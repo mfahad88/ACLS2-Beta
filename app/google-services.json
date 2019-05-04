@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1057229910860",
+    "firebase_url": "https://apni-cricket-league-6d5b9.firebaseio.com",
+    "project_id": "apni-cricket-league-6d5b9",
+    "storage_bucket": "apni-cricket-league-6d5b9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057229910860:android:a738ee74a17442af",
+        "android_client_info": {
+          "package_name": "com.psl.fantasy.league"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1057229910860-4i3qm0jekvjt07gevr17bs51m8faeg65.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.psl.fantasy.league",
+            "certificate_hash": "44cb917965174ba48d218e36255348575e64070f"
+          }
+        },
+        {
+          "client_id": "1057229910860-c1i4rvr8o55am9aq4se1cbs0l6ucm8ga.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOaOSuWxYbZlXUWt20EWJBfUF2cYteL6M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1057229910860-c1i4rvr8o55am9aq4se1cbs0l6ucm8ga.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

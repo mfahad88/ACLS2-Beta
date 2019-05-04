@@ -1,0 +1,28 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Draw the vertical line, left edge move to right 100dp and right edge move to fight 200dp. -->
+
+    <item>
+        <rotate android:fromDegrees="60">
+            <shape android:shape="rectangle">
+                <solid android:color="@color/colorPrimaryDark"/>
+                <size android:height="350dp" android:width="100dp"/>
+
+            </shape>
+        </rotate>
+
+    </item>
+
+    <item android:top="20dp"
+        android:bottom="20dp">
+        <rotate android:fromDegrees="60">
+            <shape android:shape="rectangle">
+
+                <solid android:color="@color/colorPrimary"/>
+                <size android:height="35
+
+                0dp" android:width="100dp"/>
+
+            </shape>
+        </rotate>
+    </item>
+</layer-list>

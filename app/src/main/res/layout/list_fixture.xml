@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:elevation="5dp">
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_teamOne"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"/>
+        <!--<ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@null"
+            android:scaleType="centerCrop"
+            android:id="@+id/image_team_one"
+            android:layout_margin="20dp"
+            android:layout_alignParentLeft="true"/>-->
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="Time"
+            android:id="@+id/txt_time"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_teamTwo"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+        <!--<ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@null"
+            android:scaleType="centerCrop"
+            android:id="@+id/image_team_two"
+            android:layout_margin="20dp"
+            android:layout_alignParentRight="true"/>-->
+    </RelativeLayout>
+</RelativeLayout>
