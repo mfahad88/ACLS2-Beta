@@ -3,6 +3,7 @@ package com.psl.fantasy.league.fragment;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -11,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -137,6 +140,8 @@ public class CreateTeamFragment extends Fragment {
             public void playerCount(int type, int count) {
 //                Toast.makeText(mView.getContext(), type+","+count, Toast.LENGTH_SHORT).show();
                 fragmentInterface.playerCount(type,count);
+
+
             }
 
             @Override
@@ -148,6 +153,8 @@ public class CreateTeamFragment extends Fragment {
             public void credit(double count) {
                 fragmentInterface.credit(count);
             }
+
+
         };
         PlayerInfoAdapter adapter=new PlayerInfoAdapter(mView.getContext(),R.layout.player_info_adapter,list,Player_Type,playerInterface,dbHelper);
         list_player.setAdapter(adapter);

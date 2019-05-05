@@ -1,5 +1,6 @@
 package com.psl.fantasy.league.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,9 +55,21 @@ public class PlayerInfoAdapter extends ArrayAdapter<PlayerBean> {
         }
         return playerInfoAdapter;
     }*/
+
+
+    @Override
+    public PlayerBean getItem(int position) {
+        return super.getItem(position);
+    }
+
+    @Override
+    public int getPosition(PlayerBean item) {
+        return super.getPosition(item);
+    }
+
     @Override
     public long getItemId(int position) {
-        return 0;
+        return super.getItemId(position);
     }
 
     @Override
@@ -73,6 +87,7 @@ public class PlayerInfoAdapter extends ArrayAdapter<PlayerBean> {
         CheckBox chk_vcaptain=convertView.findViewById(R.id.chk_vcaptain);
 
         CheckBox chk_captain=convertView.findViewById(R.id.chk_captain);
+        LinearLayout layout=convertView.findViewById(R.id.linear_row);
 
 //        ImageView image_view_plus=convertView.findViewById(R.id.image_view_plus) ;
 
@@ -88,12 +103,13 @@ public class PlayerInfoAdapter extends ArrayAdapter<PlayerBean> {
         if(player_Type==3) {
 
             convertView.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("NewApi")
                 @Override
                 public void onClick(View v) {
                     beanList = new ArrayList<>();
 
                   //  Toast.makeText(context, bean.getName(), Toast.LENGTH_SHORT).show();
-                    
+
                     if (list.get(position).isChecked()) {
                         if(count_wk==1) {
                             count_wk--;
@@ -109,19 +125,24 @@ public class PlayerInfoAdapter extends ArrayAdapter<PlayerBean> {
                     } else {
                         if(count_wk==0) {
                             count_wk++;
-                            
                             playerInterface.playerCount(player_Type,count_wk);
                             playerInterface.count('+');
                             playerInterface.credit(bean.getCredits());
                             finalConvertView.setSelected(true);
                             finalConvertView.setBackgroundColor(Color.parseColor("#FFF4DD"));
+
+
                             if(chk_captain.isChecked()){
                                 bean.setCaptain(true);
+
+
                             }if(chk_vcaptain.isChecked()){
                                 bean.setViceCaptain(true);
                             }
                             bean.setChecked(true);
                             dbHelper.saveMyTeam(bean);
+
+
 
                         }
                     }
@@ -162,6 +183,7 @@ public class PlayerInfoAdapter extends ArrayAdapter<PlayerBean> {
                             finalConvertView.setBackgroundColor(Color.parseColor("#FFF4DD"));
                             if(chk_captain.isChecked()){
                                 bean.setCaptain(true);
+
                             }if(chk_vcaptain.isChecked()){
                                 bean.setViceCaptain(true);
                             }
@@ -259,6 +281,7 @@ public class PlayerInfoAdapter extends ArrayAdapter<PlayerBean> {
                             finalConvertView.setBackgroundColor(Color.parseColor("#FFF4DD"));
                             if(chk_captain.isChecked()){
                                 bean.setCaptain(true);
+
                             }if(chk_vcaptain.isChecked()){
                                 bean.setViceCaptain(true);
                             }

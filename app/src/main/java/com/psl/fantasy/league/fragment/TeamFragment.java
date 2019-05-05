@@ -1,6 +1,8 @@
 package com.psl.fantasy.league.fragment;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -22,6 +24,9 @@ import com.psl.fantasy.league.Utils.Helper;
 import com.psl.fantasy.league.adapter.PageAdapter;
 import com.psl.fantasy.league.interfaces.FragmentInterface;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -41,7 +46,7 @@ public class TeamFragment extends Fragment {
     private int contestId;
     private Button btn_done;
     int teamId1; int teamId2;
-    private boolean isFromLogin=false;
+    SharedPreferences preferences;
     public TeamFragment() {
         // Required empty public constructor
     }
@@ -63,6 +68,7 @@ public class TeamFragment extends Fragment {
         txt_player_count=mView.findViewById(R.id.txt_player_count);
         txt_credit_count= mView.findViewById(R.id.txt_credit_count);
         tab_layout=mView.findViewById(R.id.tab_layout);
+        preferences=mView.getContext().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
         fragmentInterface=new FragmentInterface() {
             @Override
             public void playerCount(int type, int count) {
@@ -93,15 +99,31 @@ public class TeamFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
                             //if condition put here
-                            Fragment fragment=new LoginFragment();
-                            Bundle bundle=new Bundle();
-                            bundle.putDouble("credit", credit);
-                            bundle.putInt("contestId",contestId);
-                            fragment.setArguments(bundle);
-                            FragmentTransaction ft=getFragmentManager().beginTransaction();
-                            ft.replace(R.id.main_content,fragment);
+                            Fragment fragment = null;
+                            if(Helper.getUserSession(preferences,"MyUser")==null) {
+
+                                fragment = new LoginFragment();
+                                Bundle bundle = new Bundle();
+                                bundle.putDouble("credit", credit);
+                                bundle.putInt("contestId", contestId);
+                                fragment.setArguments(bundle);
+                            }
+                            else {
+                                try {
+                                    JSONObject jsonObject = new JSONObject(Helper.getUserSession(preferences, "MyUser").toString());
+                                    fragment=new PaymentFragment();
+                                    Bundle bundle = new Bundle();
+                                    bundle.putDouble("credit", credit);
+                                    bundle.putInt("conId", contestId);
+                                    fragment.setArguments(bundle);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                            FragmentTransaction ft = getFragmentManager().beginTransaction();
+                            ft.replace(R.id.main_content, fragment);
                             ft.commit();
-                            //Helper.showAlertNetural(mView.getContext(),"Suceess","Team Saved...");
                         }
                     });
                 }
