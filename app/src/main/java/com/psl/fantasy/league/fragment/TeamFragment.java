@@ -6,12 +6,14 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,10 @@ import com.psl.fantasy.league.interfaces.FragmentInterface;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -95,38 +101,37 @@ public class TeamFragment extends Fragment {
                 }
                 txt_player_count.setText(String.valueOf(main));
                 //if(main==14){
-                    btn_done.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //if condition put here
-                            Fragment fragment = null;
-                            if(Helper.getUserSession(preferences,"MyUser")==null) {
-
+                btn_done.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //if condition put here
+                        Fragment fragment = null;
+                        if(Helper.getUserSession(preferences,"MyUser")==null) {
+                            if(getUserIdFromText()==null) {
                                 fragment = new LoginFragment();
                                 Bundle bundle = new Bundle();
                                 bundle.putDouble("credit", credit);
                                 bundle.putInt("contestId", contestId);
                                 fragment.setArguments(bundle);
                             }
-                            else {
-                                try {
-                                    JSONObject jsonObject = new JSONObject(Helper.getUserSession(preferences, "MyUser").toString());
-                                    fragment=new PaymentFragment();
-                                    Bundle bundle = new Bundle();
-                                    bundle.putDouble("credit", credit);
-                                    bundle.putInt("conId", contestId);
-                                    fragment.setArguments(bundle);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
+                        } else {
+                            try {
+                                fragment=new PaymentFragment();
+                                Bundle bundle = new Bundle();
+                                bundle.putDouble("credit", credit);
+                                bundle.putInt("conId", contestId);
+                                fragment.setArguments(bundle);
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                            FragmentTransaction ft = getFragmentManager().beginTransaction();
-                            ft.replace(R.id.main_content, fragment);
-                            ft.commit();
+
                         }
-                    });
-                }
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        ft.replace(R.id.main_content, fragment);
+                        ft.commit();
+                    }
+                });
+            }
 
             //}
 
@@ -148,7 +153,8 @@ public class TeamFragment extends Fragment {
         tab_layout.addTab(tab_layout.newTab().setText("AR (0)"));
         tab_layout.addTab(tab_layout.newTab().setText("BOWL (0)"));
         tab_layout.setTabGravity(TabLayout.GRAVITY_FILL);
-        pager.setOffscreenPageLimit(tab_layout.getTabCount());
+//        pager.setOffscreenPageLimit(tab_layout.getTabCount());
+
         adapter = new PageAdapter(getFragmentManager(),tab_layout.getTabCount(),fragmentInterface,teamId1,teamId2);
         pager.setAdapter(adapter);
         tab_layout.setTabTextColors(ColorStateList.valueOf(Color.BLACK));
@@ -169,6 +175,34 @@ public class TeamFragment extends Fragment {
             }
         });
         return mView;
+    }
+
+    public static String getUserIdFromText(){
+        //Get the text file
+
+
+//Read text from file
+        StringBuilder text = new StringBuilder();
+        String line = null;
+        try {
+
+
+            File file = new File(Environment.getExternalStorageDirectory()+File.separator+"ACL","user.txt");
+
+            BufferedReader br = new BufferedReader(new FileReader(file));
+
+
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+            }
+            br.close();
+        }
+        catch (Exception e) {
+            //You'll need to add proper error handling here
+            e.printStackTrace();
+        }
+        Log.e("Helper",line+" Line...");
+        return line;
     }
 
 }

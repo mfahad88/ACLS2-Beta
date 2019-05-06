@@ -1,5 +1,6 @@
 package com.psl.fantasy.league.interfaces;
 
+import com.psl.fantasy.league.model.response.Insert.InsertResponse;
 import com.psl.fantasy.league.model.response.JoinContest.JoinContenstResponse;
 import com.psl.fantasy.league.model.request.TestBeanRequest;
 import com.psl.fantasy.league.model.response.Config.ConfigBeanResponse;
@@ -33,4 +34,7 @@ public interface ApiInterface {
 
     @POST("JoinContest")
     Call<JoinContenstResponse> JoinContest(@Body TestBeanRequest beanRequest);
+
+    @POST("insertUser")
+    Call<InsertResponse> insertUser(@Body TestBeanRequest beanRequest);
 }

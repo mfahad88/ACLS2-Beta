@@ -10,6 +10,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.AssetManager;
+import android.os.Environment;
+import android.support.annotation.RequiresPermission;
 import android.support.v4.content.ContextCompat;
 import android.util.Base64;
 import android.util.Log;
@@ -21,6 +23,12 @@ import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -67,39 +75,6 @@ public class Helper {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(emailStr);
         Log.e("email", String.valueOf(matcher.find()));
         return matcher.find();
-    }
-
-    public static String printKeyHash(Activity context) {
-        PackageInfo packageInfo;
-        String key = null;
-        try {
-            //getting application package name, as defined in manifest
-            String packageName = context.getApplicationContext().getPackageName();
-
-            //Retriving package info
-            packageInfo = context.getPackageManager().getPackageInfo(packageName,
-                    PackageManager.GET_SIGNATURES);
-
-            Log.e("Package Name=", context.getApplicationContext().getPackageName());
-
-            for (Signature signature : packageInfo.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                key = new String(Base64.encode(md.digest(), 0));
-
-                // String key = new String(Base64.encodeBytes(md.digest()));
-                Log.e("Key Hash=", key);
-            }
-        } catch (PackageManager.NameNotFoundException e1) {
-            Log.e("Name not found", e1.toString());
-        }
-        catch (NoSuchAlgorithmException e) {
-            Log.e("No such an algorithm", e.toString());
-        } catch (Exception e) {
-            Log.e("Exception", e.toString());
-        }
-
-        return key;
     }
 
     @SuppressLint("NewApi")
@@ -282,5 +257,74 @@ public class Helper {
         } catch (Exception e) {
             Log.e("Facebook", "printHashKey()", e);
         }
+    }
+
+
+    public static void createDirectory(){
+       try{
+           File direct = new File(Environment.getExternalStorageDirectory()+File.separator+"ACL");
+
+           if(!direct.exists()) {
+               if(direct.mkdir()){
+                   Log.e("Helper",direct.getPath()+" created...");
+               }
+           }
+       }catch (Exception e){
+           e.printStackTrace();
+       }
+    }
+
+    public static void saveText(String msg){
+        File file=null;
+        try {
+            file=new File(Environment.getExternalStorageDirectory()+File.separator+"ACL"+File.separator+"user.txt");
+            if(!file.exists()){
+                file.createNewFile();
+                FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory()+File.separator+"ACL"+File.separator+"user.txt");
+                fos.write(msg.getBytes());
+                fos.close();
+                Log.e("Helper",file.getPath()+" saved...");
+            }else{
+                file.delete();
+                file.createNewFile();
+                FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory()+File.separator+"ACL"+File.separator+"user.txt");
+                fos.write(msg.getBytes());
+                fos.close();
+                Log.e("Helper",file.getPath()+" saved...");
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static String getUserIdFromText(){
+        //Get the text file
+
+
+//Read text from file
+        StringBuilder text = new StringBuilder();
+        String line = null;
+        try {
+
+
+            File file = new File(Environment.getExternalStorageDirectory()+File.separator+"ACL","user.txt");
+
+            BufferedReader br = new BufferedReader(new FileReader(file));
+
+
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+            }
+            br.close();
+        }
+        catch (Exception e) {
+            //You'll need to add proper error handling here
+            e.printStackTrace();
+        }
+        Log.e("Helper",line+" Line...");
+        return line;
     }
 }

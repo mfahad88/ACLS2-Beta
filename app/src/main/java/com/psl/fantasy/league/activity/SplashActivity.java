@@ -17,6 +17,8 @@ import com.psl.fantasy.league.model.response.Player.PlayerResponse;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,32 +38,48 @@ public class SplashActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
         FacebookSdk.setAutoLogAppEventsEnabled(true);
+        getMatches();
+        getConfig();
+    }
+
+    private void getMatches(){
+        ApiClient.getInstance().getPlayersMatches().enqueue(new Callback<PlayerResponse>() {
+            @Override
+            public void onResponse(Call<PlayerResponse> call, Response<PlayerResponse> response) {
+                if(response.isSuccessful()){
+                    if(response.body().getResponseCode().equals("1001")){
+
+                        dbHelper.savePlayers(response.body().getData());
+                    }
+                }else{
+                    try {
+                        Helper.showAlertNetural(SplashActivity.this,"Error",response.errorBody().string());
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PlayerResponse> call, Throwable t) {
+                t.fillInStackTrace();
+                Helper.showAlertNetural(SplashActivity.this,"Error",t.getMessage());
+            }
+        });
+    }
+
+    private void getConfig(){
         try{
+            JSONObject obj=new JSONObject();
             obj.put("param_type","GF");
             obj.put("userId","1001");
             obj.put("method_Name",this.getClass().getSimpleName()+".onCreate");
             System.out.println(obj.toString());
             dbHelper.deletePlayer();
             dbHelper.deleteConfig();
-            ApiClient.getInstance().getPlayersMatches().enqueue(new Callback<PlayerResponse>() {
-                @Override
-                public void onResponse(Call<PlayerResponse> call, Response<PlayerResponse> response) {
-                    if(response.isSuccessful()){
-                        if(response.body().getResponseCode().equals("1001")){
 
-                            dbHelper.savePlayers(response.body().getData());
-                        }else{
-                            Helper.showAlertNetural(SplashActivity.this,"Error",response.body().getMessage());
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<PlayerResponse> call, Throwable t) {
-                    t.fillInStackTrace();
-                    Helper.showAlertNetural(SplashActivity.this,"Error",t.getMessage());
-                }
-            });
 
             ApiClient.getInstance().getConfig(Helper.encrypt(obj.toString()))
                     .enqueue(new Callback<ConfigBeanResponse>() {
@@ -81,12 +99,11 @@ public class SplashActivity extends AppCompatActivity {
                                             finish();
                                         }
                                     },500);
-                                }else{
-                                    Helper.showAlertNetural(SplashActivity.this,"Error",response.body().getMessage());
                                 }
                             }else{
                                 try {
                                     Helper.showAlertNetural(SplashActivity.this,"Error",response.errorBody().string());
+
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -95,8 +112,9 @@ public class SplashActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<ConfigBeanResponse> call, Throwable t) {
-                            t.fillInStackTrace();
+                            t.printStackTrace();
                             Helper.showAlertNetural(SplashActivity.this,"Error",t.getMessage());
+
                         }
                     });
 

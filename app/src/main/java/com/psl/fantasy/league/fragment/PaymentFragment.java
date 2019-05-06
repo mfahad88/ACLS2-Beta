@@ -62,6 +62,8 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
             if(Helper.getUserSession(preferences,"MyUser")!=null) {
                 JSONObject jsonObject = new JSONObject(Helper.getUserSession(preferences, "MyUser").toString());
                 userId = jsonObject.getInt("user_id");
+            }else{
+                userId= Integer.parseInt(Helper.getUserIdFromText());
             }
 
         } catch (JSONException e) {
