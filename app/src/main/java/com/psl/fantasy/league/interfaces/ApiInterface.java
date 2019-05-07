@@ -37,4 +37,7 @@ public interface ApiInterface {
 
     @POST("insertUser")
     Call<InsertResponse> insertUser(@Body TestBeanRequest beanRequest);
+
+    @POST("getAllMatchByUserId")
+    Call<String> getAllMatchByUserId(@Body TestBeanRequest beanRequest);
 }

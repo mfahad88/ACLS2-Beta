@@ -1,21 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#e2e2e2">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Upcoming Matches"
-        android:id="@+id/txt_upcoming"
-        android:textStyle="bold"
-        android:layout_margin="5dp"
-        android:padding="5dp"
-        android:textColor="@android:color/black"
-        android:layout_below="@id/my_toolbar"/>
+    android:background="#e2e2e2"
+    tools:context=".fragment.MyMatchesFragment">
 
     <ProgressBar
         android:layout_width="wrap_content"
@@ -26,12 +15,13 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/txt_upcoming"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
         android:dividerHeight="10dp"
         android:divider="@null"
         android:id="@+id/list_matches"
         android:visibility="gone"/>
+
 </RelativeLayout>
