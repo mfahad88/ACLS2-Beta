@@ -1,7 +1,6 @@
 package com.psl.fantasy.league.Utils;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.AssetManager;
 import android.os.Environment;
-import android.support.annotation.RequiresPermission;
 import android.support.v4.content.ContextCompat;
 import android.util.Base64;
 import android.util.Log;
@@ -23,28 +21,35 @@ import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.InvalidParameterSpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -54,6 +59,7 @@ public class Helper {
     public static final String publicKeyString="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCVMxpYZO46njcjm/iizphuiSJlL5P2kj16WJRT\n" +
             "OmD+rJ/DG6IsOqhEZWHOu2SUpGp+OFbNzYdRGkuDl7oWoe95v5QOMA7+8qBgwCr1/OZWp+aHkxxM\n" +
             "/to87hLEmFzWgiC8zzyHvWDzjvNJEGfPa9J0RDYjxEES7kuyhRY4KLxDowIDAQAB";
+    public static final String i="Test";
     public static final String SHARED_PREF = "PSL_FANTSY";
     public static final String MY_USER = "MyUser";
     public static final String isFromLogin="isFromLogin";
@@ -281,9 +287,14 @@ public class Helper {
             if(!file.exists()){
                 file.createNewFile();
                 FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory()+File.separator+"ACL"+File.separator+"user.txt");
-                fos.write(msg.getBytes());
-                fos.close();
-                Log.e("Helper",file.getPath()+" saved...");
+                try {
+                    fos.write(AESUtils.encrypt(msg).getBytes());
+                    fos.close();
+                    Log.e("Helper",file.getPath()+" saved...");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }else{
                 file.delete();
                 file.createNewFile();
@@ -304,7 +315,7 @@ public class Helper {
         //Get the text file
 
 
-//Read text from file
+        //Read text from file
         StringBuilder text = new StringBuilder();
         String line = null;
         try {
@@ -316,7 +327,8 @@ public class Helper {
 
 
             while ((line = br.readLine()) != null) {
-                text.append(line);
+                text.append(AESUtils.decrypt(line));
+
             }
             br.close();
         }
@@ -324,7 +336,9 @@ public class Helper {
             //You'll need to add proper error handling here
             e.printStackTrace();
         }
-        Log.e("Helper",line+" Line...");
-        return line;
+        Log.e("Helper",text.toString()+" Line...");
+        return text.toString();
     }
+
+
 }

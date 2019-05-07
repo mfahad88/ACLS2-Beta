@@ -104,10 +104,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     private void init(){
-        FacebookSdk.setApplicationId(getString(R.string.facebook_app_id));
-        FacebookSdk.sdkInitialize(mView.getContext());
-        FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
-        FacebookSdk.setAutoLogAppEventsEnabled(true);
+
         btn_next=mView.findViewById(R.id.btn_next);
         edt_mobile_no=mView.findViewById(R.id.edt_mobile_no);
         edt_password=mView.findViewById(R.id.edt_password);

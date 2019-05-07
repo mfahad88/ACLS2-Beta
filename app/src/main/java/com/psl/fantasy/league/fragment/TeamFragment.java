@@ -107,7 +107,22 @@ public class TeamFragment extends Fragment {
                         //if condition put here
                         Fragment fragment = null;
                         if(Helper.getUserSession(preferences,"MyUser")==null) {
-                            if(getUserIdFromText()==null) {
+                            File file=new File(Environment.getExternalStorageDirectory()+File.separator+"ACL","user.txt");
+                            if(file.exists()) {
+                                if (Helper.getUserIdFromText() != null) {
+
+                                    try {
+                                        fragment=new PaymentFragment();
+                                        Bundle bundle = new Bundle();
+                                        bundle.putDouble("credit", credit);
+                                        bundle.putInt("conId", contestId);
+                                        fragment.setArguments(bundle);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
+                                }
+                            }else{
                                 fragment = new LoginFragment();
                                 Bundle bundle = new Bundle();
                                 bundle.putDouble("credit", credit);
@@ -177,32 +192,6 @@ public class TeamFragment extends Fragment {
         return mView;
     }
 
-    public static String getUserIdFromText(){
-        //Get the text file
 
-
-//Read text from file
-        StringBuilder text = new StringBuilder();
-        String line = null;
-        try {
-
-
-            File file = new File(Environment.getExternalStorageDirectory()+File.separator+"ACL","user.txt");
-
-            BufferedReader br = new BufferedReader(new FileReader(file));
-
-
-            while ((line = br.readLine()) != null) {
-                text.append(line);
-            }
-            br.close();
-        }
-        catch (Exception e) {
-            //You'll need to add proper error handling here
-            e.printStackTrace();
-        }
-        Log.e("Helper",line+" Line...");
-        return line;
-    }
 
 }
