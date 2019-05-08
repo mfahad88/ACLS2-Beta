@@ -1,6 +1,10 @@
 package com.psl.fantasy.league.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.psl.fantasy.league.R;
+import com.psl.fantasy.league.fragment.JoinedContestFragment;
 import com.psl.fantasy.league.model.ui.MyMatchesBean;
 
 import java.util.List;
@@ -59,7 +64,15 @@ public class MyMatchesAdapter extends ArrayAdapter<MyMatchesBean> {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context,String.valueOf(bean.getMatch_id()),Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context,String.valueOf(bean.getMatch_id()),Toast.LENGTH_SHORT).show();
+                Fragment fragment=new JoinedContestFragment();
+                Bundle bundle=new Bundle();
+                bundle.putInt("userId",bean.getUserId());
+                bundle.putInt("matchId",bean.getMatch_id());
+                fragment.setArguments(bundle);
+                FragmentTransaction ft=((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.main_content,fragment);
+                ft.commit();
             }
         });
         return convertView;

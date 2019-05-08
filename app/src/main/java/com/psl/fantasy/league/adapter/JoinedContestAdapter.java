@@ -1,13 +1,19 @@
 package com.psl.fantasy.league.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.psl.fantasy.league.R;
+import com.psl.fantasy.league.fragment.LeaderboardFragment;
 import com.psl.fantasy.league.model.ui.JoinedContestBean;
 import com.psl.fantasy.league.model.ui.MyMatchesBean;
 
@@ -17,6 +23,7 @@ public class JoinedContestAdapter extends ArrayAdapter<JoinedContestBean> {
     Context context;
     int resource;
     List<JoinedContestBean> list;
+
     public JoinedContestAdapter(Context context, int resource, List<JoinedContestBean> objects) {
         super(context, resource, objects);
         this.context=context;
@@ -48,6 +55,7 @@ public class JoinedContestAdapter extends ArrayAdapter<JoinedContestBean> {
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView=LayoutInflater.from(context).inflate(resource,null);
         JoinedContestBean bean=list.get(position);
+        LinearLayout linear_leaderboard=convertView.findViewById(R.id.linear_leaderboard);
         TextView txt_contest_name=convertView.findViewById(R.id.txt_contest_name);
         TextView txt_contest_desc=convertView.findViewById(R.id.txt_contest_desc);
         TextView txt_entry_fee=convertView.findViewById(R.id.txt_entry_fee);
@@ -55,9 +63,22 @@ public class JoinedContestAdapter extends ArrayAdapter<JoinedContestBean> {
         TextView txt_points=convertView.findViewById(R.id.txt_points);
         txt_contest_name.setText(bean.getContestName());
         txt_contest_desc.setText(bean.getContestDesc());
-        txt_entry_fee.setText(bean.getEntryFee());
+        txt_entry_fee.setText(String.valueOf(bean.getEntryFee()));
         txt_team_name.setText(bean.getTeamName());
         txt_points.setText(String.valueOf(bean.getPoints()));
+        linear_leaderboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment=new LeaderboardFragment();
+                Bundle bundle=new Bundle();
+                bundle.putInt("contestId",bean.getContestId());
+                bundle.putInt("userId",bean.getUserId());
+                FragmentTransaction ft=((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
+                fragment.setArguments(bundle);
+                ft.replace(R.id.main_content,fragment);
+                ft.commit();
+            }
+        });
         return convertView;
     }
 }

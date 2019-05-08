@@ -17,12 +17,15 @@ import com.psl.fantasy.league.R;
 import com.psl.fantasy.league.Utils.Helper;
 import com.psl.fantasy.league.adapter.MyMatchesAdapter;
 import com.psl.fantasy.league.client.ApiClient;
+import com.psl.fantasy.league.model.response.MyMatches.Datum;
+import com.psl.fantasy.league.model.response.MyMatches.MyMatchesResponse;
 import com.psl.fantasy.league.model.ui.MyMatchesBean;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +51,7 @@ public class MyMatchesFragment extends Fragment {
         View mView=inflater.inflate(R.layout.fragment_my_matches, container, false);
         SharedPreferences preferences=mView.getContext().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
         ListView list_matches=mView.findViewById(R.id.list_matches);
+        TextView txt_error=mView.findViewById(R.id.txt_error);
         ProgressBar progressBar=mView.findViewById(R.id.progressBar);
         list=new ArrayList<>();
         /*list.add(new MyMatchesBean(1,1001,2001,"Karachi","Sirilanka","Completed",""));
@@ -77,22 +81,42 @@ public class MyMatchesFragment extends Fragment {
         JSONObject obj=new JSONObject();
         try {
             obj.put("user_id",userId);
-            ApiClient.getInstance().getAllMatchByUserId(Helper.encrypt(obj.toString())).enqueue(new Callback<String>() {
+            ApiClient.getInstance().getAllMatchByUserId(Helper.encrypt(obj.toString())).enqueue(new Callback<MyMatchesResponse>() {
                 @Override
-                public void onResponse(Call<String> call, Response<String> response) {
+                public void onResponse(Call<MyMatchesResponse> call, Response<MyMatchesResponse> response) {
                     if(response.isSuccessful()){
-                        progressBar.setVisibility(View.GONE);
+                        if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
+                            for (Datum datum : response.body().getData())
+                                list.add(new MyMatchesBean(userId,datum.getMatchId(), datum.getTeamId1().intValue(), datum.getTeamId2().intValue()
+                                        , datum.getTeamName1(), datum.getTeamName2(), datum.getMatchSts(), ""));
+                            progressBar.setVisibility(View.GONE);
 
-                        list_matches.setVisibility(View.VISIBLE);
+                            list_matches.setVisibility(View.VISIBLE);
 
-                        MyMatchesAdapter adapter=new MyMatchesAdapter(mView.getContext(),R.layout.my_matches_adapter,list);
-                        list_matches.setAdapter(adapter);
+                            MyMatchesAdapter adapter = new MyMatchesAdapter(mView.getContext(), R.layout.my_matches_adapter, list);
+                            list_matches.setAdapter(adapter);
+                        }else{
+                            progressBar.setVisibility(View.GONE);
+                            txt_error.setVisibility(View.VISIBLE);
+                            txt_error.setText(response.message());
+                        }
+                    }else{
+                        try {
+                            progressBar.setVisibility(View.GONE);
+                            txt_error.setVisibility(View.VISIBLE);
+                            txt_error.setText(response.errorBody().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
 
                 @Override
-                public void onFailure(Call<String> call, Throwable t) {
+                public void onFailure(Call<MyMatchesResponse> call, Throwable t) {
                     t.printStackTrace();
+                    progressBar.setVisibility(View.GONE);
+                    txt_error.setVisibility(View.VISIBLE);
+                    txt_error.setText(t.getMessage());
                 }
             });
         } catch (JSONException e) {

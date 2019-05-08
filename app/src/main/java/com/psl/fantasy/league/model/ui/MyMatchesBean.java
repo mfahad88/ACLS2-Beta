@@ -1,6 +1,7 @@
 package com.psl.fantasy.league.model.ui;
 
 public class MyMatchesBean {
+    private int userId;
     private int match_id;
     private int team1Id;
     private int team2Id;
@@ -9,7 +10,8 @@ public class MyMatchesBean {
     private String matchStatus;
     private String numberOfContest;
 
-    public MyMatchesBean(int match_id, int team1Id, int team2Id, String teamOne, String teamTwo, String matchStatus, String numberOfContest) {
+    public MyMatchesBean(int userId, int match_id, int team1Id, int team2Id, String teamOne, String teamTwo, String matchStatus, String numberOfContest) {
+        this.userId = userId;
         this.match_id = match_id;
         this.team1Id = team1Id;
         this.team2Id = team2Id;
@@ -17,6 +19,14 @@ public class MyMatchesBean {
         this.teamTwo = teamTwo;
         this.matchStatus = matchStatus;
         this.numberOfContest = numberOfContest;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public int getMatch_id() {
@@ -73,18 +83,5 @@ public class MyMatchesBean {
 
     public void setNumberOfContest(String numberOfContest) {
         this.numberOfContest = numberOfContest;
-    }
-
-    @Override
-    public String toString() {
-        return "MyMatchesBean{" +
-                "match_id=" + match_id +
-                ", team1Id=" + team1Id +
-                ", team2Id=" + team2Id +
-                ", teamOne='" + teamOne + '\'' +
-                ", teamTwo='" + teamTwo + '\'' +
-                ", matchStatus='" + matchStatus + '\'' +
-                ", numberOfContest='" + numberOfContest + '\'' +
-                '}';
     }
 }

@@ -6,60 +6,71 @@ import com.google.gson.annotations.SerializedName;
 
 public class Datum {
 
-    @SerializedName("contest_name")
+    @SerializedName("match_id")
     @Expose
-    private String contestName;
-    @SerializedName("description")
+    private Integer matchId;
+    @SerializedName("team_id1")
     @Expose
-    private String description;
-    @SerializedName("entry_fee")
+    private Integer teamId1;
+    @SerializedName("team_name1")
     @Expose
-    private Integer entryFee;
-    @SerializedName("team_name")
+    private String teamName1;
+    @SerializedName("team_id2")
     @Expose
-    private String teamName;
-    @SerializedName("total_point")
+    private Integer teamId2;
+    @SerializedName("team_name2")
     @Expose
-    private Integer totalPoint;
+    private String teamName2;
+    @SerializedName("match_sts")
+    @Expose
+    private String matchSts;
 
-    public String getContestName() {
-        return contestName;
+    public Integer getMatchId() {
+        return matchId;
     }
 
-    public void setContestName(String contestName) {
-        this.contestName = contestName;
+    public void setMatchId(Integer matchId) {
+        this.matchId = matchId;
     }
 
-    public String getDescription() {
-        return description;
+    public Integer getTeamId1() {
+        return teamId1;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setTeamId1(Integer teamId1) {
+        this.teamId1 = teamId1;
     }
 
-    public Integer getEntryFee() {
-        return entryFee;
+    public String getTeamName1() {
+        return teamName1;
     }
 
-    public void setEntryFee(Integer entryFee) {
-        this.entryFee = entryFee;
+    public void setTeamName1(String teamName1) {
+        this.teamName1 = teamName1;
     }
 
-    public String getTeamName() {
-        return teamName;
+    public Integer getTeamId2() {
+        return teamId2;
     }
 
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
+    public void setTeamId2(Integer teamId2) {
+        this.teamId2 = teamId2;
     }
 
-    public Integer getTotalPoint() {
-        return totalPoint;
+    public String getTeamName2() {
+        return teamName2;
     }
 
-    public void setTotalPoint(Integer totalPoint) {
-        this.totalPoint = totalPoint;
+    public void setTeamName2(String teamName2) {
+        this.teamName2 = teamName2;
+    }
+
+    public String getMatchSts() {
+        return matchSts;
+    }
+
+    public void setMatchSts(String matchSts) {
+        this.matchSts = matchSts;
     }
 
 }

@@ -5,9 +5,16 @@ import com.psl.fantasy.league.model.response.JoinContest.JoinContenstResponse;
 import com.psl.fantasy.league.model.request.TestBeanRequest;
 import com.psl.fantasy.league.model.response.Config.ConfigBeanResponse;
 import com.psl.fantasy.league.model.response.Contest.ContestResponse;
+import com.psl.fantasy.league.model.response.JoinedContest.JoinedContestResponse;
 import com.psl.fantasy.league.model.response.Login.LoginResponse;
 import com.psl.fantasy.league.model.response.Matches.MatchesResponse;
+import com.psl.fantasy.league.model.response.MyLeaderboardTab.MyLeaderboardTabResponse;
+import com.psl.fantasy.league.model.response.MyMatches.MyMatchesResponse;
+import com.psl.fantasy.league.model.response.MyMatchesTab.MyMatchesTabResponse;
 import com.psl.fantasy.league.model.response.Player.PlayerResponse;
+import com.psl.fantasy.league.model.response.PlayerInfo.PlayerInfoResponse;
+import com.psl.fantasy.league.model.ui.PlayerBean;
+import com.psl.fantasy.league.model.ui.PlayerInfoBean;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -39,5 +46,17 @@ public interface ApiInterface {
     Call<InsertResponse> insertUser(@Body TestBeanRequest beanRequest);
 
     @POST("getAllMatchByUserId")
-    Call<String> getAllMatchByUserId(@Body TestBeanRequest beanRequest);
+    Call<MyMatchesResponse> getAllMatchByUserId(@Body TestBeanRequest beanRequest);
+
+    @POST("getAllMatchesContestByUserIdTeamId")
+    Call<JoinedContestResponse> getAllMatchesContestByUserIdTeamId(@Body TestBeanRequest beanRequest);
+
+    @POST("getAllTeamsByUserId")
+    Call<MyMatchesTabResponse> getAllTeamsByUserId(@Body TestBeanRequest beanRequest);
+
+    @POST("getAllContestTeamsByUserIdUnion")
+    Call<MyLeaderboardTabResponse> getAllContestTeamsByUserIdUnion(@Body TestBeanRequest beanRequest);
+
+    @POST("getTeamPlayerInfoByTeamId")
+    Call<PlayerInfoResponse> getTeamPlayerInfoByTeamId(@Body TestBeanRequest beanRequest);
 }
