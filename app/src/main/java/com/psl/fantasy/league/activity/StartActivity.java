@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.psl.fantasy.league.R;
 import com.psl.fantasy.league.Utils.Helper;
 import com.psl.fantasy.league.fragment.DashboardFragment;
+import com.psl.fantasy.league.fragment.FragmentPrizes;
 import com.psl.fantasy.league.fragment.MyMatchesFragment;
 import com.psl.fantasy.league.fragment.TeamFragment;
 
@@ -52,6 +53,12 @@ public class StartActivity extends AppCompatActivity {
                         FragmentTransaction ft_dash=getSupportFragmentManager().beginTransaction();
                         ft_dash.replace(R.id.main_content,fragment);
                         ft_dash.commit();
+                        return true;
+                    case R.id.prizes:
+                        fragment=new FragmentPrizes();
+                        FragmentTransaction ft_prizes=getSupportFragmentManager().beginTransaction();
+                        ft_prizes.replace(R.id.main_content,fragment);
+                        ft_prizes.commit();
                         return true;
                     /*case R.id.navigation_dashboard:
                         mTextMessage.setText(R.string.title_dashboard);
