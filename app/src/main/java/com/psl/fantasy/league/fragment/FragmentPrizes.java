@@ -31,13 +31,11 @@ public class FragmentPrizes extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View mView=inflater.inflate(R.layout.fragment_create_team, container, false);
+        View mView=inflater.inflate(R.layout.fragment_prizes, container, false);
         ListView list_prizes=mView.findViewById(R.id.list_prizes);
         List<PrizesBean> list=new ArrayList<>();
-        list.add(new PrizesBean("Test","Description",0,1000));
-        PrizesAdapter adapter=new PrizesAdapter(mView.getContext(),R.layout.prizes_adapter,list);
-        list_prizes.setAdapter(adapter);
-        /*ApiClient.getInstance().AllPrizes()
+
+        ApiClient.getInstance().AllPrizes()
                 .enqueue(new Callback<PrizesResponse>() {
                     @Override
                     public void onResponse(Call<PrizesResponse> call, Response<PrizesResponse> response) {
@@ -58,7 +56,7 @@ public class FragmentPrizes extends Fragment {
                     public void onFailure(Call<PrizesResponse> call, Throwable t) {
 
                     }
-                });*/
+                });
         return mView;
     }
 }
