@@ -13,6 +13,7 @@ import com.psl.fantasy.league.model.response.MyMatches.MyMatchesResponse;
 import com.psl.fantasy.league.model.response.MyMatchesTab.MyMatchesTabResponse;
 import com.psl.fantasy.league.model.response.Player.PlayerResponse;
 import com.psl.fantasy.league.model.response.PlayerInfo.PlayerInfoResponse;
+import com.psl.fantasy.league.model.response.PrizeClaim.PrizeClaimResponse;
 import com.psl.fantasy.league.model.response.Prizes.PrizesResponse;
 import com.psl.fantasy.league.model.ui.PlayerBean;
 import com.psl.fantasy.league.model.ui.PlayerInfoBean;
@@ -63,4 +64,7 @@ public interface ApiInterface {
 
     @POST("AllPrizes")
     Call<PrizesResponse> AllPrizes();
+
+    @POST("insertPrizeClaim")
+    Call<PrizeClaimResponse> insertPrizeClaim(@Body TestBeanRequest beanRequest);
 }

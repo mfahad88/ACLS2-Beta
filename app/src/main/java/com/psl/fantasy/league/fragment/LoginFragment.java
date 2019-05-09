@@ -63,7 +63,7 @@ import static android.view.View.GONE;
 public class LoginFragment extends Fragment implements View.OnClickListener {
     // private static final int RC_SIGN_IN =100 ;
     private View mView;
-
+    private static final String EMAIL = "email";
     private EditText edt_mobile_no,edt_password,edt_mobile_number,edt_pass_word,edt_referral;
     private TextView txt_register;
     private Button btn_next,btn_sign_up;
@@ -74,6 +74,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private LinearLayout linear_sign_in;
     private String signupType="form";
     private SharedPreferences preferences;
+    private LoginButton loginButton;
+    private CallbackManager callbackManager;
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -90,14 +92,34 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             credit=getArguments().getDouble("credit");
             contestId=getArguments().getInt("contestId");
         }
-
+        loginButton = mView.findViewById(R.id.login_button);
+        loginButton.setReadPermissions(Arrays.asList(EMAIL));
         btn_next.setOnClickListener(this);
         btn_sign_up.setOnClickListener(this);
+        callbackManager = CallbackManager.Factory.create();
         txt_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 linear_sign_in.setVisibility(View.GONE);
                 linear_sign_up.setVisibility(View.VISIBLE);
+            }
+        });
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                boolean loggedIn = AccessToken.getCurrentAccessToken() == null;
+                Log.d("API123", loggedIn + " ??");
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                error.printStackTrace();
+                Helper.showAlertNetural(mView.getContext(),"Error",error.getMessage());
             }
         });
         return mView;
@@ -130,6 +152,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         }else{
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }*/
+        callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
 
