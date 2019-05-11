@@ -1,6 +1,7 @@
 package com.psl.fantasy.league.adapter;
 
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -23,9 +24,14 @@ import com.psl.fantasy.league.Utils.Helper;
 import com.psl.fantasy.league.fragment.ContestFragment;
 import com.psl.fantasy.league.model.ui.MatchesBean;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
     Context context;
@@ -50,6 +56,7 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
         return list.get(position).getMatchId();
     }
 
+    @SuppressLint("NewApi")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final SimpleDateFormat sdf=new SimpleDateFormat("HH:mm:ss");
@@ -58,54 +65,125 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
         final MatchesBean bean=list.get(position);
         Log.e("MatchesBean",bean.toString());
         Drawable drawable = null,drawable2 = null;
-        /*ImageView image_team_one = convertView.findViewById(R.id.image_team_one);
-        ImageView image_team_two = convertView.findViewById(R.id.image_team_two);*/
-        TextView txt_teamOne=convertView.findViewById(R.id.txt_teamOne);
-        TextView txt_teamTwo=convertView.findViewById(R.id.txt_teamTwo);
+        ImageView image_team_one = convertView.findViewById(R.id.image_team_one);
+        ImageView image_team_two = convertView.findViewById(R.id.image_team_two);
+        /*TextView txt_teamOne=convertView.findViewById(R.id.txt_teamOne);
+        TextView txt_teamTwo=convertView.findViewById(R.id.txt_teamTwo);*/
+        TextView txt_short_team_one=convertView.findViewById(R.id.txt_short_team_one);
+        TextView txt_short_team_two=convertView.findViewById(R.id.txt_short_team_two);
+        TextView txt_series=convertView.findViewById(R.id.txt_series);
         final TextView txt_time = convertView.findViewById(R.id.txt_time);
 
         try{
-            txt_teamOne.setText(bean.getTeamOne());
-            txt_teamTwo.setText(bean.getTeamTwo());
-          /*  if(bean.getTeamOne().equalsIgnoreCase("pakistan")){
-                drawable= context.getDrawable(R.drawable.drawable_pk);
-            }if(bean.getTeamOne().equalsIgnoreCase("bangladesh")){
-                drawable= context.getDrawable(R.drawable.drawable_bd);
-            }if(bean.getTeamOne().equalsIgnoreCase("india")){
-                drawable= context.getDrawable(R.drawable.drawable_in);
-            }if(bean.getTeamOne().equalsIgnoreCase("srilanka")){
-                drawable= context.getDrawable(R.drawable.drawable_lk);
-            }if(bean.getTeamOne().equalsIgnoreCase("australia")){
-                drawable= context.getDrawable(R.drawable.drawable_au);
+            txt_short_team_one.setText(bean.getTeamOne());
+            txt_short_team_two.setText(bean.getTeamTwo());
+            /*txt_teamOne.setText(bean.getTeamOne());
+            txt_teamTwo.setText(bean.getTeamTwo());*/
+            if(bean.getTeamOne().trim().equals("Pakistan")){
+                drawable= context.getDrawable(R.drawable.pakistan);
+                image_team_one.setImageDrawable(drawable);
+            }if(bean.getTeamOne().trim().equals("Bangladesh")){
+                drawable= context.getDrawable(R.drawable.bangladesh);
+                image_team_one.setImageDrawable(drawable);
+            }if(bean.getTeamOne().trim().equals("India")){
+                drawable= context.getDrawable(R.drawable.india);
+                image_team_one.setImageDrawable(drawable);
+            }if(bean.getTeamOne().trim().equals("Sri Lanka")){
+                drawable= context.getDrawable(R.drawable.srilanka);
+                image_team_one.setImageDrawable(drawable);
+            }if(bean.getTeamOne().trim().equals("Australia")){
+                drawable= context.getDrawable(R.drawable.australia);
+                image_team_one.setImageDrawable(drawable);
+            }if(bean.getTeamOne().trim().equals("Afghanistan")){
+                drawable= context.getDrawable(R.drawable.afghanistan);
+                image_team_one.setImageDrawable(drawable);
+            }if(bean.getTeamOne().trim().equals("South Africa")){
+                drawable= context.getDrawable(R.drawable.southafrica);
+                image_team_one.setImageDrawable(drawable);
+            }if(bean.getTeamOne().trim().equals("England")){
+                drawable= context.getDrawable(R.drawable.england);
+                image_team_one.setImageDrawable(drawable);
+            }if(bean.getTeamOne().trim().equals("India")){
+                drawable= context.getDrawable(R.drawable.india);
+                image_team_one.setImageDrawable(drawable);
+            }if(bean.getTeamOne().trim().equals("New Zealand")){
+                drawable= context.getDrawable(R.drawable.newzealand);
+                image_team_one.setImageDrawable(drawable);
+            }if(bean.getTeamOne().trim().equals("West Indies")){
+                drawable= context.getDrawable(R.drawable.westindies);
+                image_team_one.setImageDrawable(drawable);
             }
-        *//*if(bean.getTeamOne().equalsIgnoreCase("za")){
-                drawable= context.getDrawable(R.drawable.drawable_sa);
-            }if(bean.getTeamOne().equalsIgnoreCase("zw")){
-                drawable= context.getDrawable(R.drawable.drawable_zmb);
-            }*//*
 
-            if(bean.getTeamTwo().equalsIgnoreCase("pakistan")){
-                drawable2= context.getDrawable(R.drawable.drawable_pk);
-            }if(bean.getTeamTwo().equalsIgnoreCase("bbangladeshd")){
-                drawable2= context.getDrawable(R.drawable.drawable_bd);
-            }if(bean.getTeamTwo().equalsIgnoreCase("india")){
-                drawable2= context.getDrawable(R.drawable.drawable_in);
-            }if(bean.getTeamTwo().equalsIgnoreCase("srilanka")){
-                drawable2= context.getDrawable(R.drawable.drawable_lk);
-            }if(bean.getTeamTwo().equalsIgnoreCase("australia")){
-                drawable2= context.getDrawable(R.drawable.drawable_au);
+
+            if(bean.getTeamTwo().trim().equals("Pakistan")){
+                drawable= context.getDrawable(R.drawable.pakistan);
+                image_team_two.setImageDrawable(drawable);
+            }if(bean.getTeamTwo().trim().equals("Bangladesh")){
+                drawable= context.getDrawable(R.drawable.bangladesh);
+                image_team_two.setImageDrawable(drawable);
+            }if(bean.getTeamTwo().trim().equals("India")){
+                drawable= context.getDrawable(R.drawable.india);
+                image_team_two.setImageDrawable(drawable);
+            }if(bean.getTeamTwo().trim().equals("Sri Lanka")){
+                drawable= context.getDrawable(R.drawable.srilanka);
+                image_team_two.setImageDrawable(drawable);
+            }if(bean.getTeamTwo().trim().equals("Australia")){
+                drawable= context.getDrawable(R.drawable.australia);
+                image_team_two.setImageDrawable(drawable);
+            }if(bean.getTeamTwo().trim().equals("Afghanistan")){
+                drawable= context.getDrawable(R.drawable.afghanistan);
+                image_team_two.setImageDrawable(drawable);
+            }if(bean.getTeamTwo().trim().equals("South Africa")){
+                drawable= context.getDrawable(R.drawable.southafrica);
+                image_team_two.setImageDrawable(drawable);
+            }if(bean.getTeamTwo().trim().equals("England")){
+                drawable= context.getDrawable(R.drawable.england);
+                image_team_two.setImageDrawable(drawable);
+            }if(bean.getTeamTwo().trim().equals("India")){
+                drawable= context.getDrawable(R.drawable.india);
+                image_team_two.setImageDrawable(drawable);
+            }if(bean.getTeamTwo().trim().equals("New Zealand")){
+                drawable= context.getDrawable(R.drawable.newzealand);
+                image_team_two.setImageDrawable(drawable);
+            }if(bean.getTeamTwo().trim().equals("West Indies")){
+                drawable= context.getDrawable(R.drawable.westindies);
+                image_team_two.setImageDrawable(drawable);
             }
+            Log.e("West", String.valueOf(bean.getTeamOne()));
 
-
-
-            Glide.with(context).load(drawable).into(image_team_one);
-            Glide.with(context).load(drawable2).into(image_team_two);*/
-            txt_time.post(new Runnable() {
+//            Glide.with(context).load(drawable).into(image_team_one);
+//            Glide.with(context).load(drawable2).into(image_team_two);
+            new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    txt_time.setText(sdf.format(new Date()));
+                    while (true) {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        txt_time.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+                                DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.ENGLISH);
+
+                                LocalDateTime date = LocalDateTime.parse(bean.getTime().replace("+0000","Z"), inputFormatter);
+                                String formattedDate = outputFormatter.format(date);
+                                try {
+                                    Date date1=sdf.parse(formattedDate);
+
+                                    txt_time.setText(date1.toString()+" Left");
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        });
+                    }
                 }
-            });
+            }).start();
+
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

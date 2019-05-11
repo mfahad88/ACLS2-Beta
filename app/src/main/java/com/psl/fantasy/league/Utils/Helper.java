@@ -13,6 +13,8 @@ import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import com.psl.fantasy.league.model.request.TestBeanRequest;
 import com.google.android.gms.analytics.HitBuilders;
@@ -340,5 +342,9 @@ public class Helper {
         return text.toString();
     }
 
+    public static void displayError(TextView tv,String msg){
+        tv.setVisibility(View.VISIBLE);
+        tv.setText(msg);
+    }
 
 }

@@ -75,7 +75,7 @@ public class CreateTeamFragment extends Fragment {
             txt_selection.setText("Pick 3-5 Bowlers");
         }
 
-        List<Datum> playerData=dbHelper.getPlayersById(String.valueOf(teamId1),String.valueOf(teamId2));
+        List<Datum> playerData=dbHelper.getPlayersByIdSkills(String.valueOf(teamId1),String.valueOf(teamId2), String.valueOf(Player_Type));
         List<PlayerBean> player = new ArrayList<>();
         for(Datum datum:playerData){
             PlayerBean bean=new PlayerBean();
@@ -88,52 +88,10 @@ public class CreateTeamFragment extends Fragment {
             bean.setChecked(false);
             bean.setCaptain(false);
             bean.setViceCaptain(false);
-
             player.add(bean);
-
         }
-        /*List<PlayerBean> player=new ArrayList<>();
-        player.add(new PlayerBean("Kamran Akmal","PK","0",312.5,20.0,false,false,false));
-        player.add(new PlayerBean("ABC","PK","0",312.5,20.0,false,false,false));
-        player.add(new PlayerBean("ABC","AU","0",313.5,20.0,false,false,false));
-        player.add(new PlayerBean("DEF","PK","0",314.5,20.0,false,false,false));
-        player.add(new PlayerBean("DEF","AU","0",315.5,20.0,false,false,false));
-        player.add(new PlayerBean("XYZ","PK","0",316.5,20.0,false,false,false));
-        player.add(new PlayerBean("XYZ","AU","0",317.5,20.0,false,false,false));
-        player.add(new PlayerBean("GHI","PK","0",318.5,20.0,false,false,false));
-        player.add(new PlayerBean("GHI","AU","0",319.5,20.0,false,false,false));
 
-        player.add(new PlayerBean("Kamran Akmal","PK","1",312.5,20.0,false,false,false));
-        player.add(new PlayerBean("ABC","PK","1",312.5,20.0,false,false,false));
-        player.add(new PlayerBean("ABC","AU","1",313.5,20.0,false,false,false));
-        player.add(new PlayerBean("DEF","PK","1",314.5,20.0,false,false,false));
-        player.add(new PlayerBean("DEF","AU","1",315.5,20.0,false,false,false));
-        player.add(new PlayerBean("XYZ","PK","1",316.5,20.0,false,false,false));
-        player.add(new PlayerBean("XYZ","AU","1",317.5,20.0,false,false,false));
-        player.add(new PlayerBean("GHI","PK","1",318.5,20.0,false,false,false));
-        player.add(new PlayerBean("GHI","AU","1",319.5,20.0,false,false,false));
-
-        player.add(new PlayerBean("Kamran Akmal","PK","2",312.5,20.0,false,false,false));
-        player.add(new PlayerBean("ABC","PK","2",312.5,20.0,false,false,false));
-        player.add(new PlayerBean("ABC","AU","2",313.5,20.0,false,false,false));
-        player.add(new PlayerBean("DEF","PK","2",314.5,20.0,false,false,false));
-        player.add(new PlayerBean("DEF","AU","2",315.5,20.0,false,false,false));
-        player.add(new PlayerBean("XYZ","PK","2",316.5,20.0,false,false,false));
-        player.add(new PlayerBean("XYZ","AU","2",317.5,20.0,false,false,false));
-        player.add(new PlayerBean("GHI","PK","2",318.5,20.0,false,false,false));
-        player.add(new PlayerBean("GHI","AU","2",319.5,20.0,false,false,false));
-
-
-        player.add(new PlayerBean("Kamran Akmal","PK","3",312.5,20.0,false,false,false));
-        player.add(new PlayerBean("ABC","PK","3",312.5,20.0,false,false,false));
-        player.add(new PlayerBean("ABC","AU","3",313.5,20.0,false,false,false));
-        player.add(new PlayerBean("DEF","PK","3",314.5,20.0,false,false,false));
-        player.add(new PlayerBean("DEF","AU","3",315.5,20.0,false,false,false));
-        player.add(new PlayerBean("XYZ","PK","3",316.5,20.0,false,false,false));
-        player.add(new PlayerBean("XYZ","AU","3",317.5,20.0,false,false,false));
-        player.add(new PlayerBean("GHI","PK","3",318.5,20.0,false,false,false));
-        player.add(new PlayerBean("GHI","AU","3",319.5,20.0,false,false,false));*/
-        List<PlayerBean>list=player.stream().filter(p->p.getSkill().equals(String.valueOf(Player_Type))).collect(Collectors.toList());
+        //List<PlayerBean>list=player.stream().filter(p->p.getSkill().equals(String.valueOf(Player_Type))).collect(Collectors.toList());
 
         playerInterface=new PlayerInterface() {
             @Override
@@ -156,7 +114,7 @@ public class CreateTeamFragment extends Fragment {
 
 
         };
-        PlayerInfoAdapter adapter=new PlayerInfoAdapter(mView.getContext(),R.layout.player_info_adapter,list,Player_Type,playerInterface,dbHelper);
+        PlayerInfoAdapter adapter=new PlayerInfoAdapter(mView.getContext(),R.layout.player_info_adapter,player,Player_Type,playerInterface,dbHelper);
         list_player.setAdapter(adapter);
 
 

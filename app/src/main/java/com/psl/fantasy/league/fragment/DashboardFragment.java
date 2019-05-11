@@ -3,16 +3,19 @@ package com.psl.fantasy.league.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.psl.fantasy.league.R;
 import com.psl.fantasy.league.Utils.Helper;
 import com.psl.fantasy.league.adapter.FixtureAdapter;
+import com.psl.fantasy.league.adapter.ImageAdapter;
 import com.psl.fantasy.league.client.ApiClient;
 import com.psl.fantasy.league.model.response.Matches.Datum;
 import com.psl.fantasy.league.model.response.Matches.MatchesResponse;
@@ -35,6 +38,7 @@ public class DashboardFragment extends Fragment {
     private ListView list_matches;
     private List<MatchesBean> list;
     private View mView;
+    private TextView txt_status;
     private ProgressBar progressBar;
 
     public DashboardFragment() {
@@ -49,28 +53,25 @@ public class DashboardFragment extends Fragment {
         mView=inflater.inflate(R.layout.fragment_dashboard, container, false);
         init();
         try{
-            // if hardcode data
-            /*list.add(new MatchesBean(1,"pakistan","australia","14:30:00",1,2));
-            list.add(new MatchesBean(2,"india","bangladesh","15:30:00",3,4));
-            list.add(new MatchesBean(3,"srilanka","srilanka","16:30:00",5,6));
 
-            FixtureAdapter fixtureAdapter=new FixtureAdapter(mView.getContext(),R.layout.list_fixture,list);
-            list_matches.setAdapter(fixtureAdapter);*/
             JSONObject object=new JSONObject();
             object.put("method_Name",this.getClass().getSimpleName()+".onCreateView");
             ApiClient.getInstance().matches(Helper.encrypt(object.toString()))
                     .enqueue(new Callback<MatchesResponse>() {
                         @Override
                         public void onResponse(Call<MatchesResponse> call, Response<MatchesResponse> response) {
+                            progressBar.setVisibility(View.GONE);
                             if(response.isSuccessful()){
                                 if(response.body().getResponseCode().equals("1001")){
                                     for(Datum bean:response.body().getData()){
-
-                                        list.add(new MatchesBean(bean.getMatchId().intValue(),bean.getTeamId1Name(),bean.getTeamId2Name(),bean.getStartDate(),bean.getTeamId1().intValue(),bean.getTeamId2().intValue()));
-                                        progressBar.setVisibility(View.GONE);
-                                        list_matches.setVisibility(View.VISIBLE);
-                                        FixtureAdapter fixtureAdapter=new FixtureAdapter(mView.getContext(),R.layout.list_fixture,list);
-                                        list_matches.setAdapter(fixtureAdapter);
+                                        if(response.body().getData().size()>0) {
+                                            list.add(new MatchesBean(bean.getMatchId().intValue(),bean.getTeamId1Name(),bean.getTeamId2Name(),bean.getStartDate(),bean.getTeamId1().intValue(),bean.getTeamId2().intValue()));
+                                            list_matches.setVisibility(View.VISIBLE);
+                                            FixtureAdapter fixtureAdapter = new FixtureAdapter(mView.getContext(), R.layout.list_fixture, list);
+                                            list_matches.setAdapter(fixtureAdapter);
+                                        }else{
+                                            Helper.displayError(txt_status,"No record found...");
+                                        }
                                     }
 
                                 }else{
@@ -106,5 +107,9 @@ public class DashboardFragment extends Fragment {
         progressBar=mView.findViewById(R.id.progressBar);
         list_matches=mView.findViewById(R.id.list_matches);
         list=new ArrayList<>();
+        txt_status=mView.findViewById(R.id.txt_status);
+        ViewPager viewPage=mView.findViewById(R.id.viewPage);
+        ImageAdapter adapter=new ImageAdapter(mView.getContext());
+        viewPage.setAdapter(adapter);
     }
 }

@@ -9,48 +9,88 @@
 
     <RelativeLayout
         android:layout_width="300dp"
-        android:layout_height="80dp"
+        android:layout_height="100dp"
         android:layout_centerHorizontal="true"
         >
 
-        <TextView
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="3dp"
+            android:id="@+id/linear_header"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PK"
+                android:textStyle="bold"
+                android:id="@+id/txt_short_team_one"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="vs"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AUS"
+                android:textStyle="bold"
+                android:id="@+id/txt_short_team_two"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:text="ODI"
+                android:id="@+id/txt_series"/>
+        </LinearLayout>
+        <!--<TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/txt_teamOne"
             android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"/>
-        <!--<ImageView
+            android:layout_centerVertical="true"/>-->
+        <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@null"
             android:scaleType="centerCrop"
             android:id="@+id/image_team_one"
-            android:layout_margin="20dp"
-            android:layout_alignParentLeft="true"/>-->
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_below="@id/linear_header"
+            android:layout_alignParentLeft="true"/>
 
         <TextView
             android:layout_width="100dp"
             android:layout_height="30dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_below="@id/linear_header"
+            android:layout_marginTop="10dp"
             android:text="Time"
+            android:textColor="#e10000"
             android:id="@+id/txt_time"
             android:gravity="center"/>
 
-        <TextView
+        <!--<TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/txt_teamTwo"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"/>
-        <!--<ImageView
+            android:layout_centerVertical="true"/>-->
+        <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_marginTop="5dp"
             android:background="@null"
             android:scaleType="centerCrop"
             android:id="@+id/image_team_two"
-            android:layout_margin="20dp"
-            android:layout_alignParentRight="true"/>-->
+            android:layout_below="@id/linear_header"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"/>
     </RelativeLayout>
 </RelativeLayout>

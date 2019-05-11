@@ -296,6 +296,57 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
+    public List<Datum> getPlayersByIdSkills(String teamId1, String teamId2,String skills){
+        List<Datum> list=new ArrayList<>();
+        Cursor c = null ;
+        try {
+
+            String query = "SELECT * FROM " + TBL_PLAYERS +" WHERE "+team_id+" IN ('"+teamId1+"' , '"+teamId2+"') AND "+skill+" = '"+skills+"'";
+
+            SQLiteDatabase db = this.getReadableDatabase();
+            Log.e("SQLiteDatabase",query);
+            c = db.rawQuery(query, null);
+
+            if (c.moveToFirst()) {
+                do {
+                    Datum datum=new Datum();
+                    datum.setTeamId(c.getInt(c.getColumnIndex(team_id)));
+                    datum.setTeamName(c.getString(c.getColumnIndex(team_name)));
+                    datum.setPlayerId(c.getInt(c.getColumnIndex(player_id)));
+                    datum.setName(c.getString(c.getColumnIndex(name)));
+                    datum.setGame(c.getString(c.getColumnIndex(game)));
+                    datum.setPicUrl(c.getString(c.getColumnIndex(pic_url)));
+                    datum.setPlaysFor(c.getString(c.getColumnIndex(plays_for)));
+                    datum.setSkill(c.getString(c.getColumnIndex(skill)));
+                    datum.setStyle(c.getString(c.getColumnIndex(style)));
+                    datum.setRuns(c.getString(c.getColumnIndex(runs)));
+                    datum.setAvg(c.getString(c.getColumnIndex(avg)));
+                    datum.setHundreds(c.getString(c.getColumnIndex(hundreds)));
+                    datum.setFifties(c.getString(c.getColumnIndex(fifties)));
+                    datum.setSr(c.getString(c.getColumnIndex(sr)));
+                    datum.setWkt(c.getString(c.getColumnIndex(wkt)));
+                    datum.setPrice(c.getString(c.getColumnIndex(price)));
+                    datum.setCd(c.getString(c.getColumnIndex(cd)));
+                    datum.setMd(c.getString(c.getColumnIndex(md)));
+
+                    list.add(datum);
+
+                } while (c.moveToNext());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally{
+            if(c!=null)
+                c.close();
+
+        }
+        return list;
+    }
+
+
+
     public long saveMyTeam(PlayerBean bean) {
         // Gets the data repository in write mode
         long processId = 0;

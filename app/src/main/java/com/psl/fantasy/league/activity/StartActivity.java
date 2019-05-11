@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -15,8 +16,11 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.psl.fantasy.league.R;
 import com.psl.fantasy.league.Utils.Helper;
+import com.psl.fantasy.league.adapter.ImageAdapter;
+import com.psl.fantasy.league.fragment.BalanceFragment;
 import com.psl.fantasy.league.fragment.DashboardFragment;
 import com.psl.fantasy.league.fragment.FragmentPrizes;
+import com.psl.fantasy.league.fragment.MoreFragment;
 import com.psl.fantasy.league.fragment.MyMatchesFragment;
 import com.psl.fantasy.league.fragment.TeamFragment;
 
@@ -29,7 +33,7 @@ public class StartActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
     private Fragment fragment;
-
+    private ViewPager viewPage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,24 +52,32 @@ public class StartActivity extends AppCompatActivity {
                         ft.replace(R.id.main_content,fragment);
                         ft.commit();
                         return true;
-                    case R.id.my_matches:
+                    case R.id.my_details:
                         fragment=new MyMatchesFragment();
                         FragmentTransaction ft_dash=getSupportFragmentManager().beginTransaction();
                         ft_dash.replace(R.id.main_content,fragment);
                         ft_dash.commit();
                         return true;
-                    case R.id.prizes:
+                    /*case R.id.prizes:
                         fragment=new FragmentPrizes();
                         FragmentTransaction ft_prizes=getSupportFragmentManager().beginTransaction();
                         ft_prizes.replace(R.id.main_content,fragment);
                         ft_prizes.commit();
-                        return true;
-                    /*case R.id.navigation_dashboard:
-                        mTextMessage.setText(R.string.title_dashboard);
-                        return true;
-                    case R.id.navigation_notifications:
-                        mTextMessage.setText(R.string.title_notifications);
                         return true;*/
+
+                    case R.id.balance:
+                        fragment=new BalanceFragment();
+                        FragmentTransaction ft_bal=getSupportFragmentManager().beginTransaction();
+                        ft_bal.replace(R.id.main_content,fragment);
+                        ft_bal.commit();
+                        return true;
+
+                    case R.id.more:
+                        fragment=new MoreFragment();
+                        FragmentTransaction ft_more=getSupportFragmentManager().beginTransaction();
+                        ft_more.replace(R.id.main_content,fragment);
+                        ft_more.commit();
+                        return true;
                 }
                 return false;
             }

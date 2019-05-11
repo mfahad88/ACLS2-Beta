@@ -54,9 +54,7 @@ public class MyMatchesFragment extends Fragment {
         TextView txt_error=mView.findViewById(R.id.txt_error);
         ProgressBar progressBar=mView.findViewById(R.id.progressBar);
         list=new ArrayList<>();
-        /*list.add(new MyMatchesBean(1,1001,2001,"Karachi","Sirilanka","Completed",""));
-        list.add(new MyMatchesBean(2,1002,2002,"West indies","Sirilanka","Upcoming",""));
-        list.add(new MyMatchesBean(3,1003,2003,"West indies","Sirilanka","live",""));*/
+
         if(Helper.getUserSession(preferences,"MyUser")==null) {
             File file=new File(Environment.getExternalStorageDirectory()+File.separator+"ACL","user.txt");
             if(file.exists()) {

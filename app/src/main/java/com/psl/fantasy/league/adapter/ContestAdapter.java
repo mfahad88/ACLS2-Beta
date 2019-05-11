@@ -72,9 +72,9 @@ public class ContestAdapter extends BaseAdapter {
             btn_pay.setText(bean.getActual_price());
         }
         progressBar.setProgress(bean.getProgress());
-        txt_spots_left.setText(bean.getSpots_left());
+        txt_spots_left.setText(bean.getSpots_left()+" spots left");
         txt_price.setText(bean.getPrice());
-        txt_winners.setText(bean.getWinners());
+        txt_winners.setText(bean.getWinners()+" Winners");
         txt_contest_type_one.setText(bean.getContest_type());
         if(bean.getMultiple().equalsIgnoreCase("1")) {
             txt_multi.setText("M");

@@ -41,7 +41,7 @@ public class Datum {
     private String winners;
     @SerializedName("contest_type")
     @Expose
-    private String contestType;
+    private String contestType;  //1 mega 2 expert 3 beginner
     @SerializedName("winning_points")
     @Expose
     private String winningPoints;
