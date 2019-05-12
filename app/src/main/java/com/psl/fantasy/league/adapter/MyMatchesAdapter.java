@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +71,9 @@ public class MyMatchesAdapter extends ArrayAdapter<MyMatchesBean> {
                 bundle.putInt("userId",bean.getUserId());
                 bundle.putInt("matchId",bean.getMatch_id());
                 fragment.setArguments(bundle);
-                FragmentTransaction ft=((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
+                AppCompatActivity activity=(AppCompatActivity)context;
+                FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
+//                FragmentTransaction ft=((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.main_content,fragment);
                 ft.commit();
             }

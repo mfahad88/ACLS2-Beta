@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,8 +76,9 @@ public class BalanceFragment extends Fragment {
         }
     }
     public void replaceFragment(Fragment fragment) {
-
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        AppCompatActivity activity=(AppCompatActivity)mView.getContext();
+//        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.frame_container, fragment);
         //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.commit();

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
@@ -94,7 +95,9 @@ public class ContestAdapter extends BaseAdapter {
                 bundle.putInt("teamId1",teamId1);
                 bundle.putInt("teamId2",teamId2);
                 fragment.setArguments(bundle);
-                FragmentTransaction ft=((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
+                AppCompatActivity activity=(AppCompatActivity)context;
+                FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
+//                FragmentTransaction ft=((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.main_content,fragment);
                 ft.commit();
             }

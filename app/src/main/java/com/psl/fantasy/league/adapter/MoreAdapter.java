@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,9 @@ public class MoreAdapter extends ArrayAdapter {
         convertView=LayoutInflater.from(context).inflate(resource,null);
         TextView txt_item=convertView.findViewById(R.id.txt_item);
         txt_item.setText(objects[position].toString());
-        FragmentTransaction ft =((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
+        AppCompatActivity activity=(AppCompatActivity)context;
+        FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
+//        FragmentTransaction ft =((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

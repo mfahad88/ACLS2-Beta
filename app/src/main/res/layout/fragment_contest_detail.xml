@@ -11,6 +11,7 @@
         android:layout_height="match_parent"
         android:padding="15dp"
         android:divider="@null"
+        android:elevation="5dp"
         android:dividerHeight="10dp"
         android:id="@+id/list_contest"></ListView>
 

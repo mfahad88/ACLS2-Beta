@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,7 +74,9 @@ public class JoinedContestAdapter extends ArrayAdapter<JoinedContestBean> {
                 Bundle bundle=new Bundle();
                 bundle.putInt("contestId",bean.getContestId());
                 bundle.putInt("userId",bean.getUserId());
-                FragmentTransaction ft=((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
+                AppCompatActivity activity=(AppCompatActivity)context;
+                FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
+//                FragmentTransaction ft=((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
                 fragment.setArguments(bundle);
                 ft.replace(R.id.main_content,fragment);
                 ft.commit();

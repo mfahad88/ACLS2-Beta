@@ -2,14 +2,16 @@ package com.psl.fantasy.league.adapter;
 
 
 import android.annotation.SuppressLint;
-import android.app.Fragment;
+
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -172,7 +174,11 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
                                 String formattedDate = outputFormatter.format(date);
                                 try {
                                     Date date1=sdf.parse(formattedDate);
-
+                                    /*Long diff=date1.getTime()-new Date().getTime();
+                                    long diffSeconds = diff / 1000 % 60;
+                                    long diffMinutes = diff / (60 * 1000) % 60;
+                                    long diffHours = diff / (60 * 60 * 1000) % 24;
+                                    txt_time.setText(diffHours+":"+diffMinutes+":"+diffSeconds+" Left");*/
                                     txt_time.setText(date1.toString()+" Left");
                                 } catch (ParseException e) {
                                     e.printStackTrace();
@@ -195,7 +201,9 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
                     bundle.putInt("TeamId1",bean.getTeam_id1());
                     bundle.putInt("TeamId2",bean.getTeam_id2());
                     fragment.setArguments(bundle);
-                    FragmentTransaction ft=((FragmentActivity)context).getFragmentManager().beginTransaction();
+                    AppCompatActivity activity=(AppCompatActivity)context;
+                    //FragmentTransaction ft=((FragmentActivity)context).getFragmentManager().beginTransaction();
+                    android.support.v4.app.FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
                     ft.replace(R.id.main_content,fragment);
                     ft.commit();
                 }
