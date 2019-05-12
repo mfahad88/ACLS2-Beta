@@ -25,6 +25,7 @@ import com.psl.fantasy.league.R;
 import com.psl.fantasy.league.Utils.Helper;
 import com.psl.fantasy.league.adapter.PageAdapter;
 import com.psl.fantasy.league.interfaces.FragmentInterface;
+import com.psl.fantasy.league.interfaces.FragmentToActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,17 +54,28 @@ public class TeamFragment extends Fragment {
     private Button btn_done;
     int teamId1; int teamId2;
     SharedPreferences preferences;
+    FragmentToActivity mCallback;
     public TeamFragment() {
         // Required empty public constructor
     }
 
-
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mCallback = (FragmentToActivity) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement FragmentToActivity");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mView=inflater.inflate(R.layout.fragment_team, container, false);
+        mCallback.communicate("TeamFragment");
         if(getArguments()!=null){
             contestId=getArguments().getInt("contestId");
             teamId1=getArguments().getInt("teamId1");

@@ -23,23 +23,29 @@ import com.psl.fantasy.league.fragment.FragmentPrizes;
 import com.psl.fantasy.league.fragment.MoreFragment;
 import com.psl.fantasy.league.fragment.MyMatchesFragment;
 import com.psl.fantasy.league.fragment.TeamFragment;
+import com.psl.fantasy.league.interfaces.FragmentToActivity;
 
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-public class StartActivity extends AppCompatActivity {
+public class StartActivity extends AppCompatActivity implements FragmentToActivity {
 
     private TextView mTextMessage;
     private Fragment fragment;
     private ViewPager viewPage;
+    private TextView txt_bullet_1,txt_bullet_2,txt_bullet_3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
         mTextMessage = (TextView) findViewById(R.id.message);
+        txt_bullet_1 = findViewById(R.id.txt_bullet_1);
+        txt_bullet_2 = findViewById(R.id.txt_bullet_2);
+        txt_bullet_3 = findViewById(R.id.txt_bullet_3);
+
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
 
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -86,4 +92,19 @@ public class StartActivity extends AppCompatActivity {
         navigation.setSelectedItemId(R.id.navigation_home);
     }
 
+    @Override
+    public void communicate(String comm) {
+        if(comm.equalsIgnoreCase("DashboardFragment")){
+            txt_bullet_1.setEnabled(false);
+        }if(comm.equalsIgnoreCase("ContestFragment")){
+            txt_bullet_2.setEnabled(false);
+        }if(comm.equalsIgnoreCase("TeamFragment")){
+            txt_bullet_3.setEnabled(false);
+        }if(comm.equalsIgnoreCase("disable")){
+            txt_bullet_1.setEnabled(true);
+            txt_bullet_2.setEnabled(true);
+            txt_bullet_3.setEnabled(true);
+        }
+
+    }
 }

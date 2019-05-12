@@ -2,6 +2,7 @@ package com.psl.fantasy.league.fragment;
 
 
 
+import android.content.Context;
 import android.os.Bundle;
 
 
@@ -20,6 +21,7 @@ import com.psl.fantasy.league.R;
 import com.psl.fantasy.league.Utils.Helper;
 import com.psl.fantasy.league.adapter.ContestAdapter;
 import com.psl.fantasy.league.client.ApiClient;
+import com.psl.fantasy.league.interfaces.FragmentToActivity;
 import com.psl.fantasy.league.model.response.Contest.ContestResponse;
 import com.psl.fantasy.league.model.response.Contest.Datum;
 import com.psl.fantasy.league.model.ui.ContestBean;
@@ -47,8 +49,19 @@ public class ContestFragment extends Fragment {
     private ProgressBar progressBar;
     private TextView txt_status,txt_cat1,txt_cat2,txt_cat3,txt_view_more_mega,txt_view_more_expert,txt_view_more_beginner;
     int counter_mega=0; int counter_expert=0; int counter_beginner=0;
+    private FragmentToActivity mCallback;
     public ContestFragment() {
         // Required empty public constructor
+    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mCallback = (FragmentToActivity) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement FragmentToActivity");
+        }
     }
 
 
@@ -69,6 +82,7 @@ public class ContestFragment extends Fragment {
         list_contest_2=mView.findViewById(R.id.list_contest_2);
         list_contest_3=mView.findViewById(R.id.list_contest_3);
         txt_status=mView.findViewById(R.id.txt_status);
+        mCallback.communicate("ContestFragment");
         try {
             if(getArguments()!=null) {
 

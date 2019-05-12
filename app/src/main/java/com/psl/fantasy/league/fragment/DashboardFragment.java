@@ -1,6 +1,7 @@
 package com.psl.fantasy.league.fragment;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -17,6 +18,7 @@ import com.psl.fantasy.league.Utils.Helper;
 import com.psl.fantasy.league.adapter.FixtureAdapter;
 import com.psl.fantasy.league.adapter.ImageAdapter;
 import com.psl.fantasy.league.client.ApiClient;
+import com.psl.fantasy.league.interfaces.FragmentToActivity;
 import com.psl.fantasy.league.model.response.Matches.Datum;
 import com.psl.fantasy.league.model.response.Matches.MatchesResponse;
 
@@ -40,9 +42,24 @@ public class DashboardFragment extends Fragment {
     private View mView;
     private TextView txt_status;
     private ProgressBar progressBar;
+    private FragmentToActivity mCallback;
 
     public DashboardFragment() {
         // Required empty public constructor
+    }
+
+
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mCallback = (FragmentToActivity) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement FragmentToActivity");
+        }
     }
 
 
@@ -53,7 +70,8 @@ public class DashboardFragment extends Fragment {
         mView=inflater.inflate(R.layout.fragment_dashboard, container, false);
         init();
         try{
-
+            mCallback.communicate("disable");
+            mCallback.communicate("DashboardFragment");
             JSONObject object=new JSONObject();
             object.put("method_Name",this.getClass().getSimpleName()+".onCreateView");
             ApiClient.getInstance().matches(Helper.encrypt(object.toString()))
