@@ -195,8 +195,8 @@ public class ContestFragment extends Fragment {
                                                         txt_cat1.setText("Mega Contest");
 
                                                         if(counter_mega<3) {
-//                                                            int percent=((datum.getPool()-datum.getPoolConsumed())/datum.getPoolConsumed())*100;
-                                                            int percent=datum.getPoolConsumed();
+                                                            int percent=((datum.getPoolConsumed()*datum.getPool())/100);
+//                                                            int percent=datum.getPoolConsumed();
                                                             txt_cat1.setVisibility(View.VISIBLE);
                                                             list.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
                                                                     , String.valueOf(datum.getPool()),datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
@@ -218,8 +218,8 @@ public class ContestFragment extends Fragment {
                                                         txt_cat2.setText("Expert Contest");
 
                                                         if(counter_expert<3) {
-//                                                            int percent=((datum.getPool()-datum.getPoolConsumed())/datum.getPoolConsumed())*100;
-                                                            int percent=datum.getPoolConsumed();
+                                                            int percent=((datum.getPoolConsumed()*datum.getPool())/100);
+//                                                            int percent=datum.getPoolConsumed();
                                                             txt_cat2.setVisibility(View.VISIBLE);
                                                             list_expert.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
                                                                    ,String.valueOf(datum.getPool()) , datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
@@ -239,8 +239,8 @@ public class ContestFragment extends Fragment {
                                                         txt_cat3.setText("Beginner Contest");
 
                                                         if(counter_beginner<3) {
-//                                                            int percent=((datum.getPool()-datum.getPoolConsumed())/datum.getPoolConsumed())*100;
-                                                            int percent=datum.getPoolConsumed();
+                                                            int percent=((datum.getPoolConsumed()*datum.getPool())/100);
+//                                                            int percent=datum.getPoolConsumed();
                                                             txt_cat3.setVisibility(View.VISIBLE);
                                                             list_beginner.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
                                                                     ,String.valueOf(datum.getPool()), datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));

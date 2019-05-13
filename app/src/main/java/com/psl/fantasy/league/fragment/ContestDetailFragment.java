@@ -69,7 +69,7 @@ public class ContestDetailFragment extends Fragment {
                             for (Datum datum : response.body().getData()) {
                                 if(datum.getPoolConsumed()>0){
                                     if (datum.getContestType().equalsIgnoreCase(String.valueOf(contest_type))) {
-                                        int percent = ((datum.getPool() - datum.getPoolConsumed()) / datum.getPoolConsumed()) * 100;
+                                        int percent=((datum.getPoolConsumed()*datum.getPool())/100);
                                         list.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
                                                 , String.valueOf(datum.getPool()),datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
                                         ContestAdapter adapter = new ContestAdapter(mView.getContext(), R.layout.list_contest, list, TeamId1, TeamId2);

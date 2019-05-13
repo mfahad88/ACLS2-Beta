@@ -3,13 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:windowBackground"
+    android:background="#e2e2e2"
     tools:context=".fragment.ContestDetailFragment">
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:divider="@null"
         android:elevation="5dp"
         android:dividerHeight="10dp"
