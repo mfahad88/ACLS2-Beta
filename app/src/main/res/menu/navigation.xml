@@ -3,19 +3,23 @@
 
     <item
         android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_black_24dp"
         android:title="@string/title_home" />
 
     <item
         android:id="@+id/my_details"
-        android:title="My Details" />
+        android:icon="@drawable/trophy"
+        android:title="My Matches" />
 
     <item
         android:id="@+id/balance"
+        android:icon="@drawable/loan_money"
         android:title="Balance" />
 
     <item
         android:id="@+id/more"
-        android:title="more"/>
+        android:icon="@drawable/more"
+        android:title="More"/>
     <!--<item
         android:id="@+id/navigation_dashboard"
         android:icon="@drawable/ic_dashboard_black_24dp"

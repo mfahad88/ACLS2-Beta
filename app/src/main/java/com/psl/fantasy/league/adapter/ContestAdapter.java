@@ -62,6 +62,7 @@ public class ContestAdapter extends BaseAdapter {
         TextView txt_contest_type_one=convertView.findViewById(R.id.txt_contest_type_one);
         TextView txt_confirm_winning=convertView.findViewById(R.id.txt_confirm_winning);
         TextView txt_multi=convertView.findViewById(R.id.txt_multi);
+        TextView txt_pool=convertView.findViewById(R.id.txt_pool);
         if(Integer.parseInt(bean.getDiscount())>0){
             txt_discount.setVisibility(View.VISIBLE);
             StrikethroughSpan strikethroughSpan = new StrikethroughSpan();
@@ -72,6 +73,7 @@ public class ContestAdapter extends BaseAdapter {
         }else{
             btn_pay.setText(bean.getActual_price());
         }
+        txt_pool.setText(bean.getSpots()+" Spots");
         progressBar.setProgress(bean.getProgress());
         txt_spots_left.setText(bean.getSpots_left()+" spots left");
         txt_price.setText(bean.getPrice());

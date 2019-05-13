@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.psl.fantasy.league.model.response.Contest.ContestResponse;
 import com.psl.fantasy.league.model.response.Contest.Datum;
 import com.psl.fantasy.league.model.ui.ContestBean;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -50,6 +52,7 @@ public class ContestFragment extends Fragment {
     private TextView txt_status,txt_cat1,txt_cat2,txt_cat3,txt_view_more_mega,txt_view_more_expert,txt_view_more_beginner;
     int counter_mega=0; int counter_expert=0; int counter_beginner=0;
     private FragmentToActivity mCallback;
+    private SwipeRefreshLayout pullToRefresh;
     public ContestFragment() {
         // Required empty public constructor
     }
@@ -82,6 +85,7 @@ public class ContestFragment extends Fragment {
         list_contest_2=mView.findViewById(R.id.list_contest_2);
         list_contest_3=mView.findViewById(R.id.list_contest_3);
         txt_status=mView.findViewById(R.id.txt_status);
+        pullToRefresh=mView.findViewById(R.id.pullToRefresh);
         mCallback.communicate("ContestFragment");
         try {
             if(getArguments()!=null) {
@@ -90,6 +94,14 @@ public class ContestFragment extends Fragment {
                 TeamId1=getArguments().getInt("TeamId1");
                 TeamId2=getArguments().getInt("TeamId2");
             }
+            pullToRefresh.setVisibility(View.VISIBLE);
+            pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    populateContest();
+                    pullToRefresh.setRefreshing(false);
+                }
+            });
 
             txt_view_more_mega.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -144,6 +156,19 @@ public class ContestFragment extends Fragment {
                 }
             });
 
+            populateContest();
+
+
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return mView;
+    }
+
+    public void populateContest(){
+        try{
             JSONObject object=new JSONObject();
             object.put("match_id",match_id);
             object.put("method_Name",this.getClass().getSimpleName()+".onCreateView");
@@ -170,10 +195,11 @@ public class ContestFragment extends Fragment {
                                                         txt_cat1.setText("Mega Contest");
 
                                                         if(counter_mega<3) {
-                                                            int percent=((datum.getPool()-datum.getPoolConsumed())/datum.getPoolConsumed())*100;
+//                                                            int percent=((datum.getPool()-datum.getPoolConsumed())/datum.getPoolConsumed())*100;
+                                                            int percent=datum.getPoolConsumed();
                                                             txt_cat1.setVisibility(View.VISIBLE);
-                                                             list.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
-                                                                    , datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
+                                                            list.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
+                                                                    , String.valueOf(datum.getPool()),datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
                                                             list_contest_1.setVisibility(View.VISIBLE);
                                                             ContestAdapter adapter=new ContestAdapter(mView.getContext(),R.layout.list_contest,list,TeamId1,TeamId2);
                                                             list_contest_1.setAdapter(adapter);
@@ -192,10 +218,11 @@ public class ContestFragment extends Fragment {
                                                         txt_cat2.setText("Expert Contest");
 
                                                         if(counter_expert<3) {
-                                                            int percent=((datum.getPool()-datum.getPoolConsumed())/datum.getPoolConsumed())*100;
+//                                                            int percent=((datum.getPool()-datum.getPoolConsumed())/datum.getPoolConsumed())*100;
+                                                            int percent=datum.getPoolConsumed();
                                                             txt_cat2.setVisibility(View.VISIBLE);
                                                             list_expert.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
-                                                                    , datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
+                                                                   ,String.valueOf(datum.getPool()) , datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
                                                             list_contest_2.setVisibility(View.VISIBLE);
                                                             ContestAdapter adapter=new ContestAdapter(mView.getContext(),R.layout.list_contest,list_expert,TeamId1,TeamId2);
                                                             list_contest_2.setAdapter(adapter);
@@ -212,10 +239,11 @@ public class ContestFragment extends Fragment {
                                                         txt_cat3.setText("Beginner Contest");
 
                                                         if(counter_beginner<3) {
-                                                            int percent=((datum.getPool()-datum.getPoolConsumed())/datum.getPoolConsumed())*100;
+//                                                            int percent=((datum.getPool()-datum.getPoolConsumed())/datum.getPoolConsumed())*100;
+                                                            int percent=datum.getPoolConsumed();
                                                             txt_cat3.setVisibility(View.VISIBLE);
                                                             list_beginner.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
-                                                                    , datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
+                                                                    ,String.valueOf(datum.getPool()), datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
                                                             list_contest_3.setVisibility(View.VISIBLE);
                                                             ContestAdapter adapter=new ContestAdapter(mView.getContext(),R.layout.list_contest,list_beginner,TeamId1,TeamId2);
                                                             list_contest_3.setAdapter(adapter);
@@ -242,20 +270,9 @@ public class ContestFragment extends Fragment {
                             Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
                         }
                     });
-
-          //if hardcoded data
-            /*list.add(new ContestBean(1,"20",20,"10,000 spots left","40 winners","4000","5000","S","C","A"));
-            list.add(new ContestBean(2,"40",40,"10,000 spots left","40 winners","0","5000","M","C","B"));
-            list.add(new ContestBean(3,"60",60,"10,000 spots left","40 winners","0","5000","M","N","B"));
-            list.add(new ContestBean(4,"100",80,"10,000 spots left","40 winners","0","5000","M","N","B"));
-            list.add(new ContestBean(5 ,"120",100,"10,000 spots left","40 winners","0","5000","M","N","B"));
-            ContestAdapter adapter=new ContestAdapter(mView.getContext(),R.layout.list_contest,list);
-            list_contest.setAdapter(adapter);*/
-
-        }catch (Exception e){
+        }catch (JSONException e){
             e.printStackTrace();
         }
-        return mView;
     }
 
 }

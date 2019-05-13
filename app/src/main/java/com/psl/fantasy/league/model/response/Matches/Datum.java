@@ -3,6 +3,9 @@ package com.psl.fantasy.league.model.response.Matches;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
+
 public class Datum {
 
     @SerializedName("match_id")
@@ -25,7 +28,7 @@ public class Datum {
     private String vernue;
     @SerializedName("start_date")
     @Expose
-    private String startDate;
+    private Date startDate;
     @SerializedName("end_date")
     @Expose
     private String endDate;
@@ -99,11 +102,11 @@ public class Datum {
         this.vernue = vernue;
     }
 
-    public String getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 

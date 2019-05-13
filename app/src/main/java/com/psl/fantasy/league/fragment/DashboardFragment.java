@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.psl.fantasy.league.model.response.Matches.MatchesResponse;
 
 import com.psl.fantasy.league.model.ui.MatchesBean;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -43,6 +45,7 @@ public class DashboardFragment extends Fragment {
     private TextView txt_status;
     private ProgressBar progressBar;
     private FragmentToActivity mCallback;
+    private SwipeRefreshLayout pullToRefresh;
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -72,6 +75,36 @@ public class DashboardFragment extends Fragment {
         try{
             mCallback.communicate("disable");
             mCallback.communicate("DashboardFragment");
+            pullToRefresh.setVisibility(View.VISIBLE);
+
+            populateMatches();
+
+            pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    populateMatches();
+                    pullToRefresh.setRefreshing(false);
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return mView;
+    }
+
+    private void init(){
+        progressBar=mView.findViewById(R.id.progressBar);
+        list_matches=mView.findViewById(R.id.list_matches);
+        list=new ArrayList<>();
+        txt_status=mView.findViewById(R.id.txt_status);
+        ViewPager viewPage=mView.findViewById(R.id.viewPage);
+        ImageAdapter adapter=new ImageAdapter(mView.getContext());
+        viewPage.setAdapter(adapter);
+        pullToRefresh=mView.findViewById(R.id.pullToRefresh);
+    }
+
+    public void populateMatches(){
+        try{
             JSONObject object=new JSONObject();
             object.put("method_Name",this.getClass().getSimpleName()+".onCreateView");
             ApiClient.getInstance().matches(Helper.encrypt(object.toString()))
@@ -104,30 +137,8 @@ public class DashboardFragment extends Fragment {
                             Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
                         }
                     });
-
-
-            /*list_matches.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Fragment fragment=new ContestFragment();
-                    FragmentTransaction ft=getFragmentManager().beginTransaction();
-                    ft.replace(R.id.main_content,fragment);
-                    ft.commit();
-                }
-            });*/
-        }catch (Exception e){
+        }catch (JSONException e){
             e.printStackTrace();
         }
-        return mView;
-    }
-
-    private void init(){
-        progressBar=mView.findViewById(R.id.progressBar);
-        list_matches=mView.findViewById(R.id.list_matches);
-        list=new ArrayList<>();
-        txt_status=mView.findViewById(R.id.txt_status);
-        ViewPager viewPage=mView.findViewById(R.id.viewPage);
-        ImageAdapter adapter=new ImageAdapter(mView.getContext());
-        viewPage.setAdapter(adapter);
     }
 }

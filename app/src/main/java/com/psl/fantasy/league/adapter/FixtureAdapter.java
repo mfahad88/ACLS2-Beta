@@ -69,8 +69,7 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
         Drawable drawable = null,drawable2 = null;
         ImageView image_team_one = convertView.findViewById(R.id.image_team_one);
         ImageView image_team_two = convertView.findViewById(R.id.image_team_two);
-        /*TextView txt_teamOne=convertView.findViewById(R.id.txt_teamOne);
-        TextView txt_teamTwo=convertView.findViewById(R.id.txt_teamTwo);*/
+
         TextView txt_short_team_one=convertView.findViewById(R.id.txt_short_team_one);
         TextView txt_short_team_two=convertView.findViewById(R.id.txt_short_team_two);
         TextView txt_series=convertView.findViewById(R.id.txt_series);
@@ -79,8 +78,7 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
         try{
             txt_short_team_one.setText(bean.getTeamOne());
             txt_short_team_two.setText(bean.getTeamTwo());
-            /*txt_teamOne.setText(bean.getTeamOne());
-            txt_teamTwo.setText(bean.getTeamTwo());*/
+
             if(bean.getTeamOne().trim().equals("Pakistan")){
                 drawable= context.getDrawable(R.drawable.pakistan);
                 image_team_one.setImageDrawable(drawable);
@@ -153,8 +151,7 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
             }
             Log.e("West", String.valueOf(bean.getTeamOne()));
 
-//            Glide.with(context).load(drawable).into(image_team_one);
-//            Glide.with(context).load(drawable2).into(image_team_two);
+
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -167,20 +164,28 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
                         txt_time.post(new Runnable() {
                             @Override
                             public void run() {
-                                DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+                                SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                               /* DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
                                 DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.ENGLISH);
 
                                 LocalDateTime date = LocalDateTime.parse(bean.getTime().replace("+0000","Z"), inputFormatter);
                                 String formattedDate = outputFormatter.format(date);
                                 try {
                                     Date date1=sdf.parse(formattedDate);
-                                    /*Long diff=date1.getTime()-new Date().getTime();
+                                    *//*Long diff=date1.getTime()-new Date().getTime();
                                     long diffSeconds = diff / 1000 % 60;
                                     long diffMinutes = diff / (60 * 1000) % 60;
                                     long diffHours = diff / (60 * 60 * 1000) % 24;
-                                    txt_time.setText(diffHours+":"+diffMinutes+":"+diffSeconds+" Left");*/
+                                    txt_time.setText(diffHours+":"+diffMinutes+":"+diffSeconds+" Left");*//*
                                     txt_time.setText(date1.toString()+" Left");
                                 } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }*/
+                                try {
+
+
+                                    txt_time.setText( bean.getTime().toString()+ " Left");
+                                }catch (Exception e){
                                     e.printStackTrace();
                                 }
 
@@ -214,4 +219,38 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
 
         return convertView;
     }
+
+    public String showDifference(String date1){
+        String dateStart = new Date().toString();
+        String dateStop = date1;
+        String dateFinal = "";
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        Date d1 = null;
+        Date d2 = null;
+
+        try {
+            d1 = format.parse(dateStart);
+            d2 = format.parse(dateStop);
+
+
+            long diff = d2.getTime() - d1.getTime();
+
+            long diffSeconds = diff / 1000 % 60;
+            long diffMinutes = diff / (60 * 1000) % 60;
+            long diffHours = diff / (60 * 60 * 1000) % 24;
+            long diffDays = diff / (24 * 60 * 60 * 1000);
+
+            System.out.print(diffDays + " days, ");
+            System.out.print(diffHours + " hours, ");
+            System.out.print(diffMinutes + " minutes, ");
+            System.out.print(diffSeconds + " seconds.");
+            dateFinal=diffDays + " days, "+diffHours + " hours, "+diffMinutes + " minutes, "+diffSeconds + " seconds.";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dateFinal;
+    }
+
 }

@@ -47,7 +47,6 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
         txt_bullet_3 = findViewById(R.id.txt_bullet_3);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {

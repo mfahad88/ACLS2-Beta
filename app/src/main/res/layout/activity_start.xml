@@ -38,13 +38,42 @@
                 android:textColor="@android:color/white"
                 android:text="Apni Cricket League"/>
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/bell_notification"
+            <LinearLayout
+                android:id="@+id/iv_nc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="20dp"/>
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="5dp"
+                android:gravity="bottom">
+
+            <TextView
+                android:id="@+id/txtNotifCount"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_below="@+id/layout000"
+                android:gravity="center"
+                android:padding="1dp"
+                android:background="@drawable/deal_bg"
+                android:text="0"
+                android:textColor="#ffffff"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:translationZ="1dp" />
+
+            <LinearLayout
+                android:id="@+id/layout0001"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:layout_marginBottom="7dp"
+                android:layout_marginLeft="-22dp"
+                android:background="@drawable/bell_notification"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+            </LinearLayout>
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
@@ -60,59 +89,206 @@
     </RelativeLayout>-->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:orientation="horizontal"
-        android:gravity="center_horizontal"
         android:id="@+id/linear_status"
-        android:background="#8a004990"
+        android:background="#fff"
+        android:gravity="center_horizontal"
         android:layout_below="@id/my_toolbar">
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        >
+
+      
         <TextView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Match"
+            android:textSize="8sp"
+            android:paddingLeft="20dp"
+            android:id="@+id/txt_select_match"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_below="@id/txt_select_match"
+            android:layout_marginLeft="20dp"
             android:id="@+id/txt_bullet_1"
-            android:layout_gravity="center_vertical"
             android:background="@drawable/drawable_bullet"/>
 
         <View
-            android:layout_width="100dp"
+            android:layout_width="130dp"
             android:layout_height="2dp"
-            android:layout_gravity="center_vertical"
+            android:layout_toRightOf="@id/txt_bullet_1"
+            android:layout_below="@id/txt_select_match"
+            android:layout_marginTop="5dp"
+            android:id="@+id/view_line_1"
             android:background="#000000" />
 
         <TextView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Join Contest"
+            android:layout_marginLeft="-12dp"
+            android:id="@+id/txt_join_contest"
+            android:textSize="8sp"
+            android:textStyle="bold"
+            android:layout_toRightOf="@id/view_line_1"
+            />
+
+        <TextView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_below="@id/txt_join_contest"
             android:id="@+id/txt_bullet_2"
-            android:layout_gravity="center_vertical"
+            android:layout_toRightOf="@id/view_line_1"
             android:background="@drawable/drawable_bullet"/>
+
         <View
-            android:layout_width="100dp"
+            android:layout_width="130dp"
             android:layout_height="2dp"
-            android:layout_gravity="center_vertical"
+            android:layout_toRightOf="@id/txt_bullet_2"
+            android:layout_below="@id/txt_select_match"
+            android:layout_marginTop="5dp"
+            android:id="@+id/view_line_2"
             android:background="#000000" />
 
         <TextView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create Team"
+            android:id="@+id/txt_create_team"
+            android:layout_marginLeft="-30dp"
+            android:textSize="8sp"
+            android:textStyle="bold"
+            android:layout_toRightOf="@id/view_line_2"
+            />
+
+        <TextView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_below="@id/txt_create_team"
             android:id="@+id/txt_bullet_3"
-            android:layout_gravity="center_vertical"
+            android:layout_toRightOf="@id/view_line_2"
             android:background="@drawable/drawable_bullet"/>
+        <!--<LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/linear_line_1"
+            android:layout_toRightOf="@id/linear_select_match"
+            android:layout_centerVertical="true">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:id="@+id/txt_line1"
+                android:textStyle="bold"/>
+
+        <View
+            android:layout_width="150dp"
+            android:layout_height="2dp"
+            android:layout_gravity="center_vertical"
+            android:background="#000000" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_toRightOf="@id/linear_line_1"
+            android:id="@+id/linear_join_contet"
+            android:layout_centerVertical="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Join Contest"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                android:id="@+id/txt_join_contest"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_below="@id/txt_select_match"
+                android:layout_gravity="right"
+                android:background="@drawable/drawable_bullet"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/linear_line_2"
+            android:layout_toRightOf="@id/linear_join_contet"
+            android:layout_centerVertical="true">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:id="@+id/txt_line2"
+                android:textStyle="bold"/>
+
+            <View
+                android:layout_width="150dp"
+                android:layout_height="2dp"
+                android:layout_gravity="center_vertical"
+                android:background="#000000" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_toRightOf="@id/linear_line_2"
+            android:id="@+id/linear_create_team"
+            android:layout_centerVertical="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create Team"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                android:id="@+id/txt_create_team"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_below="@id/txt_create_team"
+                android:layout_gravity="right"
+                android:background="@drawable/drawable_bullet"/>
+
+        </LinearLayout>-->
+        
+    </RelativeLayout>
+
     </LinearLayout>
+
     <FrameLayout
+        android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/navigation"
         android:layout_below="@id/linear_status"
-        android:id="@+id/main_content"
-        android:layout_above="@id/navigation"/>
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="10dp"
+        />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
         app:labelVisibilityMode="labeled"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground"
         android:layout_alignParentBottom="true"
+        android:background="?android:attr/windowBackground"
         app:menu="@menu/navigation" />
 
 </RelativeLayout>

@@ -5,6 +5,7 @@ public class ContestBean {
     private String price;
     private int progress;
     private String spots_left;
+    private String spots;
     private String winners;
     private String discount;
     private String actual_price;
@@ -12,17 +13,27 @@ public class ContestBean {
     private String confirm_winning;
     private String contest_type;
 
-    public ContestBean(int contestId, String price, int progress, String spots_left, String winners, String discount, String actual_price, String multiple, String confirm_winning, String contest_type) {
+
+    public ContestBean(int contestId, String price, int progress, String spots_left, String spots, String winners, String discount, String actual_price, String multiple, String confirm_winning, String contest_type) {
         this.contestId = contestId;
         this.price = price;
         this.progress = progress;
         this.spots_left = spots_left;
+        this.spots = spots;
         this.winners = winners;
         this.discount = discount;
         this.actual_price = actual_price;
         this.multiple = multiple;
         this.confirm_winning = confirm_winning;
         this.contest_type = contest_type;
+    }
+
+    public String getSpots() {
+        return spots;
+    }
+
+    public void setSpots(String spots) {
+        this.spots = spots;
     }
 
     public int getContestId() {

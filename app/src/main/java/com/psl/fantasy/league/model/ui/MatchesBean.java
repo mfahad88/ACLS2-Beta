@@ -1,14 +1,17 @@
 package com.psl.fantasy.league.model.ui;
 
+
+import java.util.Date;
+
 public class MatchesBean {
     private int MatchId;
     private String TeamOne;
     private String TeamTwo;
-    private String Time;
+    private Date Time;
     private int team_id1;
     private int team_id2;
 
-    public MatchesBean(int matchId, String teamOne, String teamTwo, String time, int team_id1, int team_id2) {
+    public MatchesBean(int matchId, String teamOne, String teamTwo, Date time, int team_id1, int team_id2) {
         MatchId = matchId;
         TeamOne = teamOne;
         TeamTwo = teamTwo;
@@ -41,11 +44,11 @@ public class MatchesBean {
         TeamTwo = teamTwo;
     }
 
-    public String getTime() {
+    public Date getTime() {
         return Time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Date time) {
         Time = time;
     }
 

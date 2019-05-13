@@ -1,6 +1,7 @@
 package com.psl.fantasy.league.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,14 +55,84 @@ public class MyMatchesAdapter extends ArrayAdapter<MyMatchesBean> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView=LayoutInflater.from(context).inflate(resource,null);
-        TextView txt_teamOne=convertView.findViewById(R.id.txt_teamOne);
-        TextView txt_teamTwo=convertView.findViewById(R.id.txt_teamTwo);
-        TextView txt_match_status=convertView.findViewById(R.id.txt_match_status);
+        Drawable drawable;
+        ImageView image_team_one=convertView.findViewById(R.id.image_team_one);
+        ImageView image_team_two=convertView.findViewById(R.id.image_team_two);
+
         TextView txt_contest_joined=convertView.findViewById(R.id.txt_contest_joined);
         MyMatchesBean bean= list.get(position);
-        txt_teamOne.setText(bean.getTeamOne());
-        txt_teamTwo.setText(bean.getTeamTwo());
-        txt_match_status.setText(bean.getMatchStatus());
+
+        if(bean.getTeamOne().trim().equals("Pakistan")){
+            drawable= context.getDrawable(R.drawable.pakistan);
+            image_team_one.setImageDrawable(drawable);
+        }if(bean.getTeamOne().trim().equals("Bangladesh")){
+            drawable= context.getDrawable(R.drawable.bangladesh);
+            image_team_one.setImageDrawable(drawable);
+        }if(bean.getTeamOne().trim().equals("India")){
+            drawable= context.getDrawable(R.drawable.india);
+            image_team_one.setImageDrawable(drawable);
+        }if(bean.getTeamOne().trim().equals("Sri Lanka")){
+            drawable= context.getDrawable(R.drawable.srilanka);
+            image_team_one.setImageDrawable(drawable);
+        }if(bean.getTeamOne().trim().equals("Australia")){
+            drawable= context.getDrawable(R.drawable.australia);
+            image_team_one.setImageDrawable(drawable);
+        }if(bean.getTeamOne().trim().equals("Afghanistan")){
+            drawable= context.getDrawable(R.drawable.afghanistan);
+            image_team_one.setImageDrawable(drawable);
+        }if(bean.getTeamOne().trim().equals("South Africa")){
+            drawable= context.getDrawable(R.drawable.southafrica);
+            image_team_one.setImageDrawable(drawable);
+        }if(bean.getTeamOne().trim().equals("England")){
+            drawable= context.getDrawable(R.drawable.england);
+            image_team_one.setImageDrawable(drawable);
+        }if(bean.getTeamOne().trim().equals("India")){
+            drawable= context.getDrawable(R.drawable.india);
+            image_team_one.setImageDrawable(drawable);
+        }if(bean.getTeamOne().trim().equals("New Zealand")){
+            drawable= context.getDrawable(R.drawable.newzealand);
+            image_team_one.setImageDrawable(drawable);
+        }if(bean.getTeamOne().trim().equals("West Indies")){
+            drawable= context.getDrawable(R.drawable.westindies);
+            image_team_one.setImageDrawable(drawable);
+        }
+
+
+        if(bean.getTeamTwo().trim().equals("Pakistan")){
+            drawable= context.getDrawable(R.drawable.pakistan);
+            image_team_two.setImageDrawable(drawable);
+        }if(bean.getTeamTwo().trim().equals("Bangladesh")){
+            drawable= context.getDrawable(R.drawable.bangladesh);
+            image_team_two.setImageDrawable(drawable);
+        }if(bean.getTeamTwo().trim().equals("India")){
+            drawable= context.getDrawable(R.drawable.india);
+            image_team_two.setImageDrawable(drawable);
+        }if(bean.getTeamTwo().trim().equals("Sri Lanka")){
+            drawable= context.getDrawable(R.drawable.srilanka);
+            image_team_two.setImageDrawable(drawable);
+        }if(bean.getTeamTwo().trim().equals("Australia")){
+            drawable= context.getDrawable(R.drawable.australia);
+            image_team_two.setImageDrawable(drawable);
+        }if(bean.getTeamTwo().trim().equals("Afghanistan")){
+            drawable= context.getDrawable(R.drawable.afghanistan);
+            image_team_two.setImageDrawable(drawable);
+        }if(bean.getTeamTwo().trim().equals("South Africa")){
+            drawable= context.getDrawable(R.drawable.southafrica);
+            image_team_two.setImageDrawable(drawable);
+        }if(bean.getTeamTwo().trim().equals("England")){
+            drawable= context.getDrawable(R.drawable.england);
+            image_team_two.setImageDrawable(drawable);
+        }if(bean.getTeamTwo().trim().equals("India")){
+            drawable= context.getDrawable(R.drawable.india);
+            image_team_two.setImageDrawable(drawable);
+        }if(bean.getTeamTwo().trim().equals("New Zealand")){
+            drawable= context.getDrawable(R.drawable.newzealand);
+            image_team_two.setImageDrawable(drawable);
+        }if(bean.getTeamTwo().trim().equals("West Indies")){
+            drawable= context.getDrawable(R.drawable.westindies);
+            image_team_two.setImageDrawable(drawable);
+        }
+
         txt_contest_joined.setText(bean.getNumberOfContest());
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override

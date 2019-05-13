@@ -22,7 +22,7 @@ public class ImageAdapter extends PagerAdapter{
     }  
   
     private int[] sliderImageId = new int[]{  
-            R.drawable.afghanistan, R.drawable.australia, R.drawable.india
+            R.drawable.banner_cwc, R.drawable.cwc_banner
     };  
   
     @Override  
