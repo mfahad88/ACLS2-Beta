@@ -15,7 +15,7 @@ import com.psl.fantasy.league.adapter.MoreAdapter;
  * A simple {@link Fragment} subclass.
  */
 public class MoreFragment extends Fragment {
-    public static final String[] items={"Terms & Conditions","FAQs","Prizes","About","Rules","Legality"};
+    public static final String[] items={"Terms & Conditions","FAQs","Prizes","About","Rules"};
 
     public MoreFragment() {
         // Required empty public constructor

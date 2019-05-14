@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 
 import com.psl.fantasy.league.fragment.TeamFragment;
+import com.psl.fantasy.league.fragment.WinnerBottomFragment;
 import com.psl.fantasy.league.model.ui.ContestBean;
 import com.psl.fantasy.league.R;
 
@@ -63,6 +64,14 @@ public class ContestAdapter extends BaseAdapter {
         TextView txt_confirm_winning=convertView.findViewById(R.id.txt_confirm_winning);
         TextView txt_multi=convertView.findViewById(R.id.txt_multi);
         TextView txt_pool=convertView.findViewById(R.id.txt_pool);
+        txt_winners.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WinnerBottomFragment fragment=new WinnerBottomFragment();
+                AppCompatActivity activity=(AppCompatActivity)context;
+                fragment.show(activity.getSupportFragmentManager(),"fm");
+            }
+        });
         if(Integer.parseInt(bean.getDiscount())>0){
             txt_discount.setVisibility(View.VISIBLE);
             StrikethroughSpan strikethroughSpan = new StrikethroughSpan();

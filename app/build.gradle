@@ -36,15 +36,16 @@ dependencies {
     implementation 'com.android.support:cardview-v7:28.0.0'
     implementation 'com.android.support:design:28.0.0'
 //    implementation 'com.android.support:support-v4:28.0.0'
-
+    implementation 'com.google.firebase:firebase-messaging:17.3.0'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
     implementation 'com.google.firebase:firebase-core:15.0.0'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
-    implementation('com.crashlytics.sdk.android:crashlytics:KIT_VERSION@aar') {
+
+//    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
+   /* implementation('com.crashlytics.sdk.android:crashlytics:KIT_VERSION@aar') {
         transitive = true;
-    }
+    }*/
     implementation 'com.google.firebase:firebase-auth:15.0.0'
 
 //    implementation 'com.google.android.gms:play-services-analytics:10.2.4'
@@ -56,5 +57,5 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:15.0.0'
     implementation 'com.karumi:dexter:5.0.0'
 }
-//apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.gms.google-services'
 

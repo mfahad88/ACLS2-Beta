@@ -2,6 +2,7 @@ package com.psl.fantasy.league.Utils;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -16,6 +17,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.psl.fantasy.league.BuildConfig;
+import com.psl.fantasy.league.activity.AnalyticsApplication;
 import com.psl.fantasy.league.model.request.TestBeanRequest;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -345,6 +348,21 @@ public class Helper {
     public static void displayError(TextView tv,String msg){
         tv.setVisibility(View.VISIBLE);
         tv.setText(msg);
+    }
+
+    public static void updateGoogleAnalytics(Tracker mTracker,String screenName){
+
+        mTracker.setScreenName(screenName);
+        mTracker.setAppId(BuildConfig.APPLICATION_ID);
+        mTracker.setAppVersion(BuildConfig.VERSION_NAME);
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+
+
+    }
+
+    public  static Tracker getGoogleAnalytics(Application app){
+        AnalyticsApplication application = (AnalyticsApplication) app;
+        return application.getDefaultTracker();
     }
 
 }

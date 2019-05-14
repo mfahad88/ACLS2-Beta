@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.facebook.LoggingBehavior;
+import com.google.android.gms.analytics.Tracker;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -39,7 +40,7 @@ import retrofit2.Response;
 
 public class SplashActivity extends AppCompatActivity {
     DbHelper dbHelper;
-
+    Tracker tracker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +53,8 @@ public class SplashActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
         FacebookSdk.setAutoLogAppEventsEnabled(true);
+        tracker=Helper.getGoogleAnalytics(getApplication());
+        Helper.updateGoogleAnalytics(tracker,this.getClass().getSimpleName());
         requestMultiplePermissions();
 
     }

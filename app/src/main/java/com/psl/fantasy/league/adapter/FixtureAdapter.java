@@ -165,26 +165,11 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
                             @Override
                             public void run() {
                                 SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                               /* DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
-                                DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.ENGLISH);
 
-                                LocalDateTime date = LocalDateTime.parse(bean.getTime().replace("+0000","Z"), inputFormatter);
-                                String formattedDate = outputFormatter.format(date);
-                                try {
-                                    Date date1=sdf.parse(formattedDate);
-                                    *//*Long diff=date1.getTime()-new Date().getTime();
-                                    long diffSeconds = diff / 1000 % 60;
-                                    long diffMinutes = diff / (60 * 1000) % 60;
-                                    long diffHours = diff / (60 * 60 * 1000) % 24;
-                                    txt_time.setText(diffHours+":"+diffMinutes+":"+diffSeconds+" Left");*//*
-                                    txt_time.setText(date1.toString()+" Left");
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }*/
                                 try {
 
 
-                                    txt_time.setText( bean.getTime().toString()+ " Left");
+                                    txt_time.setText( showDifference(sdf.format(bean.getTime())));
                                 }catch (Exception e){
                                     e.printStackTrace();
                                 }
@@ -221,12 +206,12 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
     }
 
     public String showDifference(String date1){
-        String dateStart = new Date().toString();
+
         String dateStop = date1;
         String dateFinal = "";
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
+        String dateStart = format.format(new Date());
         Date d1 = null;
         Date d2 = null;
 
@@ -246,7 +231,25 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
             System.out.print(diffHours + " hours, ");
             System.out.print(diffMinutes + " minutes, ");
             System.out.print(diffSeconds + " seconds.");
-            dateFinal=diffDays + " days, "+diffHours + " hours, "+diffMinutes + " minutes, "+diffSeconds + " seconds.";
+
+            //New Format By FT
+            long hrs=diffDays*24;
+            hrs+=diffHours;
+
+            if(hrs<=48 && hrs>5){
+                dateFinal=hrs+" Hr(s) Left" ;
+            }
+
+            if(hrs>48){
+                dateFinal=diffHours+" Hr(s) "+diffMinutes+" Min(s) Left";
+            }
+
+        //    if(hrs<=5){
+            if(hrs<=5 && hrs>0){ // change once data is updated
+                dateFinal = diffHours+" Hr(s) "+diffMinutes+" Min(s) "+diffSeconds+" Sec(s) Left";
+            }
+
+           // dateFinal=diffDays + " days, "+diffHours + " hours, "+diffMinutes + " minutes, "+diffSeconds + " seconds.";
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,7 +64,9 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                 JSONObject jsonObject = new JSONObject(Helper.getUserSession(preferences, "MyUser").toString());
                 userId = jsonObject.getInt("user_id");
             }else{
-                userId= Integer.parseInt(Helper.getUserIdFromText());
+                if(!TextUtils.isEmpty(Helper.getUserIdFromText())) {
+                    userId = Integer.parseInt(Helper.getUserIdFromText());
+                }
             }
 
         } catch (JSONException e) {

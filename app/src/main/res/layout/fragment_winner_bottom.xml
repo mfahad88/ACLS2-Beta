@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#aae2e2e2"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.WinnerBottomFragment">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:id="@+id/toolbar"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Close"
+                android:textAllCaps="true"
+                android:textColor="@android:color/white"
+                android:id="@+id/txt_close"
+                android:layout_centerVertical="false"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Winning breakup"
+                android:textAllCaps="true"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:text="Prize Pool"
+        android:textSize="12sp"
+        android:id="@+id/txt_prize"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txt_prize"
+        android:textSize="18sp"
+        android:layout_marginTop="5dp"
+        android:text=""
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:id="@+id/txt_prize_pool"
+        android:layout_centerHorizontal="true"/>
+
+       <ListView
+           android:layout_width="match_parent"
+           android:layout_height="212dp"
+           android:layout_below="@id/txt_prize_pool"
+           android:layout_marginLeft="10dp"
+           android:layout_marginRight="10dp"
+           android:background="#aae2e2e2"
+           android:id="@+id/list_winner"/>
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="more"
+           android:padding="10dp"
+           android:layout_marginBottom="100dp"
+           android:textAllCaps="true"
+           android:id="@+id/txt_more"
+           android:gravity="center_vertical"
+           android:drawableStart="@drawable/ic_arrow_downward_black_24dp"
+           android:background="@drawable/more_square"
+           android:textColor="@color/colorPrimary"
+           android:layout_centerHorizontal="true"
+           android:layout_below="@id/list_winner"
+           android:drawableLeft="@drawable/ic_arrow_downward_black_24dp" />
+
+</RelativeLayout>

@@ -133,7 +133,7 @@ public class MyMatchesAdapter extends ArrayAdapter<MyMatchesBean> {
             image_team_two.setImageDrawable(drawable);
         }
 
-        txt_contest_joined.setText(bean.getNumberOfContest());
+        txt_contest_joined.setText(bean.getMatchStatus());
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

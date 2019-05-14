@@ -21,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -214,7 +213,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
                                                 Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
                                             } catch (IOException e) {
-                                                Crashlytics.logException(e.getCause());
+
                                                 e.printStackTrace();
 
                                             }

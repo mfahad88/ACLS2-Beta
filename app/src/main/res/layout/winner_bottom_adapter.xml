@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:text="Rank: 1"
+        android:id="@+id/txt_rank"
+        android:layout_alignParentStart="true"
+        android:textAlignment="viewStart"
+        android:gravity="start"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:text="10000"
+        android:id="@+id/txt_amount"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:textAlignment="viewEnd"
+        android:gravity="end" />
+</RelativeLayout>
