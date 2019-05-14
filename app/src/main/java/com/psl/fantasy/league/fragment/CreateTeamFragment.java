@@ -3,24 +3,18 @@ package com.psl.fantasy.league.fragment;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.psl.fantasy.league.R;
 import com.psl.fantasy.league.Utils.DbHelper;
-import com.psl.fantasy.league.Utils.Helper;
 import com.psl.fantasy.league.adapter.PlayerInfoAdapter;
 import com.psl.fantasy.league.interfaces.FragmentInterface;
 import com.psl.fantasy.league.interfaces.PlayerInterface;
@@ -29,7 +23,6 @@ import com.psl.fantasy.league.model.ui.PlayerBean;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,6 +43,7 @@ public class CreateTeamFragment extends Fragment {
 
 
 
+
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,7 +58,9 @@ public class CreateTeamFragment extends Fragment {
             teamId1=getArguments().getInt("teamId1");
             teamId2=getArguments().getInt("teamId2");
         }
-
+        if(dbHelper.getMyTeamCount()>0){
+            dbHelper.deleteMyTeam();
+        }
         if(Player_Type==3) {
             txt_selection.setText("You can pick only 1 Wicket-keeper");
         }if(Player_Type==0) {
@@ -98,7 +94,6 @@ public class CreateTeamFragment extends Fragment {
             public void playerCount(int type, int count) {
 //                Toast.makeText(mView.getContext(), type+","+count, Toast.LENGTH_SHORT).show();
                 fragmentInterface.playerCount(type,count);
-
 
             }
 

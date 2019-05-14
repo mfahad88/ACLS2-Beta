@@ -486,6 +486,33 @@ public class DbHelper extends SQLiteOpenHelper {
         return list;
     }
 
+    public int getMyTeamCount(){
+        int count=0;
+        Cursor c = null ;
+        try {
+
+            String query = "SELECT COUNT(*) FROM " + TBL_MY_TEAM ;
+
+            SQLiteDatabase db = this.getReadableDatabase();
+            c = db.rawQuery(query, null);
+
+            if (c.moveToFirst()) {
+                do {
+                    count=c.getInt(0);
+                } while (c.moveToNext());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally{
+            if(c!=null)
+                c.close();
+
+        }
+        return count;
+    }
+
     public void deleteConfig(){
         try {
             String query="delete from "+ TBL_CONFIG;
