@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.TabLayout;
@@ -18,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +57,9 @@ public class TeamFragment extends Fragment {
     int teamId1; int teamId2;
     SharedPreferences preferences;
     FragmentToActivity mCallback;
+    String teamOne,teamTwo;
+    ImageView image_team_one,image_team_two;
+    Drawable drawable;
     public TeamFragment() {
         // Required empty public constructor
     }
@@ -80,12 +85,16 @@ public class TeamFragment extends Fragment {
             contestId=getArguments().getInt("contestId");
             teamId1=getArguments().getInt("teamId1");
             teamId2=getArguments().getInt("teamId2");
+            teamOne=getArguments().getString("TeamOne");
+            teamTwo=getArguments().getString("TeamTwo");
         }
         btn_done=mView.findViewById(R.id.btn_done);
         pager=mView.findViewById(R.id.pager);
         txt_player_count=mView.findViewById(R.id.txt_player_count);
         txt_credit_count= mView.findViewById(R.id.txt_credit_count);
         tab_layout=mView.findViewById(R.id.tab_layout);
+        image_team_one=mView.findViewById(R.id.image_team_one);
+        image_team_two=mView.findViewById(R.id.image_team_two);
         preferences=mView.getContext().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
         fragmentInterface=new FragmentInterface() {
             @Override
@@ -201,6 +210,79 @@ public class TeamFragment extends Fragment {
 
             }
         });
+
+
+
+        if(teamOne.trim().equals("Pakistan")){
+            drawable= mView.getContext().getDrawable(R.drawable.pakistan);
+            image_team_one.setImageDrawable(drawable);
+        }if(teamOne.trim().equals("Bangladesh")){
+            drawable= mView.getContext().getDrawable(R.drawable.bangladesh);
+            image_team_one.setImageDrawable(drawable);
+        }if(teamOne.trim().equals("India")){
+            drawable= mView.getContext().getDrawable(R.drawable.india);
+            image_team_one.setImageDrawable(drawable);
+        }if(teamOne.trim().equals("Sri Lanka")){
+            drawable= mView.getContext().getDrawable(R.drawable.srilanka);
+            image_team_one.setImageDrawable(drawable);
+        }if(teamOne.trim().equals("Australia")){
+            drawable= mView.getContext().getDrawable(R.drawable.australia);
+            image_team_one.setImageDrawable(drawable);
+        }if(teamOne.trim().equals("Afghanistan")){
+            drawable= mView.getContext().getDrawable(R.drawable.afghanistan);
+            image_team_one.setImageDrawable(drawable);
+        }if(teamOne.trim().equals("South Africa")){
+            drawable= mView.getContext().getDrawable(R.drawable.southafrica);
+            image_team_one.setImageDrawable(drawable);
+        }if(teamOne.trim().equals("England")){
+            drawable= mView.getContext().getDrawable(R.drawable.england);
+            image_team_one.setImageDrawable(drawable);
+        }if(teamOne.trim().equals("India")){
+            drawable= mView.getContext().getDrawable(R.drawable.india);
+            image_team_one.setImageDrawable(drawable);
+        }if(teamOne.trim().equals("New Zealand")){
+            drawable= mView.getContext().getDrawable(R.drawable.newzealand);
+            image_team_one.setImageDrawable(drawable);
+        }if(teamOne.trim().equals("West Indies")){
+            drawable= mView.getContext().getDrawable(R.drawable.westindies);
+            image_team_one.setImageDrawable(drawable);
+        }
+
+
+        if(teamTwo.trim().equals("Pakistan")){
+            drawable= mView.getContext().getDrawable(R.drawable.pakistan);
+            image_team_two.setImageDrawable(drawable);
+        }if(teamTwo.trim().equals("Bangladesh")){
+            drawable= mView.getContext().getDrawable(R.drawable.bangladesh);
+            image_team_two.setImageDrawable(drawable);
+        }if(teamTwo.trim().equals("India")){
+            drawable= mView.getContext().getDrawable(R.drawable.india);
+            image_team_two.setImageDrawable(drawable);
+        }if(teamTwo.trim().equals("Sri Lanka")){
+            drawable= mView.getContext().getDrawable(R.drawable.srilanka);
+            image_team_two.setImageDrawable(drawable);
+        }if(teamTwo.trim().equals("Australia")){
+            drawable= mView.getContext().getDrawable(R.drawable.australia);
+            image_team_two.setImageDrawable(drawable);
+        }if(teamTwo.trim().equals("Afghanistan")){
+            drawable= mView.getContext().getDrawable(R.drawable.afghanistan);
+            image_team_two.setImageDrawable(drawable);
+        }if(teamTwo.trim().equals("South Africa")){
+            drawable= mView.getContext().getDrawable(R.drawable.southafrica);
+            image_team_two.setImageDrawable(drawable);
+        }if(teamTwo.trim().equals("England")){
+            drawable= mView.getContext().getDrawable(R.drawable.england);
+            image_team_two.setImageDrawable(drawable);
+        }if(teamTwo.trim().equals("India")){
+            drawable= mView.getContext().getDrawable(R.drawable.india);
+            image_team_two.setImageDrawable(drawable);
+        }if(teamTwo.trim().equals("New Zealand")){
+            drawable= mView.getContext().getDrawable(R.drawable.newzealand);
+            image_team_two.setImageDrawable(drawable);
+        }if(teamTwo.trim().equals("West Indies")){
+            drawable= mView.getContext().getDrawable(R.drawable.westindies);
+            image_team_two.setImageDrawable(drawable);
+        }
         return mView;
     }
 

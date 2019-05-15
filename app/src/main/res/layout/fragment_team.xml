@@ -8,25 +8,25 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="75dp"
         android:id="@+id/relative_header"
         android:background="#3c3c3c"
         android:layout_alignParentTop="true">
 
         <TextView
-            android:layout_width="80dp"
-            android:layout_height="120dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/txt_player"
-            android:text="Player"
-            android:textSize="12sp"
-            android:gravity="center_horizontal|bottom"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
+            android:text="Players"
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp"
+            android:textSize="10sp"
             android:textColor="@android:color/white"/>
 
         <TextView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:textColor="@android:color/white"
             android:layout_below="@id/txt_player"
             android:id="@+id/txt_player_count"
@@ -42,36 +42,73 @@
             android:text="/ 11"
             android:textColor="@android:color/white"
             android:layout_below="@id/txt_player"
-            android:textSize="16sp"
+            android:textSize="8sp"
             android:gravity="center"
             android:layout_toRightOf="@id/txt_player_count"
             android:layout_alignBottom="@id/txt_player_count"
             />
 
         <TextView
-            android:layout_width="80dp"
-            android:layout_height="120dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/txt_credit"
             android:text="Credit"
-            android:textSize="12sp"
-            android:gravity="center_horizontal|bottom"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:layout_marginRight="10dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:textColor="@android:color/white"/>
 
 
         <TextView
-            android:layout_width="80dp"
-            android:layout_height="50dp"
-            android:layout_alignParentRight="true"
-            android:textColor="@android:color/white"
-            android:layout_below="@id/txt_player"
             android:id="@+id/txt_credit_count"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:paddingRight="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_player"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
             android:gravity="center"
-            android:text="0"/>
+            android:paddingRight="5dp"
+            android:text="0"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:padding="5dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:scaleType="centerCrop"
+                android:id="@+id/image_team_one"
+                android:background="@null"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="vs"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:layout_gravity="center_vertical"/>
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:scaleType="centerCrop"
+                android:id="@+id/image_team_two"
+                android:background="@null" />
+        </LinearLayout>
     </RelativeLayout>
 
     <RelativeLayout
@@ -83,7 +120,7 @@
         <android.support.design.widget.TabLayout
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:elevation="6dp"
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>

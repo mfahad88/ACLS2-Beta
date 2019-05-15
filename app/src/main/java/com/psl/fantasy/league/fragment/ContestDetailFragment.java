@@ -35,6 +35,7 @@ public class ContestDetailFragment extends Fragment {
     int contest_type; //1 mega, 2 expert,3 beginner
     int TeamId1;int TeamId2;
     private List<ContestBean> list;
+    private String teamOne,teamTwo;
     public ContestDetailFragment() {
         // Required empty public constructor
     }
@@ -51,6 +52,8 @@ public class ContestDetailFragment extends Fragment {
             contest_type=getArguments().getInt("contest_type");
             TeamId1=getArguments().getInt("TeamId1");
             TeamId2=getArguments().getInt("TeamId2");
+            teamOne=getArguments().getString("TeamOne");
+            teamTwo=getArguments().getString("TeamTwo");
         }
         list=new ArrayList<>();
         JSONObject object=new JSONObject();
@@ -72,7 +75,7 @@ public class ContestDetailFragment extends Fragment {
                                         int percent=((datum.getPoolConsumed()*datum.getPool())/100);
                                         list.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
                                                 , String.valueOf(datum.getPool()),datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
-                                        ContestAdapter adapter = new ContestAdapter(mView.getContext(), R.layout.list_contest, list, TeamId1, TeamId2);
+                                        ContestAdapter adapter = new ContestAdapter(mView.getContext(), R.layout.list_contest, list, TeamId1, TeamId2,teamOne,teamTwo);
                                         list_contest.setAdapter(adapter);
                                     }
                                 }

@@ -1,14 +1,23 @@
 package com.psl.fantasy.league.adapter;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 
 
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -19,8 +28,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+
 import com.psl.fantasy.league.R;
 import com.psl.fantasy.league.Utils.Helper;
 import com.psl.fantasy.league.fragment.ContestFragment;
@@ -39,11 +49,20 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
     Context context;
     int resource;
     List<MatchesBean> list;
+    LocationManager locationManager;
+    String mprovider;
+    Location location;
+    @SuppressLint("MissingPermission")
     public FixtureAdapter(Context context, int resource, List<MatchesBean> list) {
         super(context,resource,list);
         this.context=context;
         this.resource=resource;
         this.list=list;
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+
+        mprovider = locationManager.getBestProvider(criteria, false);
+        location=locationManager.getLastKnownLocation(mprovider);
     }
 
     @Override
@@ -149,7 +168,7 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
                 drawable= context.getDrawable(R.drawable.westindies);
                 image_team_two.setImageDrawable(drawable);
             }
-            Log.e("West", String.valueOf(bean.getTeamOne()));
+
 
 
             new Thread(new Runnable() {
@@ -166,8 +185,8 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
                             public void run() {
                                 SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-                                try {
 
+                                try {
 
                                     txt_time.setText( showDifference(sdf.format(bean.getTime())));
                                 }catch (Exception e){
@@ -190,6 +209,8 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
                     bundle.putInt("match_id",bean.getMatchId());
                     bundle.putInt("TeamId1",bean.getTeam_id1());
                     bundle.putInt("TeamId2",bean.getTeam_id2());
+                    bundle.putString("TeamOne",bean.getTeamOne().trim());
+                    bundle.putString("TeamTwo",bean.getTeamTwo().trim());
                     fragment.setArguments(bundle);
                     AppCompatActivity activity=(AppCompatActivity)context;
                     //FragmentTransaction ft=((FragmentActivity)context).getFragmentManager().beginTransaction();
@@ -211,7 +232,7 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
         String dateFinal = "";
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateStart = format.format(new Date());
+        String dateStart = format.format(new Date(location.getTime()));
         Date d1 = null;
         Date d2 = null;
 
@@ -255,5 +276,7 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
         }
         return dateFinal;
     }
+
+
 
 }

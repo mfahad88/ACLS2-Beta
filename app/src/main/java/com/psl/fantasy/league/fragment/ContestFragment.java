@@ -53,6 +53,8 @@ public class ContestFragment extends Fragment {
     int counter_mega=0; int counter_expert=0; int counter_beginner=0;
     private FragmentToActivity mCallback;
     private SwipeRefreshLayout pullToRefresh;
+    private String teamOne,teamTwo;
+    private ContestAdapter adapter;
     public ContestFragment() {
         // Required empty public constructor
     }
@@ -93,11 +95,14 @@ public class ContestFragment extends Fragment {
                 match_id = getArguments().getInt("match_id");
                 TeamId1=getArguments().getInt("TeamId1");
                 TeamId2=getArguments().getInt("TeamId2");
+                teamOne=getArguments().getString("TeamOne");
+                teamTwo=getArguments().getString("TeamTwo");
             }
             pullToRefresh.setVisibility(View.VISIBLE);
             pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
+
                     populateContest();
                     pullToRefresh.setRefreshing(false);
                 }
@@ -113,6 +118,8 @@ public class ContestFragment extends Fragment {
                     bundle.putInt("TeamId1",TeamId1);
                     bundle.putInt("TeamId2",TeamId2);
                     bundle.putInt("contest_type",1);
+                    bundle.putString("TeamOne",teamOne);
+                    bundle.putString("TeamTwo",teamTwo);
                     fragment.setArguments(bundle);
                     FragmentTransaction ft=getFragmentManager().beginTransaction();
 
@@ -131,6 +138,8 @@ public class ContestFragment extends Fragment {
                     bundle.putInt("TeamId1",TeamId1);
                     bundle.putInt("TeamId2",TeamId2);
                     bundle.putInt("contest_type",2);
+                    bundle.putString("TeamOne",teamOne);
+                    bundle.putString("TeamTwo",teamTwo);
                     fragment.setArguments(bundle);
                     FragmentTransaction ft=getFragmentManager().beginTransaction();
 
@@ -148,6 +157,8 @@ public class ContestFragment extends Fragment {
                     bundle.putInt("TeamId1",TeamId1);
                     bundle.putInt("TeamId2",TeamId2);
                     bundle.putInt("contest_type",3);
+                    bundle.putString("TeamOne",teamOne);
+                    bundle.putString("TeamTwo",teamTwo);
                     fragment.setArguments(bundle);
                     FragmentTransaction ft=getFragmentManager().beginTransaction();
 
@@ -189,8 +200,8 @@ public class ContestFragment extends Fragment {
                                             if(datum.getIsVisible().equals("1")){
                                                 txt_view_more_mega.setVisibility(View.VISIBLE);
 
-                                                if(datum.getContestType().equalsIgnoreCase("1")){
-                                                    if(datum.getPoolConsumed()>0){
+                                                if(datum.getContestType().equalsIgnoreCase("0")){
+                                                    //if(datum.getPoolConsumed()>0){
 
                                                         txt_cat1.setText("Mega Contest");
 
@@ -201,18 +212,19 @@ public class ContestFragment extends Fragment {
                                                             list.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
                                                                     , String.valueOf(datum.getPool()),datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
                                                             list_contest_1.setVisibility(View.VISIBLE);
-                                                            ContestAdapter adapter=new ContestAdapter(mView.getContext(),R.layout.list_contest,list,TeamId1,TeamId2);
+
+                                                            adapter = new ContestAdapter(mView.getContext(),R.layout.list_contest,list,TeamId1,TeamId2,teamOne,teamTwo);
                                                             list_contest_1.setAdapter(adapter);
                                                             counter_mega++;
                                                         }
 
 
-                                                    }
+                                                    //}
                                                 }
 
 
-                                                if(datum.getContestType().equalsIgnoreCase("2")){
-                                                    if(datum.getPoolConsumed()>0){
+                                                if(datum.getContestType().equalsIgnoreCase("1")){
+//                                                    if(datum.getPoolConsumed()>0){
                                                         txt_view_more_expert.setVisibility(View.VISIBLE);
 
                                                         txt_cat2.setText("Expert Contest");
@@ -224,16 +236,17 @@ public class ContestFragment extends Fragment {
                                                             list_expert.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
                                                                    ,String.valueOf(datum.getPool()) , datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
                                                             list_contest_2.setVisibility(View.VISIBLE);
-                                                            ContestAdapter adapter=new ContestAdapter(mView.getContext(),R.layout.list_contest,list_expert,TeamId1,TeamId2);
+                                                            adapter=new ContestAdapter(mView.getContext(),R.layout.list_contest,list_expert,TeamId1,TeamId2,teamOne,teamTwo);
+
                                                             list_contest_2.setAdapter(adapter);
                                                             counter_expert++;
                                                         }
 
 
-                                                    }
+//                                                    }
                                                 }
-                                                if(datum.getContestType().equalsIgnoreCase("3")){
-                                                    if(datum.getPoolConsumed()>0){
+                                                if(datum.getContestType().equalsIgnoreCase("2")){
+                                                  //  if(datum.getPoolConsumed()>0){
 
                                                         txt_view_more_beginner.setVisibility(View.VISIBLE);
                                                         txt_cat3.setText("Beginner Contest");
@@ -245,12 +258,12 @@ public class ContestFragment extends Fragment {
                                                             list_beginner.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
                                                                     ,String.valueOf(datum.getPool()), datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
                                                             list_contest_3.setVisibility(View.VISIBLE);
-                                                            ContestAdapter adapter=new ContestAdapter(mView.getContext(),R.layout.list_contest,list_beginner,TeamId1,TeamId2);
+                                                            adapter=new ContestAdapter(mView.getContext(),R.layout.list_contest,list_beginner,TeamId1,TeamId2,teamOne,teamTwo);
                                                             list_contest_3.setAdapter(adapter);
                                                             counter_beginner++;
                                                         }
 
-                                                    }
+                                                    //}
                                                 }
                                             }
                                         }

@@ -4,13 +4,18 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -36,6 +41,7 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
     private Fragment fragment;
     private ViewPager viewPage;
     private TextView txt_bullet_1,txt_bullet_2,txt_bullet_3;
+    private LinearLayout linear_pointer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,8 +51,9 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
         txt_bullet_1 = findViewById(R.id.txt_bullet_1);
         txt_bullet_2 = findViewById(R.id.txt_bullet_2);
         txt_bullet_3 = findViewById(R.id.txt_bullet_3);
-
+        linear_pointer= findViewById(R.id.linear_pointer);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        setBottomNavigationLabelsTextSize(navigation,0.9f);
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -94,6 +101,7 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
     @Override
     public void communicate(String comm) {
         if(comm.equalsIgnoreCase("DashboardFragment")){
+            linear_pointer.setVisibility(View.VISIBLE);
             txt_bullet_1.setEnabled(false);
         }if(comm.equalsIgnoreCase("ContestFragment")){
             txt_bullet_2.setEnabled(false);
@@ -103,7 +111,33 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
             txt_bullet_1.setEnabled(true);
             txt_bullet_2.setEnabled(true);
             txt_bullet_3.setEnabled(true);
+            linear_pointer.setVisibility(View.GONE);
         }
 
+    }
+
+    private void setBottomNavigationLabelsTextSize(BottomNavigationView bottomNavigationView, float ratio) {
+        for (int i = 0; i < bottomNavigationView.getChildCount(); i++) {
+            View item = bottomNavigationView.getChildAt(i);
+
+            if (item instanceof BottomNavigationMenuView) {
+                BottomNavigationMenuView menu = (BottomNavigationMenuView) item;
+
+                for (int j = 0; j < menu.getChildCount(); j++) {
+                    View menuItem = menu.getChildAt(j);
+
+                    View small = menuItem.findViewById(android.support.design.R.id.smallLabel);
+                    if (small instanceof TextView) {
+                        float size = ((TextView) small).getTextSize();
+                        ((TextView) small).setTextSize(TypedValue.COMPLEX_UNIT_PX, ratio * size);
+                    }
+                    View large = menuItem.findViewById(android.support.design.R.id.largeLabel);
+                    if (large instanceof TextView) {
+                        float size = ((TextView) large).getTextSize();
+                        ((TextView) large).setTextSize(TypedValue.COMPLEX_UNIT_PX, ratio * size);
+                    }
+                }
+            }
+        }
     }
 }

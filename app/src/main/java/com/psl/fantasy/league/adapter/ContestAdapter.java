@@ -12,6 +12,7 @@ import android.text.style.StrikethroughSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -24,31 +25,22 @@ import com.psl.fantasy.league.R;
 
 import java.util.List;
 
-public class ContestAdapter extends BaseAdapter {
+public class ContestAdapter extends ArrayAdapter<ContestBean> {
 
     Context context; int resource; List<ContestBean> list; int teamId1; int teamId2;
-    public ContestAdapter(Context context, int resource, List<ContestBean> list, int teamId1, int teamId2) {
+    private String teamOne,teamTwo;
+    public ContestAdapter(Context context, int resource, List<ContestBean> list, int teamId1, int teamId2,String teamOne,String teamTwo) {
+        super(context,resource,list);
         this.context=context;
         this.resource=resource;
         this.list=list;
         this.teamId1=teamId1;
         this.teamId2=teamId2;
+        this.teamOne=teamOne;
+        this.teamTwo=teamTwo;
     }
 
-    @Override
-    public int getCount() {
-        return list.size();
-    }
 
-    @Override
-    public Object getItem(int position) {
-        return list.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -105,6 +97,8 @@ public class ContestAdapter extends BaseAdapter {
                 bundle.putInt("contestId",bean.getContestId());
                 bundle.putInt("teamId1",teamId1);
                 bundle.putInt("teamId2",teamId2);
+                bundle.putString("TeamOne",teamOne);
+                bundle.putString("TeamTwo",teamTwo);
                 fragment.setArguments(bundle);
                 AppCompatActivity activity=(AppCompatActivity)context;
                 FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();

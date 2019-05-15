@@ -3,10 +3,13 @@ package com.psl.fantasy.league.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.internal.BottomNavigationMenuView;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +49,7 @@ public class DashboardFragment extends Fragment {
     private ProgressBar progressBar;
     private FragmentToActivity mCallback;
     private SwipeRefreshLayout pullToRefresh;
+    FixtureAdapter fixtureAdapter;
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -82,8 +86,17 @@ public class DashboardFragment extends Fragment {
             pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-                    populateMatches();
-                    pullToRefresh.setRefreshing(false);
+
+                    try {
+                        fixtureAdapter.clear();
+                        fixtureAdapter.notifyDataSetChanged();
+
+                        populateMatches();
+
+                        pullToRefresh.setRefreshing(false);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             });
         }catch (Exception e){
@@ -116,10 +129,15 @@ public class DashboardFragment extends Fragment {
                                 if(response.body().getResponseCode().equals("1001")){
                                     for(Datum bean:response.body().getData()){
                                         if(response.body().getData().size()>0) {
-                                            list.add(new MatchesBean(bean.getMatchId().intValue(),bean.getTeamId1Name(),bean.getTeamId2Name(),bean.getStartDate(),bean.getTeamId1().intValue(),bean.getTeamId2().intValue()));
-                                            list_matches.setVisibility(View.VISIBLE);
-                                            FixtureAdapter fixtureAdapter = new FixtureAdapter(mView.getContext(), R.layout.list_fixture, list);
-                                            list_matches.setAdapter(fixtureAdapter);
+                                            if(bean.getMatchSts().equalsIgnoreCase("1")){
+                                                list.add(new MatchesBean(bean.getMatchId().intValue(),bean.getTeamId1Name(),bean.getTeamId2Name(),bean.getStartDate(),bean.getTeamId1().intValue(),bean.getTeamId2().intValue()));
+                                                list_matches.setVisibility(View.VISIBLE);
+
+                                                fixtureAdapter = new FixtureAdapter(mView.getContext(), R.layout.list_fixture, list);
+
+                                                list_matches.setAdapter(fixtureAdapter);
+
+                                            }
                                         }else{
                                             Helper.displayError(txt_status,"No record found...");
                                         }
@@ -141,4 +159,6 @@ public class DashboardFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
+
 }

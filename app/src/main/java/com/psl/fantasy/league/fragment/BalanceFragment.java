@@ -1,6 +1,7 @@
 package com.psl.fantasy.league.fragment;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.psl.fantasy.league.R;
+import com.psl.fantasy.league.interfaces.FragmentToActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,6 +22,17 @@ public class BalanceFragment extends Fragment {
     private View mView;
     private TabLayout allTabs;
     private Fragment fragment;
+    private FragmentToActivity mCallback;
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mCallback = (FragmentToActivity) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement FragmentToActivity");
+        }
+    }
     public BalanceFragment() {
         // Required empty public constructor
     }
@@ -31,7 +44,7 @@ public class BalanceFragment extends Fragment {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_leaderboard, container, false);
         allTabs = mView.findViewById(R.id.tabs);
-
+        mCallback.communicate("disable");
         bindWidgetsWithAnEvent();
         setupTabLayout();
         return mView;

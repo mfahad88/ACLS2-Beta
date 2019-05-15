@@ -17,6 +17,7 @@ import com.psl.fantasy.league.R;
 import com.psl.fantasy.league.Utils.Helper;
 import com.psl.fantasy.league.adapter.MyMatchesAdapter;
 import com.psl.fantasy.league.client.ApiClient;
+import com.psl.fantasy.league.interfaces.FragmentToActivity;
 import com.psl.fantasy.league.model.response.MyMatches.Datum;
 import com.psl.fantasy.league.model.response.MyMatches.MyMatchesResponse;
 import com.psl.fantasy.league.model.ui.MyMatchesBean;
@@ -39,10 +40,21 @@ import retrofit2.Response;
 public class MyMatchesFragment extends Fragment {
     private List<MyMatchesBean> list;
     private int userId;
+    private FragmentToActivity mCallback;
     public MyMatchesFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mCallback = (FragmentToActivity) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement FragmentToActivity");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,7 +66,7 @@ public class MyMatchesFragment extends Fragment {
         TextView txt_error=mView.findViewById(R.id.txt_error);
         ProgressBar progressBar=mView.findViewById(R.id.progressBar);
         list=new ArrayList<>();
-
+        mCallback.communicate("disable");
         if(Helper.getUserSession(preferences,"MyUser")==null) {
             File file=new File(Environment.getExternalStorageDirectory()+File.separator+"ACL","user.txt");
             if(file.exists()) {

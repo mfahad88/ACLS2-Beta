@@ -119,83 +119,7 @@ public class DbHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public long saveConfig(List<com.psl.fantasy.league.model.response.Config.Datum> list) {
-        // Gets the data repository in write mode
-        long processId = 0;
-        SQLiteDatabase db=null;
 
-        try{
-            db = this.getWritableDatabase();
-            ContentValues values = new ContentValues();
-            for(com.psl.fantasy.league.model.response.Config.Datum datum:list){
-                values.put(PARAM_CODE,Integer.parseInt(datum.getParamCode()));
-                values.put(PARAM_TYPE,datum.getParamType());
-                values.put(DESCRIPTION,datum.getDesc());
-                values.put(CONFIG_VAL,datum.getConfigVal());
-                values.put(USERID,datum.getUserId());
-                values.put(CD,datum.getCd());
-                values.put(MD,datum.getMd());
-                processId = db.insert(TBL_CONFIG, null, values);
-                Log.e("SQLiteDatabase",datum.toString());
-            }
-
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }	finally
-        {
-            if(db!=null)
-                if(db.isOpen())
-                    db.close();
-        }
-
-        return processId;
-    }
-
-    public long savePlayers(List<com.psl.fantasy.league.model.response.Player.Datum> list) {
-        // Gets the data repository in write mode
-        long processId = 0;
-        SQLiteDatabase db=null;
-
-        try{
-            db = this.getWritableDatabase();
-            ContentValues values = new ContentValues();
-            for(com.psl.fantasy.league.model.response.Player.Datum datum:list){
-                values.put(team_id,datum.getTeamId().intValue());
-                values.put(team_name,datum.getTeamName());
-                values.put(player_id,String.valueOf(datum.getPlayerId()));
-                values.put(name,datum.getName());
-                values.put(game,datum.getGame());
-                values.put(pic_url,datum.getPicUrl());
-                values.put(plays_for,datum.getPlaysFor());
-                values.put(skill,datum.getSkill());
-                values.put(style,datum.getStyle());
-                values.put(runs,datum.getRuns());
-                values.put(avg,datum.getAvg());
-                values.put(hundreds,datum.getHundreds());
-                values.put(fifties,datum.getFifties());
-                values.put(sr,datum.getSr());
-                values.put(wkt,datum.getWkt());
-                values.put(price,datum.getPrice());
-                values.put(cd,datum.getCd());
-                values.put(md,datum.getMd());
-
-                processId = db.insert(TBL_PLAYERS, null, values);
-                Log.e("SQLiteDatabase",datum.toString());
-            }
-
-
-        }catch (SQLException e){
-            e.printStackTrace();
-        }	finally
-        {
-            if(db!=null)
-                if(db.isOpen())
-                    db.close();
-        }
-
-        return processId;
-    }
 
     public List<com.psl.fantasy.league.model.response.Player.Datum> getPlayers(String team_id){
         List<com.psl.fantasy.league.model.response.Player.Datum> list=new ArrayList<>();
@@ -345,7 +269,110 @@ public class DbHelper extends SQLiteOpenHelper {
         return list;
     }
 
+    public List<PlayerBean> getMyTeam(){
+        List<PlayerBean> list = new ArrayList<>();
+        Cursor c = null ;
+        try {
 
+            String query = "SELECT * FROM " + TBL_MY_TEAM ;
+
+            SQLiteDatabase db = this.getReadableDatabase();
+            c = db.rawQuery(query, null);
+
+            if (c.moveToFirst()) {
+                do {
+                    PlayerBean bean=new PlayerBean();
+                    bean.setId(c.getInt(c.getColumnIndex(ID)));
+                    bean.setName(c.getString(c.getColumnIndex(NAME)));
+                    bean.setPoints(Double.parseDouble(c.getString(c.getColumnIndex(PRICE))));
+                    bean.setSkill(c.getString(c.getColumnIndex(SKILLS)));
+                    if(c.getInt(c.getColumnIndex(ISCAPTAIN))==1) {
+                        bean.setCaptain(true);
+                    }else{
+                        bean.setCaptain(false);
+                    }
+                    if(c.getInt(c.getColumnIndex(ISWCAPTAIN))==1){
+                        bean.setViceCaptain(true);
+                    }else{
+                        bean.setViceCaptain(false);
+                    }
+                    if(c.getInt(c.getColumnIndex(ISCHECKED))==1){
+                        bean.setChecked(true);
+                    }else{
+                        bean.setChecked(false);
+                    }
+
+                    list.add(bean);
+                    Log.e("Value--->",list.toString());
+                } while (c.moveToNext());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally{
+            if(c!=null)
+                c.close();
+
+        }
+        return list;
+    }
+
+
+    public int getMyTeamCountBySkills(String skills){
+        int count=0;
+        Cursor c = null ;
+        try {
+
+            String query = "SELECT COUNT(*) FROM " + TBL_MY_TEAM + "WHERE "+SKILLS+"='"+skills+"'";
+
+            SQLiteDatabase db = this.getReadableDatabase();
+            c = db.rawQuery(query, null);
+
+            if (c.moveToFirst()) {
+                do {
+                    count=c.getInt(0);
+                } while (c.moveToNext());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally{
+            if(c!=null)
+                c.close();
+
+        }
+        return count;
+    }
+
+
+    public int getMyTeamCount(){
+        int count=0;
+        Cursor c = null ;
+        try {
+
+            String query = "SELECT COUNT(*) FROM " + TBL_MY_TEAM ;
+
+            SQLiteDatabase db = this.getReadableDatabase();
+            c = db.rawQuery(query, null);
+
+            if (c.moveToFirst()) {
+                do {
+                    count=c.getInt(0);
+                } while (c.moveToNext());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally{
+            if(c!=null)
+                c.close();
+
+        }
+        return count;
+    }
 
     public long saveMyTeam(PlayerBean bean) {
         // Gets the data repository in write mode
@@ -437,81 +464,85 @@ public class DbHelper extends SQLiteOpenHelper {
         return processId;
     }
 
-    public List<PlayerBean> getMyTeam(){
-        List<PlayerBean> list = new ArrayList<>();
-        Cursor c = null ;
-        try {
+    public long saveConfig(List<com.psl.fantasy.league.model.response.Config.Datum> list) {
+        // Gets the data repository in write mode
+        long processId = 0;
+        SQLiteDatabase db=null;
 
-            String query = "SELECT * FROM " + TBL_MY_TEAM ;
-
-            SQLiteDatabase db = this.getReadableDatabase();
-            c = db.rawQuery(query, null);
-
-            if (c.moveToFirst()) {
-                do {
-                    PlayerBean bean=new PlayerBean();
-                    bean.setId(c.getInt(c.getColumnIndex(ID)));
-                    bean.setName(c.getString(c.getColumnIndex(NAME)));
-                    bean.setPoints(Double.parseDouble(c.getString(c.getColumnIndex(PRICE))));
-                    bean.setSkill(c.getString(c.getColumnIndex(SKILLS)));
-                    if(c.getInt(c.getColumnIndex(ISCAPTAIN))==1) {
-                        bean.setCaptain(true);
-                    }else{
-                        bean.setCaptain(false);
-                    }
-                    if(c.getInt(c.getColumnIndex(ISWCAPTAIN))==1){
-                        bean.setViceCaptain(true);
-                    }else{
-                        bean.setViceCaptain(false);
-                    }
-                    if(c.getInt(c.getColumnIndex(ISCHECKED))==1){
-                        bean.setChecked(true);
-                    }else{
-                        bean.setChecked(false);
-                    }
-
-                    list.add(bean);
-                    Log.e("Value--->",list.toString());
-                } while (c.moveToNext());
+        try{
+            db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            for(com.psl.fantasy.league.model.response.Config.Datum datum:list){
+                values.put(PARAM_CODE,Integer.parseInt(datum.getParamCode()));
+                values.put(PARAM_TYPE,datum.getParamType());
+                values.put(DESCRIPTION,datum.getDesc());
+                values.put(CONFIG_VAL,datum.getConfigVal());
+                values.put(USERID,datum.getUserId());
+                values.put(CD,datum.getCd());
+                values.put(MD,datum.getMd());
+                processId = db.insert(TBL_CONFIG, null, values);
+                Log.e("SQLiteDatabase",datum.toString());
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally{
-            if(c!=null)
-                c.close();
 
+        }catch (Exception e){
+            e.printStackTrace();
+        }	finally
+        {
+            if(db!=null)
+                if(db.isOpen())
+                    db.close();
         }
-        return list;
+
+        return processId;
     }
 
-    public int getMyTeamCount(){
-        int count=0;
-        Cursor c = null ;
-        try {
+    public long savePlayers(List<com.psl.fantasy.league.model.response.Player.Datum> list) {
+        // Gets the data repository in write mode
+        long processId = 0;
+        SQLiteDatabase db=null;
 
-            String query = "SELECT COUNT(*) FROM " + TBL_MY_TEAM ;
+        try{
+            db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            for(com.psl.fantasy.league.model.response.Player.Datum datum:list){
+                values.put(team_id,datum.getTeamId().intValue());
+                values.put(team_name,datum.getTeamName());
+                values.put(player_id,String.valueOf(datum.getPlayerId()));
+                values.put(name,datum.getName());
+                values.put(game,datum.getGame());
+                values.put(pic_url,datum.getPicUrl());
+                values.put(plays_for,datum.getPlaysFor());
+                values.put(skill,datum.getSkill());
+                values.put(style,datum.getStyle());
+                values.put(runs,datum.getRuns());
+                values.put(avg,datum.getAvg());
+                values.put(hundreds,datum.getHundreds());
+                values.put(fifties,datum.getFifties());
+                values.put(sr,datum.getSr());
+                values.put(wkt,datum.getWkt());
+                values.put(price,datum.getPrice());
+                values.put(cd,datum.getCd());
+                values.put(md,datum.getMd());
 
-            SQLiteDatabase db = this.getReadableDatabase();
-            c = db.rawQuery(query, null);
-
-            if (c.moveToFirst()) {
-                do {
-                    count=c.getInt(0);
-                } while (c.moveToNext());
+                processId = db.insert(TBL_PLAYERS, null, values);
+                Log.e("SQLiteDatabase",datum.toString());
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally{
-            if(c!=null)
-                c.close();
 
+        }catch (SQLException e){
+            e.printStackTrace();
+        }	finally
+        {
+            if(db!=null)
+                if(db.isOpen())
+                    db.close();
         }
-        return count;
+
+        return processId;
     }
+
+
 
     public void deleteConfig(){
         try {

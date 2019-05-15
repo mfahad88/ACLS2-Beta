@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,23 +65,28 @@ public class CreateTeamFragment extends Fragment {
         if(Player_Type==3) {
             txt_selection.setText("You can pick only 1 Wicket-keeper");
         }if(Player_Type==0) {
-            txt_selection.setText("Pick 3-5 Batsmen");
+            txt_selection.setText("Pick 4 Batsmen");
         }if(Player_Type==2) {
-            txt_selection.setText("Pick 1-3 All-Rounders");
+            txt_selection.setText("Pick 2 All-Rounders");
         }if(Player_Type==1) {
-            txt_selection.setText("Pick 3-5 Bowlers");
+            txt_selection.setText("Pick 4 Bowlers");
         }
 
         List<Datum> playerData=dbHelper.getPlayersByIdSkills(String.valueOf(teamId1),String.valueOf(teamId2), String.valueOf(Player_Type));
         List<PlayerBean> player = new ArrayList<>();
         for(Datum datum:playerData){
+
             PlayerBean bean=new PlayerBean();
             bean.setId(datum.getPlayerId());
             bean.setName(datum.getName());
             bean.setShort_country(datum.getTeamName());
             bean.setSkill(String.valueOf(Player_Type));
-            bean.setCredits(Double.parseDouble(datum.getPrice()));
-            bean.setPoints(Double.parseDouble(datum.getAvg()));
+            if(!TextUtils.isEmpty(datum.getPrice())) {
+                bean.setCredits(Double.parseDouble(datum.getPrice()));
+            }
+            if(!TextUtils.isEmpty(datum.getAvg())) {
+                bean.setPoints(Double.parseDouble(datum.getAvg()));
+            }
             bean.setChecked(false);
             bean.setCaptain(false);
             bean.setViceCaptain(false);
