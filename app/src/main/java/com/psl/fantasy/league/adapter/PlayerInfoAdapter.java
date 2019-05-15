@@ -138,7 +138,7 @@ public class PlayerInfoAdapter extends ArrayAdapter<PlayerBean> {
                 public void onClick(View v) {
 
                     if (list.get(position).isChecked()) {
-                        if (count_bat > 1) {
+                        if (count_bat > 0) {
                             //  Toast.makeText(context, bean.getName(), Toast.LENGTH_SHORT).show();
 
                             count_bat--;
@@ -157,7 +157,7 @@ public class PlayerInfoAdapter extends ArrayAdapter<PlayerBean> {
                         }
                     } else {
                         if(dbHelper.getMyTeamCount()<11){
-                            if (count_bat < 5) {
+                            if (count_bat < 4) {
                                 count_bat++;
 
                                 playerInterface.playerCount(player_Type, count_bat);
@@ -191,7 +191,7 @@ public class PlayerInfoAdapter extends ArrayAdapter<PlayerBean> {
                     //  Toast.makeText(context, bean.getName(), Toast.LENGTH_SHORT).show();
 
                     if (list.get(position).isChecked()) {
-                        if (count_alrounder > 1) {
+                        if (count_alrounder > 0) {
                             count_alrounder--;
 
                             playerInterface.playerCount(player_Type, count_alrounder);
@@ -209,7 +209,7 @@ public class PlayerInfoAdapter extends ArrayAdapter<PlayerBean> {
                         }
                     } else {
                         if(dbHelper.getMyTeamCount()<11){
-                            if (count_alrounder < 3) {
+                            if (count_alrounder < 2) {
                                 count_alrounder++;
 
                                 playerInterface.playerCount(player_Type, count_alrounder);
@@ -243,7 +243,7 @@ public class PlayerInfoAdapter extends ArrayAdapter<PlayerBean> {
                     //  Toast.makeText(context, bean.getName(), Toast.LENGTH_SHORT).show();
 
                     if (list.get(position).isChecked()) {
-                        if (count_bowl > 1) {
+                        if (count_bowl > 0) {
                             count_bowl--;
 
                             playerInterface.playerCount(player_Type, count_bowl);
@@ -261,7 +261,7 @@ public class PlayerInfoAdapter extends ArrayAdapter<PlayerBean> {
                         }
                     } else {
                         if(dbHelper.getMyTeamCount()<11){
-                            if (count_bowl < 5) {
+                            if (count_bowl < 4) {
                                 count_bowl++;
 
                                 playerInterface.playerCount(player_Type, count_bowl);

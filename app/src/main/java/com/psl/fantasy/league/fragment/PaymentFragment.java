@@ -116,25 +116,31 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onResponse(Call<JoinContenstResponse> call, Response<JoinContenstResponse> response) {
                         if(response.isSuccessful()){
-                            dbHelper.deleteMyTeam();
-                            Helper.showAlertNetural(mView.getContext(),"Success",response.body().getMessage());
-
+                            if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
+                                dbHelper.deleteMyTeam();
+                                Helper.showAlertNetural(mView.getContext(), "Success", response.body().getMessage());
+                            }else{
+                                Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                Log.e("Pay",response.body().getMessage());
+                            }
 
                         }else{
                             try {
                                 Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
+                                Log.e("Error",response.errorBody().string());
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         }
-//                        Intent intent=new Intent(mView.getContext(),StartActivity.class);
-//                        startActivity(intent);
+                        Intent intent=new Intent(mView.getContext(),StartActivity.class);
+                        startActivity(intent);
+
                     }
 
                     @Override
                     public void onFailure(Call<JoinContenstResponse> call, Throwable t) {
-                        t.fillInStackTrace();
-                        Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
+                        t.printStackTrace();
+                        //Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
                     }
                 });
     }

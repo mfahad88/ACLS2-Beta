@@ -193,6 +193,7 @@ public class TeamFragment extends Fragment {
 
         adapter = new PageAdapter(getFragmentManager(),tab_layout.getTabCount(),fragmentInterface,teamId1,teamId2);
         pager.setAdapter(adapter);
+
         tab_layout.setTabTextColors(ColorStateList.valueOf(Color.BLACK));
         tab_layout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

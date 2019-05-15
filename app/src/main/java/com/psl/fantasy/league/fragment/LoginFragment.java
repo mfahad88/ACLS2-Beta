@@ -41,6 +41,7 @@ import com.psl.fantasy.league.Utils.DbHelper;
 import com.psl.fantasy.league.Utils.Helper;
 import com.psl.fantasy.league.activity.StartActivity;
 import com.psl.fantasy.league.client.ApiClient;
+import com.psl.fantasy.league.interfaces.FragmentToActivity;
 import com.psl.fantasy.league.model.response.Insert.InsertResponse;
 import com.psl.fantasy.league.model.response.Login.LoginResponse;
 
@@ -75,6 +76,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private SharedPreferences preferences;
     private LoginButton loginButton;
     private CallbackManager callbackManager;
+    private FragmentToActivity mCallback;
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mCallback = (FragmentToActivity) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement FragmentToActivity");
+        }
+    }
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -87,6 +99,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         mView=inflater.inflate(R.layout.fragment_login, container, false);
         init();
+        mCallback.communicate("disable");
         if(getArguments()!=null){
             credit=getArguments().getDouble("credit");
             contestId=getArguments().getInt("contestId");
