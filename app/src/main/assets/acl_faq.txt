@@ -1,0 +1,87 @@
+
+FAQs
+
+ABOUT
+> What is Apni Cricket league (ACL)?
+Apni Cricket league is an online cricket game where participants create virtual teams of real players and compete based on the performance of those real players in actual games.
+> Are there any charges for using the ACL app?
+There are no charges of using the app. Participants may choose to enter free or paid contests of their choice.
+> Is this service safe to use?
+Yes, the app provides a safe and secure way to carry out transactions:
+i. No information is stored on your mobile phone which means your username and password are never exposed even if your mobile phone is lost or stolen
+ii. All transactions are secured through advanced encryption methodologies
+REGISTRATION
+> How do I register?
+Register yourself using your mobile number.
+> What if I don’t have a valid email address?
+Simply register using your mobile number.
+> From where can I download the app?
+The app can be downloaded from Google Play Store (Android Only)
+> What kind of device versions are compatible to download the app?
+Android 4.2 and above 
+> Is it necessary for me to open a JS wallet account in order to play the fantasy league?
+No, you can play without opening a wallet.
+> How many accounts can I create using the same mobile number on the app?
+You can create one account per mobile number.
+App Registration Steps
+* Search for “Apni Cricket League” on Google Play Store or Apple App store
+* Download App
+* Click “Register”
+* Enter Mobile Number (mandatory)
+* Accept terms and conditions
+Purchasing Coins and Entering Contest
+> How can I purchase coins for entry into a paid contest?
+You may purchase using the following payment methods:
+o Valid debit/credit card
+o Use your mobile phone (airtime) balance for prepaid mobile number
+o Bill your postpaid mobile phone
+> How do I get a notification for a successful transaction?
+You will get an inapp notification confirming your coins purchase.
+
+PLAYING THE GAME
+> How do I play?
+Follow these simple steps to play on ACL App:
+i. Register/ Log into your account
+ii. Click on create team
+iii. Create your team of 11 players 
+iv. Assign Captain and Vice-Captain
+v. Once the live match starts, your team starts earning points based on actual performances of the players selected by you. Final points, ranks and winners are declared after the end of the match
+> How do I create my team?
+After logging in, click on create team and select 11 players of your choice. Team creation will be locked 30 minutes before the match begins.
+> How many players are needed to create a team?
+11 players are required to create a team. There are two formations and one of them needs to be selected.
+> How many teams can I create?
+You can create upto six teams
+> Do I require an internet connection to play?
+Yes, you require a stable broadband, 3G/4G internet connection to play
+> What if one of my chosen players does not play in the round?
+Choose your team carefully! Any player chosen by you who does not feature in the round does not get any points.
+> Can I change my current team players with others available in the league?
+Yes, you can edit your team prior to the start of the match. Team creation will be locked 30 minutes before the start of the match.
+> When I make changes to my team, how long does it take to reflect?
+Once you make changes to your team, the changes are updated immediately
+
+
+
+
+
+
+
+SCORES & POINTS
+> How will I score points?
+You will score points depending on how the players in your team perform in the live match
+.
+> How are my points calculated?
+Points are calculated depending on how your chosen player performs in the actual match. 
+> When do the points get updated?
+The points get updated immediately. 
+> How can I cross check my points?
+You can cross check your points through your dashboard
+
+PRIZES
+> How is the winner of the match decided?
+The winner is decided based on the highest points calculated at the end of a match. Top players will receive special prizes. Refer to the prize section for the prize details.
+> How will I be informed if I win a prize?
+You will receive an in-app notification and announcement will be done on the official Apni Cricket League page on Facebook.
+
+

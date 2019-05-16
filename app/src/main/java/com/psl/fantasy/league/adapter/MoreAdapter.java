@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.psl.fantasy.league.R;
+import com.psl.fantasy.league.fragment.FaqFragment;
 import com.psl.fantasy.league.fragment.FragmentPrizes;
 
 public class MoreAdapter extends ArrayAdapter {
@@ -38,6 +39,9 @@ public class MoreAdapter extends ArrayAdapter {
             public void onClick(View v) {
                 if(objects[position].toString().equalsIgnoreCase("prizes")){
                     ft.replace(R.id.main_content,new FragmentPrizes());
+                    ft.commit();
+                }if(objects[position].toString().equalsIgnoreCase("FAQs")){
+                    ft.replace(R.id.main_content,new FaqFragment());
                     ft.commit();
                 }
             }

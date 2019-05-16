@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.psl.fantasy.league.R;
 import com.psl.fantasy.league.Utils.DbHelper;
+import com.psl.fantasy.league.interfaces.CaptainInterface;
 import com.psl.fantasy.league.model.ui.PlayerBean;
 
 import java.util.List;
@@ -21,12 +22,14 @@ public class CaptainAdapter extends ArrayAdapter<PlayerBean> {
     List<PlayerBean> list;
     DbHelper dbHelper;
     int captain_count; int vice_captain_count;
-    public CaptainAdapter(Context context, int resource, List<PlayerBean> objects, DbHelper dbHelper) {
+    CaptainInterface captainInterface;
+    public CaptainAdapter(Context context, int resource, List<PlayerBean> objects, DbHelper dbHelper, CaptainInterface captainInterface) {
         super(context, resource, objects);
         this.context=context;
         this.resource=resource;
         this.list=objects;
         this.dbHelper=dbHelper;
+        this.captainInterface=captainInterface;
     }
 
 
@@ -53,6 +56,7 @@ public class CaptainAdapter extends ArrayAdapter<PlayerBean> {
                         captain_count--;
                         txt_captain.setSelected(false);
                         bean.setCheckedCaptain(false);
+                        captainInterface.captain(false);
                         txt_captain.setTextColor(Color.parseColor("#9b9b9b"));
                         dbHelper.updateCaptainMyTeam(bean.getId(), true, 0);
                     }
@@ -62,6 +66,7 @@ public class CaptainAdapter extends ArrayAdapter<PlayerBean> {
                             txt_captain.setSelected(true);
                             txt_captain.setTextColor(Color.parseColor("#ffffff"));
                             bean.setCheckedCaptain(true);
+                            captainInterface.captain(true);
                             dbHelper.updateCaptainMyTeam(bean.getId(), true, 1);
                         }
                 }
@@ -77,6 +82,7 @@ public class CaptainAdapter extends ArrayAdapter<PlayerBean> {
                         vice_captain_count--;
                         txt_vice_captain.setSelected(false);
                         bean.setCheckedViceCaptain(false);
+                        captainInterface.vice_captain(false);
                         txt_vice_captain.setTextColor(Color.parseColor("#9b9b9b"));
                         dbHelper.updateCaptainMyTeam(bean.getId(), false, 0);
                     }
@@ -85,6 +91,7 @@ public class CaptainAdapter extends ArrayAdapter<PlayerBean> {
                         vice_captain_count++;
                         txt_vice_captain.setSelected(true);
                         bean.setCheckedViceCaptain(true);
+                        captainInterface.vice_captain(true);
                         txt_vice_captain.setTextColor(Color.parseColor("#ffffff"));
                         dbHelper.updateCaptainMyTeam(bean.getId(), false, 1);
                     }

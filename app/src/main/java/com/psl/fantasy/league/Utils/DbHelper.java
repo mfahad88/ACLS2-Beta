@@ -286,7 +286,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     bean.setName(c.getString(c.getColumnIndex(NAME)));
                     bean.setPoints(Double.parseDouble(c.getString(c.getColumnIndex(PRICE))));
                     bean.setSkill(c.getString(c.getColumnIndex(SKILLS)));
-                   /* if(c.getInt(c.getColumnIndex(ISCAPTAIN))==1) {
+                    if(c.getInt(c.getColumnIndex(ISCAPTAIN))==1) {
                         bean.setCaptain(true);
                     }else{
                         bean.setCaptain(false);
@@ -300,7 +300,7 @@ public class DbHelper extends SQLiteOpenHelper {
                         bean.setChecked(true);
                     }else{
                         bean.setChecked(false);
-                    }*/
+                    }
 
                     list.add(bean);
                     Log.e("Value--->",list.toString());

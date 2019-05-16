@@ -127,48 +127,18 @@ public class TeamFragment extends Fragment {
                     public void onClick(View v) {
                         //if condition put here
                         Fragment fragment=new CaptainFragment();
+                        Bundle bundle=new Bundle();
+                        bundle.putInt("contestId",contestId);
+                        bundle.putInt("teamId1",teamId1);
+                        bundle.putInt("teamId2",teamId2);
+                        bundle.putString("TeamOne",teamOne);
+                        bundle.putString("TeamTwo",teamTwo);
+                        bundle.putDouble("credit",credit);
+                        fragment.setArguments(bundle);
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
                         ft.replace(R.id.main_content, fragment);
                         ft.commit();
-                        /*Fragment fragment = null;
-                        if(Helper.getUserSession(preferences,"MyUser")==null) {
-                            File file=new File(Environment.getExternalStorageDirectory()+File.separator+"ACL","user.txt");
-                            if(file.exists()) {
-                                if (Helper.getUserIdFromText() != null) {
 
-                                    try {
-                                        fragment=new PaymentFragment();
-                                        Bundle bundle = new Bundle();
-                                        bundle.putDouble("credit", credit);
-                                        bundle.putInt("conId", contestId);
-                                        fragment.setArguments(bundle);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-
-                                }
-                            }else{
-                                fragment = new LoginFragment();
-                                Bundle bundle = new Bundle();
-                                bundle.putDouble("credit", credit);
-                                bundle.putInt("contestId", contestId);
-                                fragment.setArguments(bundle);
-                            }
-                        } else {
-                            try {
-                                fragment=new PaymentFragment();
-                                Bundle bundle = new Bundle();
-                                bundle.putDouble("credit", credit);
-                                bundle.putInt("conId", contestId);
-                                fragment.setArguments(bundle);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        ft.replace(R.id.main_content, fragment);
-                        ft.commit();*/
                     }
                 });
             }
