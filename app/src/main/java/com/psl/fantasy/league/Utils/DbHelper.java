@@ -286,7 +286,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     bean.setName(c.getString(c.getColumnIndex(NAME)));
                     bean.setPoints(Double.parseDouble(c.getString(c.getColumnIndex(PRICE))));
                     bean.setSkill(c.getString(c.getColumnIndex(SKILLS)));
-                    if(c.getInt(c.getColumnIndex(ISCAPTAIN))==1) {
+                   /* if(c.getInt(c.getColumnIndex(ISCAPTAIN))==1) {
                         bean.setCaptain(true);
                     }else{
                         bean.setCaptain(false);
@@ -300,7 +300,7 @@ public class DbHelper extends SQLiteOpenHelper {
                         bean.setChecked(true);
                     }else{
                         bean.setChecked(false);
-                    }
+                    }*/
 
                     list.add(bean);
                     Log.e("Value--->",list.toString());
@@ -316,6 +316,40 @@ public class DbHelper extends SQLiteOpenHelper {
 
         }
         return list;
+    }
+
+
+    public int getIsCaptainMyTeamCount(boolean isCaptain){
+        
+        Cursor c = null ;
+        String query;
+        int count = 0;
+        try {
+            if(isCaptain) {
+                
+                query = "SELECT COUNT(*) FROM " + TBL_MY_TEAM +" WHERE "+ISCAPTAIN+"=1";
+            }else{
+                query = "SELECT COUNT(*) FROM " + TBL_MY_TEAM +" WHERE "+ISWCAPTAIN+"=1";
+            }
+
+            SQLiteDatabase db = this.getReadableDatabase();
+            c = db.rawQuery(query, null);
+
+            if (c.moveToFirst()) {
+                do {
+                    count=c.getInt(0);
+                } while (c.moveToNext());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally{
+            if(c!=null)
+                c.close();
+
+        }
+        return count;
     }
 
 
@@ -464,6 +498,8 @@ public class DbHelper extends SQLiteOpenHelper {
         return processId;
     }
 
+
+
     public long saveConfig(List<com.psl.fantasy.league.model.response.Config.Datum> list) {
         // Gets the data repository in write mode
         long processId = 0;
@@ -594,5 +630,33 @@ public class DbHelper extends SQLiteOpenHelper {
         {
             e.printStackTrace();
         }
+    }
+
+
+    public long updateCaptainMyTeam(int Id,boolean isCaptain,int value) {
+        // Gets the data repository in write mode
+        long processId = 0;
+        SQLiteDatabase db=null;
+
+        try{
+            db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(ID,Id);
+            if(isCaptain) {
+                values.put(ISCAPTAIN,value);
+            }else{
+                values.put(ISWCAPTAIN,value);
+            }
+            processId=db.update(TBL_MY_TEAM,values,ID+"="+Id,null);
+        }catch (SQLException e){
+            e.printStackTrace();
+        }	finally
+        {
+            if(db!=null)
+                if(db.isOpen())
+                    db.close();
+        }
+
+        return processId;
     }
 }

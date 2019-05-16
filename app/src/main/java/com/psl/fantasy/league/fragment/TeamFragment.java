@@ -126,7 +126,11 @@ public class TeamFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         //if condition put here
-                        Fragment fragment = null;
+                        Fragment fragment=new CaptainFragment();
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        ft.replace(R.id.main_content, fragment);
+                        ft.commit();
+                        /*Fragment fragment = null;
                         if(Helper.getUserSession(preferences,"MyUser")==null) {
                             File file=new File(Environment.getExternalStorageDirectory()+File.separator+"ACL","user.txt");
                             if(file.exists()) {
@@ -164,7 +168,7 @@ public class TeamFragment extends Fragment {
                         }
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
                         ft.replace(R.id.main_content, fragment);
-                        ft.commit();
+                        ft.commit();*/
                     }
                 });
             }
@@ -191,14 +195,16 @@ public class TeamFragment extends Fragment {
         tab_layout.setTabGravity(TabLayout.GRAVITY_FILL);
         pager.setOffscreenPageLimit(tab_layout.getTabCount());
 
-        adapter = new PageAdapter(getFragmentManager(),tab_layout.getTabCount(),fragmentInterface,teamId1,teamId2);
+        adapter = new PageAdapter(getFragmentManager(),tab_layout.getTabCount(),fragmentInterface,teamId1,teamId2,tab_layout);
         pager.setAdapter(adapter);
 
         tab_layout.setTabTextColors(ColorStateList.valueOf(Color.BLACK));
         tab_layout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+
                 pager.setCurrentItem(tab.getPosition());
+
             }
 
             @Override
@@ -212,6 +218,22 @@ public class TeamFragment extends Fragment {
             }
         });
 
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                tab_layout.getTabAt(i).select();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
 
 
         if(teamOne.trim().equals("Pakistan")){

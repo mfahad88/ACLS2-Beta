@@ -12,20 +12,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Spinner;
 
 import com.psl.fantasy.league.R;
 import com.psl.fantasy.league.Utils.DbHelper;
 import com.psl.fantasy.league.Utils.Helper;
 import com.psl.fantasy.league.activity.StartActivity;
+import com.psl.fantasy.league.adapter.TelcoAdapter;
 import com.psl.fantasy.league.model.response.JoinContest.JoinContenstResponse;
 import com.psl.fantasy.league.client.ApiClient;
 import com.psl.fantasy.league.model.ui.PlayerBean;
+import com.psl.fantasy.league.model.ui.TelcoBean;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -42,6 +46,9 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
     int ContestId; int userId;
     double credit;
     SharedPreferences preferences;
+    int[] icon={R.drawable.mobilink_logo, R.drawable.warid_logo, R.drawable.telenor_logo, R.drawable.zong_logo};
+    String[] telcoName={"Mobilink","Warid","Telenor","Zong"};
+    Spinner spinner_telco;
     public PaymentFragment() {
         // Required empty public constructor
     }
@@ -55,6 +62,9 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
         btn_pay=mView.findViewById(R.id.btn_pay);
         preferences=mView.getContext().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
         dbHelper=new DbHelper(mView.getContext());
+        spinner_telco=mView.findViewById(R.id.spinner_telco);
+
+
         if(getArguments()!=null){
             ContestId=getArguments().getInt("conId");
             credit=getArguments().getDouble("credit");
@@ -74,6 +84,8 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
         }
 
         btn_pay.setOnClickListener(this);
+        TelcoAdapter adapter=new TelcoAdapter(mView.getContext(),R.layout.telco_adapter,icon,telcoName);
+        spinner_telco.setAdapter(adapter);
         return mView;
     }
 
@@ -140,7 +152,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onFailure(Call<JoinContenstResponse> call, Throwable t) {
                         t.printStackTrace();
-                        //Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
+
                     }
                 });
     }

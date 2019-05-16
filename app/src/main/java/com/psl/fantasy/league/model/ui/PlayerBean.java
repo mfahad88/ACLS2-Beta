@@ -13,7 +13,8 @@ public class PlayerBean{
     private boolean isChecked;
     private boolean isCaptain;
     private boolean isViceCaptain;
-
+    private boolean isCheckedCaptain;
+    private boolean isCheckedViceCaptain;
 
 
     public int getId() {
@@ -88,6 +89,21 @@ public class PlayerBean{
         isViceCaptain = viceCaptain;
     }
 
+    public boolean isCheckedCaptain() {
+        return isCheckedCaptain;
+    }
+
+    public void setCheckedCaptain(boolean checkedCaptain) {
+        isCheckedCaptain = checkedCaptain;
+    }
+
+    public boolean isCheckedViceCaptain() {
+        return isCheckedViceCaptain;
+    }
+
+    public void setCheckedViceCaptain(boolean checkedViceCaptain) {
+        isCheckedViceCaptain = checkedViceCaptain;
+    }
 
     @Override
     public String toString() {
@@ -101,8 +117,8 @@ public class PlayerBean{
                 ", isChecked=" + isChecked +
                 ", isCaptain=" + isCaptain +
                 ", isViceCaptain=" + isViceCaptain +
+                ", isCheckedCaptain=" + isCheckedCaptain +
+                ", isCheckedViceCaptain=" + isCheckedViceCaptain +
                 '}';
     }
-
-
 }

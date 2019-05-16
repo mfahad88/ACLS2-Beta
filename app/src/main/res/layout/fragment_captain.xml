@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.CaptainFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#efeff4"
+        android:id="@+id/relative_header">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose your Captain and Vice Captain"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/relative_header"
+        android:id="@+id/list_view_captain"></ListView>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_save_team"
+        android:layout_marginBottom="15dp"
+        android:text="Save Team"
+        android:textAllCaps="true"
+        android:enabled="false"
+        android:textColor="@android:color/black"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/drawable_btn_square"/>
+
+</RelativeLayout>
