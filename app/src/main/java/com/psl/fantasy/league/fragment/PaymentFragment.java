@@ -6,13 +6,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.psl.fantasy.league.R;
 import com.psl.fantasy.league.Utils.DbHelper;
@@ -44,11 +48,14 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
     private Button btn_pay;
     private DbHelper dbHelper;
     int ContestId; int userId;
+    TextView edt_mobile_no;
+    String mobileNo;
     double credit;
     SharedPreferences preferences;
-    int[] icon={R.drawable.mobilink_logo, R.drawable.warid_logo, R.drawable.telenor_logo, R.drawable.zong_logo};
-    String[] telcoName={"Mobilink","Warid","Telenor","Zong"};
+    int[] icon={R.drawable.mobilink_logo, R.drawable.warid_logo, R.drawable.telenor_logo, R.drawable.zong_logo,R.drawable.ufone_logo};
+    String[] telcoName={"Mobilink","Warid","Telenor","Zong","Ufone"};
     Spinner spinner_telco;
+    TelephonyManager telephonyManager;
     public PaymentFragment() {
         // Required empty public constructor
     }
@@ -60,9 +67,13 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         mView=inflater.inflate(R.layout.fragment_payment, container, false);
         btn_pay=mView.findViewById(R.id.btn_pay);
+        edt_mobile_no=mView.findViewById(R.id.edt_mobile_no);
         preferences=mView.getContext().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
         dbHelper=new DbHelper(mView.getContext());
         spinner_telco=mView.findViewById(R.id.spinner_telco);
+
+        telephonyManager = (TelephonyManager) mView.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        String provider = telephonyManager.getSimOperatorName();
 
 
         if(getArguments()!=null){
@@ -71,14 +82,23 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
         }
         try {
             if(Helper.getUserSession(preferences,"MyUser")!=null) {
-                JSONObject jsonObject = new JSONObject(Helper.getUserSession(preferences, "MyUser").toString());
+                JSONObject jsonObject = new JSONObject(String.valueOf(Helper.getUserSession(preferences, "MyUser")));
+
+                mobileNo=String.format("%.0f",jsonObject.getDouble("mobile_no"));
                 userId = jsonObject.getInt("user_id");
+
             }else{
                 if(!TextUtils.isEmpty(Helper.getUserIdFromText())) {
-                    userId = Integer.parseInt(Helper.getUserIdFromText());
+                    JSONObject object=new JSONObject(Helper.getUserIdFromText());
+                    mobileNo=object.getString("mobile_no");
+                    userId = object.getInt("user_id");
+
                 }
             }
 
+            //if(!TextUtils.isEmpty(mobileNo)) {
+                edt_mobile_no.setText("0"+mobileNo);
+            //}
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -86,6 +106,12 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
         btn_pay.setOnClickListener(this);
         TelcoAdapter adapter=new TelcoAdapter(mView.getContext(),R.layout.telco_adapter,icon,telcoName);
         spinner_telco.setAdapter(adapter);
+
+        for(int i=0;i<telcoName.length;i++){
+            if(telcoName[i].equalsIgnoreCase(provider)){
+                spinner_telco.setSelection(i);
+            }
+        }
         return mView;
     }
 

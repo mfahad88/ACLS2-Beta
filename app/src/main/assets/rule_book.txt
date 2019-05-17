@@ -1,0 +1,21 @@
+Points will be awarded based on the following:
+> Scoring 1 run = +1 point
+> Scoring a 4 = +8 points
+> Scoring a 6 = +12 points
+> Scoring a 50 = +50 points
+> Scoring a 100 = +100 points
+
+> Scoring a Duck = -10 points
+> Scoring a Golden Duck = -20 points
+> On taking a catch = +10 points
+> Wicketkeeper's 1 stump = +20 points
+
+> Bowler Getting a wicket = +40 points
+> Bowler Getting a Four wicket haul = +150 points
+> Bowler Getting a Five Wicket Haul = +200 points
+> Bowler getting a hat-trick = +300 points
+> Bowling a maiden over = +50 points
+
+> Captain x2 points (Captain's attained points are doubled)
+> Vice-Captain x1.5 points (Vice-Captain's attained points are doubled)
+

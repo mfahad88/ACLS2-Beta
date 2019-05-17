@@ -67,7 +67,7 @@ public class JoinedContestFragment extends Fragment {
                     list_matches.setVisibility(View.VISIBLE);
                     if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
                         for (Datum datum : response.body().getData()) {
-                            list.add(new JoinedContestBean(userId,datum.getContest_id(),datum.getContestName(), datum.getDescription(), datum.getEntryFee(), datum.getTeamName(), datum.getTotalPoint()));
+                            list.add(new JoinedContestBean(datum.getContest_id(),userId,datum.getContestName(), datum.getDescription(), datum.getEntryFee(), datum.getTeamName(), datum.getTotalPoint()));
                             JoinedContestAdapter adapter = new JoinedContestAdapter(mView.getContext(), R.layout.joined_contest_adapter, list);
                             list_matches.setAdapter(adapter);
                         }

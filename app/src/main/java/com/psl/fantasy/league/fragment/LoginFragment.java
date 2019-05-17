@@ -259,8 +259,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
                                 if(Helper.getUserSession(preferences,"MyUser")!=null) {
                                     try {
-                                        JSONObject jsonObject = new JSONObject(Helper.getUserSession(preferences, "MyUser").toString());
-                                        Helper.saveText(String.valueOf(jsonObject.getInt("user_id")));
+                                        JSONObject jsonObject = new JSONObject(String.valueOf(Helper.getUserSession(preferences, "MyUser")));
+                                        Helper.saveText(String.valueOf(jsonObject));
                                     }catch (Exception e){
                                         e.printStackTrace();
                                     }

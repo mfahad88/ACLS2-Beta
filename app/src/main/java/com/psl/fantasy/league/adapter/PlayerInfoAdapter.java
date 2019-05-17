@@ -45,6 +45,7 @@ public class PlayerInfoAdapter extends ArrayAdapter<PlayerBean> {
     }
 
 
+
     @Override
     public PlayerBean getItem(int position) {
         return list.get(position);

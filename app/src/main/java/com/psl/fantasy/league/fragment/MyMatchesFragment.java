@@ -73,7 +73,8 @@ public class MyMatchesFragment extends Fragment {
                 if (Helper.getUserIdFromText() != null) {
 
                     try {
-                        userId= Integer.parseInt(Helper.getUserIdFromText());
+                        JSONObject jsonObject=new JSONObject(Helper.getUserIdFromText());
+                        userId= jsonObject.getInt("user_id");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

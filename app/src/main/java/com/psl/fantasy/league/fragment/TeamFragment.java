@@ -46,7 +46,7 @@ public class TeamFragment extends Fragment {
     FragmentInterface fragmentInterface;
     int count_keeper=0;
     int main=0;
-    double credit=0;
+    double credit=100000;
     String wkt_keeper="";
     private View mView;
     private TextView txt_player_count;
@@ -88,6 +88,7 @@ public class TeamFragment extends Fragment {
             teamOne=getArguments().getString("TeamOne");
             teamTwo=getArguments().getString("TeamTwo");
         }
+
         btn_done=mView.findViewById(R.id.btn_done);
         pager=mView.findViewById(R.id.pager);
         txt_player_count=mView.findViewById(R.id.txt_player_count);
@@ -95,6 +96,7 @@ public class TeamFragment extends Fragment {
         tab_layout=mView.findViewById(R.id.tab_layout);
         image_team_one=mView.findViewById(R.id.image_team_one);
         image_team_two=mView.findViewById(R.id.image_team_two);
+        txt_credit_count.setText(String.valueOf(credit));
         preferences=mView.getContext().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
         fragmentInterface=new FragmentInterface() {
             @Override
@@ -148,9 +150,11 @@ public class TeamFragment extends Fragment {
             @Override
             public void credit(double count) {
                 if(sign=='+') {
-                    credit = credit + count;
+                    //credit = credit + count;
+                    credit=credit-count;
                 }else {
-                    credit = credit - count;
+//                    credit = credit - count;
+                    credit = credit + count;
                 }
 //                Toast.makeText(mView.getContext(), String.valueOf(credit), Toast.LENGTH_SHORT).show();
                 txt_credit_count.setText(String.valueOf(credit));

@@ -230,7 +230,7 @@ public class Helper {
         editor.commit();
     }
 
-    public static Object getUserSession(SharedPreferences sharedpreferences, String key){
+    public static <T>Object getUserSession(SharedPreferences sharedpreferences, String key){
         Gson gson=new Gson();
        String json=sharedpreferences.getString(key,"");
        return  gson.fromJson(json,Object.class);
@@ -294,6 +294,7 @@ public class Helper {
                 FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory()+File.separator+"ACL"+File.separator+"user.txt");
                 try {
                     fos.write(AESUtils.encrypt(msg).getBytes());
+//                    fos.write(msg.getBytes());
                     fos.close();
                     Log.e("Helper",file.getPath()+" saved...");
                 } catch (Exception e) {

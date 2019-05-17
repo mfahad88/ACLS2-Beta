@@ -1,0 +1,27 @@
+Game format of ACL for 2019 World Cup
+ACL provides a fantasy gaming platform for the sport of cricket. It is an online game where users create a virtual team of real-life players and earn points based on the performances of these players in real matches. A user who scores the maximum points in his joined contest attains the first rank on the leader-board. ACL offers free and paid contests in addition to trial contests – that will be recommended to every first time/new registrant to the gaming app. A user has to pay a certain fee to join a contest and can win real cash. There is no age limit to participate in the game and contest.
+ACL is played with cricket knowledge and skill to create the best performing winning 11. Your team earns points based on your chosen players' performance in the real-life matches. All factors that influence the outcome of the match have to be taken into account by every player working to achieve the maximum points and glory, these include:
+* Both Team’s line-up
+* Individual player’s current playing form
+* Weather & pitch conditions
+* Individuals player’s ability to perform under match conditions
+4 steps to participate in ACL:
+1. Select A Match (within a Series):
+Select any of the upcoming matches from any of the current or upcoming cricket series.
+
+2. Create Your Team: 
+Players will use their sports knowledge and showcase their skills to create an ACL team within a budget of 100 credits.
+
+3. Join a Contest: 
+Prior to joining a contest, the players will be recommended to enlist in a trial contest where there will be no winnings. Similarly, a player may choose to enter a free contest without an entry free. All paid contests will have an entry fees and guaranteed winners which will be declared based on players ranks. All paid contests will have limited slots which will be announced. With machine learning, the predictive model will get better at ensuring revenue for each contest is maximized in any series based on the availability of data.
+
+Prior to match kick-off time, contests will continue to be launched with varied winning pots, entry fees, and slots to ensure maximum paid participation in ACL with guaranteed cash winnings.
+Players will be able to follow the contest’s progress upto match kick-off time and will have the option to participate in as many contest with their created team.
+
+The contest leaderboard will display the team’s rank post-match based on the fantasy points and rule book.
+
+4. Withdraw your Winnings: 
+Instantly withdraw winnings from your ACL account into your JCash wallet account.
+
+
+

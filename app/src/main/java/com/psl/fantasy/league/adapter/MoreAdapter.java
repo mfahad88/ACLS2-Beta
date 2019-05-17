@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.psl.fantasy.league.R;
 import com.psl.fantasy.league.fragment.FaqFragment;
 import com.psl.fantasy.league.fragment.FragmentPrizes;
+import com.psl.fantasy.league.fragment.RulesFragment;
+import com.psl.fantasy.league.fragment.TermsConditionsFragment;
 
 public class MoreAdapter extends ArrayAdapter {
     Context context;
@@ -42,6 +44,12 @@ public class MoreAdapter extends ArrayAdapter {
                     ft.commit();
                 }if(objects[position].toString().equalsIgnoreCase("FAQs")){
                     ft.replace(R.id.main_content,new FaqFragment());
+                    ft.commit();
+                }if(objects[position].toString().equalsIgnoreCase("Rules")){
+                    ft.replace(R.id.main_content,new RulesFragment());
+                    ft.commit();
+                }if(objects[position].toString().equalsIgnoreCase("Terms & Conditions")){
+                    ft.replace(R.id.main_content,new TermsConditionsFragment());
                     ft.commit();
                 }
             }
