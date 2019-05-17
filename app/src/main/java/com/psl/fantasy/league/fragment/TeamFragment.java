@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -74,6 +75,7 @@ public class TeamFragment extends Fragment {
                     + " must implement FragmentToActivity");
         }
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -170,6 +172,7 @@ public class TeamFragment extends Fragment {
         pager.setOffscreenPageLimit(tab_layout.getTabCount());
 
         adapter = new PageAdapter(getFragmentManager(),tab_layout.getTabCount(),fragmentInterface,teamId1,teamId2,tab_layout);
+
         pager.setAdapter(adapter);
 
         tab_layout.setTabTextColors(ColorStateList.valueOf(Color.BLACK));

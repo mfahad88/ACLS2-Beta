@@ -1,17 +1,21 @@
 package com.psl.fantasy.league.adapter;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.psl.fantasy.league.Utils.Helper;
 import com.psl.fantasy.league.fragment.CreateTeamFragment;
 import com.psl.fantasy.league.interfaces.FragmentInterface;
 
-public class PageAdapter extends FragmentPagerAdapter {
+public class PageAdapter extends FragmentStatePagerAdapter {
 
     private int numOfTabs;
     Fragment fragment;
@@ -27,6 +31,8 @@ public class PageAdapter extends FragmentPagerAdapter {
         this.tabLayout=tab_layout;
 
     }
+
+
 
     @Override
     public Fragment getItem(int position) {

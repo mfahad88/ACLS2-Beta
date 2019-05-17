@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.psl.fantasy.league.R;
 import com.psl.fantasy.league.Utils.DbHelper;
@@ -43,8 +44,6 @@ public class CreateTeamFragment extends Fragment {
     }
 
 
-
-
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,6 +53,7 @@ public class CreateTeamFragment extends Fragment {
         list_player=mView.findViewById(R.id.list_player);
         TextView txt_selection=mView.findViewById(R.id.txt_selection);
         dbHelper=new DbHelper(mView.getContext());
+        Toast.makeText(mView.getContext(), "onCreateView", Toast.LENGTH_SHORT).show();
         if(getArguments()!=null){
             Player_Type=getArguments().getInt("Player_Type"); //0=batting ,1=bowling,2=alrounder,3=keeper
             teamId1=getArguments().getInt("teamId1");
