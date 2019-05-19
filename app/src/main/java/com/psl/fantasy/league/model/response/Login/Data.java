@@ -11,7 +11,7 @@ public class Data {
     private MyUser myUser;
     @SerializedName("myUsermsc")
     @Expose
-    private Object myUsermsc;
+    private MyUsermsc myUsermsc;
 
     public MyUser getMyUser() {
         return myUser;
@@ -21,11 +21,11 @@ public class Data {
         this.myUser = myUser;
     }
 
-    public Object getMyUsermsc() {
+    public MyUsermsc getMyUsermsc() {
         return myUsermsc;
     }
 
-    public void setMyUsermsc(Object myUsermsc) {
+    public void setMyUsermsc(MyUsermsc myUsermsc) {
         this.myUsermsc = myUsermsc;
     }
 

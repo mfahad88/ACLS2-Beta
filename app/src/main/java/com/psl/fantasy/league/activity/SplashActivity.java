@@ -32,6 +32,7 @@ import com.psl.fantasy.league.client.ApiClient;
 import com.psl.fantasy.league.model.response.Config.ConfigBeanResponse;
 import com.psl.fantasy.league.model.response.Player.PlayerResponse;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -63,31 +64,38 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void getMatches(){
-        ApiClient.getInstance().getPlayersMatches().enqueue(new Callback<PlayerResponse>() {
-            @Override
-            public void onResponse(Call<PlayerResponse> call, Response<PlayerResponse> response) {
-                if(response.isSuccessful()){
-                    if(response.body().getResponseCode().equals("1001")){
 
-                        dbHelper.savePlayers(response.body().getData());
+        try{
+            JSONObject object=new JSONObject();
+            object.put("match_id",0);
+            ApiClient.getInstance().getPlayersMatches(Helper.encrypt(object.toString())).enqueue(new Callback<PlayerResponse>() {
+                @Override
+                public void onResponse(Call<PlayerResponse> call, Response<PlayerResponse> response) {
+                    if(response.isSuccessful()){
+                        if(response.body().getResponseCode().equals("1001")){
+
+                            dbHelper.savePlayers(response.body().getData());
+                        }
+                    }else{
+                        try {
+                            Helper.showAlertNetural(SplashActivity.this,"Error",response.errorBody().string());
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
                     }
-                }else{
-                    try {
-                        Helper.showAlertNetural(SplashActivity.this,"Error",response.errorBody().string());
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
                 }
-            }
 
-            @Override
-            public void onFailure(Call<PlayerResponse> call, Throwable t) {
-                t.fillInStackTrace();
-                Helper.showAlertNetural(SplashActivity.this,"Error",t.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(Call<PlayerResponse> call, Throwable t) {
+                    t.fillInStackTrace();
+                    Helper.showAlertNetural(SplashActivity.this,"Error",t.getMessage());
+                }
+            });
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
     }
 
     private void getConfig(){

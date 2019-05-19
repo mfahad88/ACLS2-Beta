@@ -171,7 +171,7 @@ public class TeamFragment extends Fragment {
         tab_layout.setTabGravity(TabLayout.GRAVITY_FILL);
         pager.setOffscreenPageLimit(tab_layout.getTabCount());
 
-        adapter = new PageAdapter(getFragmentManager(),tab_layout.getTabCount(),fragmentInterface,teamId1,teamId2,tab_layout);
+        adapter = new PageAdapter(getFragmentManager(),tab_layout.getTabCount(),fragmentInterface,teamId1,teamId2);
 
         pager.setAdapter(adapter);
 

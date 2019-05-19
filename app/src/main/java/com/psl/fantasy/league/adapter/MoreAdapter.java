@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.psl.fantasy.league.R;
 import com.psl.fantasy.league.fragment.FaqFragment;
-import com.psl.fantasy.league.fragment.FragmentPrizes;
+import com.psl.fantasy.league.fragment.PrizesFragment;
 import com.psl.fantasy.league.fragment.RulesFragment;
 import com.psl.fantasy.league.fragment.TermsConditionsFragment;
 
@@ -40,7 +40,7 @@ public class MoreAdapter extends ArrayAdapter {
             @Override
             public void onClick(View v) {
                 if(objects[position].toString().equalsIgnoreCase("prizes")){
-                    ft.replace(R.id.main_content,new FragmentPrizes());
+                    ft.replace(R.id.main_content,new PrizesFragment());
                     ft.commit();
                 }if(objects[position].toString().equalsIgnoreCase("FAQs")){
                     ft.replace(R.id.main_content,new FaqFragment());

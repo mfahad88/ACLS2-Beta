@@ -53,6 +53,15 @@ public class Datum {
     @SerializedName("team_id2_logo_path_disble")
     @Expose
     private String teamId2LogoPathDisble;
+    @SerializedName("team_id1_shortName")
+    @Expose
+    private String team_id1_shortName;
+    @SerializedName("team_id2_shortName")
+    @Expose
+    private String team_id2_shortName;
+    @SerializedName("series_name")
+    @Expose
+    private String series_name;
 
     public Integer getMatchId() {
         return matchId;
@@ -174,4 +183,27 @@ public class Datum {
         this.teamId2LogoPathDisble = teamId2LogoPathDisble;
     }
 
+    public String getTeam_id1_shortName() {
+        return team_id1_shortName;
+    }
+
+    public void setTeam_id1_shortName(String team_id1_shortName) {
+        this.team_id1_shortName = team_id1_shortName;
+    }
+
+    public String getTeam_id2_shortName() {
+        return team_id2_shortName;
+    }
+
+    public void setTeam_id2_shortName(String team_id2_shortName) {
+        this.team_id2_shortName = team_id2_shortName;
+    }
+
+    public String getSeries_name() {
+        return series_name;
+    }
+
+    public void setSeries_name(String series_name) {
+        this.series_name = series_name;
+    }
 }

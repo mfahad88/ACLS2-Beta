@@ -67,7 +67,7 @@ public class MyMatchesFragment extends Fragment {
         ProgressBar progressBar=mView.findViewById(R.id.progressBar);
         list=new ArrayList<>();
         mCallback.communicate("disable");
-        if(Helper.getUserSession(preferences,"MyUser")==null) {
+        if(Helper.getUserSession(preferences,Helper.MY_USER)==null) {
             File file=new File(Environment.getExternalStorageDirectory()+File.separator+"ACL","user.txt");
             if(file.exists()) {
                 if (Helper.getUserIdFromText() != null) {

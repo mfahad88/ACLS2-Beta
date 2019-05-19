@@ -81,7 +81,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
             credit=getArguments().getDouble("credit");
         }
         try {
-            if(Helper.getUserSession(preferences,"MyUser")!=null) {
+            /*if(Helper.getUserSession(preferences,"MyUser")!=null) {
                 JSONObject jsonObject = new JSONObject(String.valueOf(Helper.getUserSession(preferences, "MyUser")));
 
                 mobileNo=String.format("%.0f",jsonObject.getDouble("mobile_no"));
@@ -94,8 +94,11 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                     userId = object.getInt("user_id");
 
                 }
-            }
+            }*/
+            JSONObject jsonObject = new JSONObject(String.valueOf(Helper.getUserSession(preferences, "MyUser")));
 
+            mobileNo=String.format("%.0f",jsonObject.getDouble("mobile_no"));
+            userId = jsonObject.getInt("user_id");
             //if(!TextUtils.isEmpty(mobileNo)) {
                 edt_mobile_no.setText("0"+mobileNo);
             //}

@@ -77,6 +77,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private LoginButton loginButton;
     private CallbackManager callbackManager;
     private FragmentToActivity mCallback;
+    private String screen;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -103,6 +104,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         if(getArguments()!=null){
             credit=getArguments().getDouble("credit");
             contestId=getArguments().getInt("contestId");
+            screen=getArguments().getString("screen");
         }
         loginButton = mView.findViewById(R.id.login_button);
         loginButton.setReadPermissions(Arrays.asList(EMAIL));
@@ -255,25 +257,37 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                         if(response.isSuccessful()){
                             if(response.body().getResponseCode().equalsIgnoreCase("1001")){
                                 Helper.putUserSession(sharedpreferences,Helper.MY_USER,response.body().getData().getMyUser());
+                                Helper.putUserSession(sharedpreferences,Helper.MY_USER_MSC,response.body().getData().getMyUsermsc());
                                 Helper.createDirectory();
 
                                 if(Helper.getUserSession(preferences,"MyUser")!=null) {
                                     try {
-                                        JSONObject jsonObject = new JSONObject(String.valueOf(Helper.getUserSession(preferences, "MyUser")));
-                                        Helper.saveText(String.valueOf(jsonObject));
+                                        JSONObject jsonObject = new JSONObject(String.valueOf(Helper.getUserSession(preferences, Helper.MY_USER)));
+                                        jsonObject.put(Helper.MY_USER_MSC,String.valueOf(Helper.getUserSession(preferences, Helper.MY_USER_MSC)));
+                                        Helper.saveText(String.valueOf(jsonObject));;
                                     }catch (Exception e){
                                         e.printStackTrace();
                                     }
                                 }
 
-                                Fragment fragment=new PaymentFragment();
-                                Bundle bundle=new Bundle();
-                                bundle.putInt("conId",contestId);
-                                bundle.putDouble("credit",credit);
-                                fragment.setArguments(bundle);
-                                FragmentTransaction ft=getFragmentManager().beginTransaction();
-                                ft.replace(R.id.main_content,fragment);
-                                ft.commit();
+
+
+
+                                if(screen.equalsIgnoreCase("payment")){
+                                    Fragment fragment=new PaymentFragment();
+                                    Bundle bundle=new Bundle();
+                                    bundle.putInt("conId",contestId);
+                                    bundle.putDouble("credit",credit);
+                                    fragment.setArguments(bundle);
+                                    FragmentTransaction ft=getFragmentManager().beginTransaction();
+                                    ft.replace(R.id.main_content,fragment);
+                                    ft.commit();
+                                }if(screen.equalsIgnoreCase("prizesclaim")){
+                                    Fragment fragment=new FragmentClaimPrizes();
+                                    FragmentTransaction ft=getFragmentManager().beginTransaction();
+                                    ft.replace(R.id.main_content,fragment);
+                                    ft.commit();
+                                }
 
                             }else{
                                 Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());

@@ -33,7 +33,7 @@ public interface ApiInterface {
     Call<ContestResponse> getAllContest(@Body TestBeanRequest beanRequest);
 
     @POST("getPlayersMatches")
-    Call<PlayerResponse> getPlayersMatches();
+    Call<PlayerResponse> getPlayersMatches(@Body TestBeanRequest beanRequest);
 
     @POST("config")
     Call<ConfigBeanResponse> getConfig(@Body TestBeanRequest beanRequest);

@@ -90,8 +90,8 @@ public class CaptainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Fragment fragment = null;
-                        if(Helper.getUserSession(preferences,"MyUser")==null) {
-                            File file=new File(Environment.getExternalStorageDirectory()+File.separator+"ACL","user.txt");
+                        if(Helper.getUserSession(preferences,Helper.MY_USER)==null) {
+                            /*File file=new File(Environment.getExternalStorageDirectory()+File.separator+"ACL","user.txt");
                             if(file.exists()) {
                                 if (Helper.getUserIdFromText() != null) {
 
@@ -112,7 +112,13 @@ public class CaptainFragment extends Fragment {
                                 bundle.putDouble("credit", credit);
                                 bundle.putInt("contestId", contestId);
                                 fragment.setArguments(bundle);
-                            }
+                            }*/
+                            fragment = new LoginFragment();
+                            Bundle bundle = new Bundle();
+                            bundle.putDouble("credit", credit);
+                            bundle.putInt("contestId", contestId);
+                            bundle.putString("screen","Payment");
+                            fragment.setArguments(bundle);
                         } else {
                             try {
                                 fragment=new PaymentFragment();

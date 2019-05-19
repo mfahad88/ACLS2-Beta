@@ -24,6 +24,8 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -67,6 +69,7 @@ public class Helper {
     public static final String i="Test";
     public static final String SHARED_PREF = "PSL_FANTSY";
     public static final String MY_USER = "MyUser";
+    public static final String MY_USER_MSC = "MyUserMsc";
     public static final String isFromLogin="isFromLogin";
     public static void showAlertNetural(Context ctx, String title, String message){
         AlertDialog.Builder builder=new AlertDialog.Builder(ctx);
@@ -230,10 +233,34 @@ public class Helper {
         editor.commit();
     }
 
-    public static <T>Object getUserSession(SharedPreferences sharedpreferences, String key){
+    /*public static <T>Object getUserSession(SharedPreferences sharedpreferences, String key){
         Gson gson=new Gson();
        String json=sharedpreferences.getString(key,"");
        return  gson.fromJson(json,Object.class);
+    }*/
+
+    public static <T>Object getUserSession(SharedPreferences sharedpreferences, String key){
+        Gson gson=new Gson();
+        String session = null;
+        String json=sharedpreferences.getString(key,"");
+        if(gson.fromJson(json,Object.class)==null){
+            File file=new File(Environment.getExternalStorageDirectory()+File.separator+"ACL","user.txt");
+            if(file.exists()) {
+                if (Helper.getUserIdFromText() != null) {
+
+                    try {
+                        session=Helper.getUserIdFromText();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }else{
+            session=gson.fromJson(json,Object.class).toString();
+        }
+        return  session;
     }
 
     public static boolean removeUserSession(SharedPreferences sharedPreferences,String key){

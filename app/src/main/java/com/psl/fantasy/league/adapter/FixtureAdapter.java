@@ -85,7 +85,7 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
         convertView=LayoutInflater.from(context).inflate(resource,null);
         final MatchesBean bean=list.get(position);
         Log.e("MatchesBean",bean.toString());
-        Drawable drawable = null,drawable2 = null;
+        Drawable drawable = null;
         ImageView image_team_one = convertView.findViewById(R.id.image_team_one);
         ImageView image_team_two = convertView.findViewById(R.id.image_team_two);
 
@@ -95,8 +95,9 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
         final TextView txt_time = convertView.findViewById(R.id.txt_time);
 
         try{
-            txt_short_team_one.setText(bean.getTeamOne());
-            txt_short_team_two.setText(bean.getTeamTwo());
+            txt_series.setText(bean.getTxt_series());
+            txt_short_team_one.setText(bean.getShortName1());
+            txt_short_team_two.setText(bean.getShortName2());
 
             if(bean.getTeamOne().trim().equals("Pakistan")){
                 drawable= context.getDrawable(R.drawable.pakistan);

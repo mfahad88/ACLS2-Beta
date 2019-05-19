@@ -21,14 +21,13 @@ public class PageAdapter extends FragmentStatePagerAdapter {
     Fragment fragment;
     FragmentInterface fragmentInterface;
     int teamId1; int teamId2;
-    TabLayout tabLayout;
-    public PageAdapter(FragmentManager fm, int numOfTabs, FragmentInterface fragmentInterface, int teamId1, int teamId2, TabLayout tab_layout) {
+
+    public PageAdapter(FragmentManager fm, int numOfTabs, FragmentInterface fragmentInterface, int teamId1, int teamId2) {
         super(fm);
         this.numOfTabs = numOfTabs;
         this.fragmentInterface=fragmentInterface;
         this.teamId1=teamId1;
         this.teamId2=teamId2;
-        this.tabLayout=tab_layout;
 
     }
 
