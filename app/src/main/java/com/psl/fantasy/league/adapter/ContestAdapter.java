@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
+import com.psl.fantasy.league.fragment.DashboardFragment;
 import com.psl.fantasy.league.fragment.TeamFragment;
 import com.psl.fantasy.league.fragment.WinnerBottomFragment;
 import com.psl.fantasy.league.model.ui.ContestBean;
@@ -102,8 +103,10 @@ public class ContestAdapter extends ArrayAdapter<ContestBean> {
                 fragment.setArguments(bundle);
                 AppCompatActivity activity=(AppCompatActivity)context;
                 FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
+                activity.getSupportFragmentManager().popBackStack(new DashboardFragment().getClass().getName(),0);
 //                FragmentTransaction ft=((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.main_content,fragment);
+
                 ft.commit();
             }
         });

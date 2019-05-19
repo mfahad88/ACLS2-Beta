@@ -53,7 +53,6 @@ public class CreateTeamFragment extends Fragment {
         list_player=mView.findViewById(R.id.list_player);
         TextView txt_selection=mView.findViewById(R.id.txt_selection);
         dbHelper=new DbHelper(mView.getContext());
-        Toast.makeText(mView.getContext(), "onCreateView", Toast.LENGTH_SHORT).show();
         if(getArguments()!=null){
             Player_Type=getArguments().getInt("Player_Type"); //0=batting ,1=bowling,2=alrounder,3=keeper
             teamId1=getArguments().getInt("teamId1");

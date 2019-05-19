@@ -140,7 +140,9 @@ public class TeamFragment extends Fragment {
                         bundle.putDouble("credit",credit);
                         fragment.setArguments(bundle);
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        getFragmentManager().popBackStack(new ContestFragment().getClass().getName(),0);
                         ft.replace(R.id.main_content, fragment);
+
                         ft.commit();
 
                     }
