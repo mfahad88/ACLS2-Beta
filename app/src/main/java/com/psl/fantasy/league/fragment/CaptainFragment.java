@@ -36,6 +36,7 @@ public class CaptainFragment extends Fragment {
     String teamOne,teamTwo;
     Double credit;
     SharedPreferences preferences;
+    private int contestAmt;
     public CaptainFragment() {
         // Required empty public constructor
     }
@@ -52,6 +53,7 @@ public class CaptainFragment extends Fragment {
         List<PlayerBean> list=dbHelper.getMyTeam();
         preferences=mView.getContext().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
         if(getArguments()!=null){
+            contestAmt=getArguments().getInt("contestAmt");
             contestId=getArguments().getInt("contestId");
             teamId1=getArguments().getInt("teamId1");
             teamId2=getArguments().getInt("teamId2");
@@ -123,6 +125,7 @@ public class CaptainFragment extends Fragment {
                             try {
                                 fragment=new PaymentFragment();
                                 Bundle bundle = new Bundle();
+                                bundle.putInt("contestAmt",contestAmt);
                                 bundle.putDouble("credit", credit);
                                 bundle.putInt("conId", contestId);
                                 fragment.setArguments(bundle);

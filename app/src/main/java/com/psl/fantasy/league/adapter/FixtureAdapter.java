@@ -46,13 +46,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
+public class FixtureAdapter extends ArrayAdapter<MatchesBean> implements LocationListener {
     Context context;
     int resource;
     List<MatchesBean> list;
     LocationManager locationManager;
     String mprovider;
-    Location location;
+    Location mlocation;
+    LocationListener listener;
     @SuppressLint("MissingPermission")
     public FixtureAdapter(Context context, int resource, List<MatchesBean> list) {
         super(context,resource,list);
@@ -63,7 +64,8 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
         Criteria criteria = new Criteria();
 
         mprovider = locationManager.getBestProvider(criteria, false);
-        location=locationManager.getLastKnownLocation(mprovider);
+        mlocation=locationManager.getLastKnownLocation(mprovider);
+        locationManager.requestLocationUpdates(mprovider,5000,0,this);
     }
 
     @Override
@@ -85,7 +87,7 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
 
         convertView=LayoutInflater.from(context).inflate(resource,null);
         final MatchesBean bean=list.get(position);
-        Log.e("MatchesBean",bean.toString());
+
         Drawable drawable = null;
         ImageView image_team_one = convertView.findViewById(R.id.image_team_one);
         ImageView image_team_two = convertView.findViewById(R.id.image_team_two);
@@ -94,6 +96,7 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
         TextView txt_short_team_two=convertView.findViewById(R.id.txt_short_team_two);
         TextView txt_series=convertView.findViewById(R.id.txt_series);
         final TextView txt_time = convertView.findViewById(R.id.txt_time);
+
 
         try{
             txt_series.setText(bean.getTxt_series());
@@ -235,7 +238,7 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
         String dateFinal = "";
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateStart = format.format(new Date(location.getTime()));
+        String dateStart = format.format(new Date(mlocation.getTime()));
         Date d1 = null;
         Date d2 = null;
 
@@ -265,10 +268,10 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
             }
 
             if(hrs>48){
-                dateFinal=diffHours+" Hr(s) "+diffMinutes+" Min(s) Left";
+                dateFinal=diffDays+" Day(s) "+diffHours+" Hr(s) Left";
             }
 
-        //    if(hrs<=5){
+           // if(hrs<=5){
             if(hrs<=5 && hrs>0){ // change once data is updated
                 dateFinal = diffHours+" Hr(s) "+diffMinutes+" Min(s) "+diffSeconds+" Sec(s) Left";
             }
@@ -281,5 +284,23 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> {
     }
 
 
+    @Override
+    public void onLocationChanged(Location location) {
+        mlocation=location;
+    }
 
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
 }

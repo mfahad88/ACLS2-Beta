@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.psl.fantasy.league.R;
+import com.psl.fantasy.league.Utils.DbHelper;
 import com.psl.fantasy.league.Utils.Helper;
 import com.psl.fantasy.league.adapter.PageAdapter;
 import com.psl.fantasy.league.interfaces.FragmentInterface;
@@ -54,6 +55,7 @@ public class TeamFragment extends Fragment {
     private TextView txt_credit_count;
     public char sign;
     private int contestId;
+    private int contestAmt;
     private Button btn_done;
     int teamId1; int teamId2;
     SharedPreferences preferences;
@@ -61,6 +63,7 @@ public class TeamFragment extends Fragment {
     String teamOne,teamTwo;
     ImageView image_team_one,image_team_two;
     Drawable drawable;
+    DbHelper dbHelper;
     public TeamFragment() {
         // Required empty public constructor
     }
@@ -84,6 +87,7 @@ public class TeamFragment extends Fragment {
         mView=inflater.inflate(R.layout.fragment_team, container, false);
         mCallback.communicate("TeamFragment");
         if(getArguments()!=null){
+            contestAmt=getArguments().getInt("contestAmt");
             contestId=getArguments().getInt("contestId");
             teamId1=getArguments().getInt("teamId1");
             teamId2=getArguments().getInt("teamId2");
@@ -92,6 +96,7 @@ public class TeamFragment extends Fragment {
         }
 
         btn_done=mView.findViewById(R.id.btn_done);
+        dbHelper=new DbHelper(mView.getContext());
         pager=mView.findViewById(R.id.pager);
         txt_player_count=mView.findViewById(R.id.txt_player_count);
         txt_credit_count= mView.findViewById(R.id.txt_credit_count);
@@ -125,31 +130,34 @@ public class TeamFragment extends Fragment {
                     main--;
                 }
                 txt_player_count.setText(String.valueOf(main));
-                //if(main==14){
+
                 btn_done.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //if condition put here
-                        Fragment fragment=new CaptainFragment();
-                        Bundle bundle=new Bundle();
-                        bundle.putInt("contestId",contestId);
-                        bundle.putInt("teamId1",teamId1);
-                        bundle.putInt("teamId2",teamId2);
-                        bundle.putString("TeamOne",teamOne);
-                        bundle.putString("TeamTwo",teamTwo);
-                        bundle.putDouble("credit",credit);
-                        fragment.setArguments(bundle);
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        getFragmentManager().popBackStack(new ContestFragment().getClass().getName(),0);
-                        ft.replace(R.id.main_content, fragment);
+                        if(dbHelper.getMyTeamCount()==11) {
+                            Fragment fragment = new CaptainFragment();
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("contestAmt",contestAmt);
+                            bundle.putInt("contestId", contestId);
+                            bundle.putInt("teamId1", teamId1);
+                            bundle.putInt("teamId2", teamId2);
+                            bundle.putString("TeamOne", teamOne);
+                            bundle.putString("TeamTwo", teamTwo);
+                            bundle.putDouble("credit", credit);
+                            fragment.setArguments(bundle);
+                            FragmentTransaction ft = getFragmentManager().beginTransaction();
 
-                        ft.commit();
+                            ft.replace(R.id.main_content, fragment);
+
+                            ft.commit();
+                        }
 
                     }
                 });
-            }
 
-            //}
+
+            }
 
             @Override
             public void credit(double count) {

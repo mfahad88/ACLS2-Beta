@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -78,6 +79,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private CallbackManager callbackManager;
     private FragmentToActivity mCallback;
     private String screen;
+    ProgressBar progressBar;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -153,6 +155,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         btn_sign_up=mView.findViewById(R.id.btn_sign_up);
         txt_register=mView.findViewById(R.id.txt_register);
         preferences=mView.getContext().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
+        progressBar=mView.findViewById(R.id.progressBar);
 
     }
 
@@ -180,7 +183,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                    JSONObject obj=new JSONObject();
                    obj.put("mobile_no",mobileNo);
                    obj.put("pws",password);
-                    login(obj);
+                   btn_next.setEnabled(false);
+                   progressBar.setVisibility(View.VISIBLE);
+                   login(obj);
                }
            }catch (Exception e){
                e.printStackTrace();
@@ -254,7 +259,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 .enqueue(new Callback<LoginResponse>() {
                     @Override
                     public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+
                         if(response.isSuccessful()){
+                            progressBar.setVisibility(View.GONE);
+                            btn_next.setEnabled(true);
                             if(response.body().getResponseCode().equalsIgnoreCase("1001")){
                                 Helper.putUserSession(sharedpreferences,Helper.MY_USER,response.body().getData().getMyUser());
                                 Helper.putUserSession(sharedpreferences,Helper.MY_USER_MSC,response.body().getData().getMyUsermsc());
@@ -287,10 +295,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                                     FragmentTransaction ft=getFragmentManager().beginTransaction();
                                     ft.replace(R.id.main_content,fragment);
                                     ft.commit();
+                                }if(screen.equalsIgnoreCase("mymatches")){
+                                    Fragment fragment=new MyMatchesFragment();
+                                    FragmentTransaction ft=getFragmentManager().beginTransaction();
+                                    ft.replace(R.id.main_content,fragment);
+                                    ft.commit();
                                 }
 
                             }else{
+                                progressBar.setVisibility(View.GONE);
                                 Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                btn_next.setEnabled(true);
                             }
                         }
                     }
@@ -299,6 +314,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     public void onFailure(Call<LoginResponse> call, Throwable t) {
                         t.printStackTrace();
                         Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
+                        btn_next.setEnabled(true);
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
     }

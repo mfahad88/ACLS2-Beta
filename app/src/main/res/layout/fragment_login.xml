@@ -56,6 +56,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/txt_OR"
                     android:hint="Mobile No."
+                    android:singleLine="true"
+                    android:maxLength="11"
                     android:textSize="12sp"
                     android:inputType="number"
                     android:digits="@string/digits"
@@ -72,6 +74,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/edt_mobile_no"
                     android:hint="Password"
+                    android:maxLength="15"
+                    android:singleLine="true"
                     android:textSize="12sp"
                     android:id="@+id/edt_password"
                     android:inputType="textPassword"
@@ -86,6 +90,7 @@
                     android:layout_centerHorizontal="true"
                     android:text="Next"
                     android:id="@+id/btn_next"
+                    android:singleLine="true"
                     android:textSize="12sp"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="20dp"
@@ -101,6 +106,7 @@
             android:layout_height="wrap_content"
             android:weightSum="1"
             android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
             android:visibility="visible"
             android:padding="15dp">
 
@@ -122,6 +128,14 @@
         </LinearLayout>
 
     </LinearLayout>
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linear_sign_in"
+        android:id="@+id/progressBar"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"/>
 
     <LinearLayout
         android:id="@+id/linear_sign_up"

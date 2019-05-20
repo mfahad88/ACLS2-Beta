@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,27 +69,22 @@ public class MyMatchesFragment extends Fragment {
         ProgressBar progressBar=mView.findViewById(R.id.progressBar);
         list=new ArrayList<>();
         mCallback.communicate("disable");
-        if(Helper.getUserSession(preferences,Helper.MY_USER)==null) {
-            File file=new File(Environment.getExternalStorageDirectory()+File.separator+"ACL","user.txt");
-            if(file.exists()) {
-                if (Helper.getUserIdFromText() != null) {
-
-                    try {
-                        JSONObject jsonObject=new JSONObject(Helper.getUserIdFromText());
-                        userId= jsonObject.getInt("user_id");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-        }else{
-            try{
-                JSONObject jsonObject = new JSONObject(Helper.getUserSession(preferences, "MyUser").toString());
-                userId=jsonObject.getInt("user_id");
-            }catch (JSONException e){
+        if(Helper.getUserSession(preferences,Helper.MY_USER)!=null) {
+            try {
+                JSONObject object=new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
+                userId=object.getInt("user_id");
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }else{
+            Fragment fragment=new LoginFragment();
+            Bundle bundle=new Bundle();
+            bundle.putString("screen","mymatches");
+            fragment.setArguments(bundle);
+            AppCompatActivity activity=(AppCompatActivity)getActivity();
+            FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.main_content,fragment);
+            ft.commit();
         }
         JSONObject obj=new JSONObject();
         try {

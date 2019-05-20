@@ -9,16 +9,32 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#efeff4"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
         android:id="@+id/relative_header">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Choose your Captain and Vice Captain"
-            android:textSize="15sp"
+            android:layout_alignParentLeft="true"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"/>
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_save_team"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="15dp"
+            android:text="Save Team"
+            android:textAllCaps="true"
+            android:enabled="false"
+            android:layout_centerVertical="true"
+            android:textColor="@android:color/black"
+            android:background="@drawable/drawable_btn_square"/>
     </RelativeLayout>
     <ListView
         android:layout_width="match_parent"
@@ -26,17 +42,6 @@
         android:layout_below="@id/relative_header"
         android:id="@+id/list_view_captain"></ListView>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_save_team"
-        android:layout_marginBottom="15dp"
-        android:text="Save Team"
-        android:textAllCaps="true"
-        android:enabled="false"
-        android:textColor="@android:color/black"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/drawable_btn_square"/>
+
 
 </RelativeLayout>

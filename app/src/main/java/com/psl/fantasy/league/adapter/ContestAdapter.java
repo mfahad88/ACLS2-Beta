@@ -95,6 +95,7 @@ public class ContestAdapter extends ArrayAdapter<ContestBean> {
             public void onClick(View v) {
                 Fragment fragment=new TeamFragment();
                 Bundle bundle=new Bundle();
+                bundle.putInt("contestAmt", Integer.parseInt(btn_pay.getText().toString()));
                 bundle.putInt("contestId",bean.getContestId());
                 bundle.putInt("teamId1",teamId1);
                 bundle.putInt("teamId2",teamId2);
@@ -103,7 +104,7 @@ public class ContestAdapter extends ArrayAdapter<ContestBean> {
                 fragment.setArguments(bundle);
                 AppCompatActivity activity=(AppCompatActivity)context;
                 FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
-                activity.getSupportFragmentManager().popBackStack(new DashboardFragment().getClass().getName(),0);
+
 //                FragmentTransaction ft=((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.main_content,fragment);
 

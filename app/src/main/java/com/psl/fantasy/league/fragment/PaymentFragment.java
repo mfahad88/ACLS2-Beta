@@ -5,7 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +30,8 @@ import com.psl.fantasy.league.activity.StartActivity;
 import com.psl.fantasy.league.adapter.TelcoAdapter;
 import com.psl.fantasy.league.model.response.JoinContest.JoinContenstResponse;
 import com.psl.fantasy.league.client.ApiClient;
+import com.psl.fantasy.league.model.response.SimPaisa.SimPaisaResponse;
+import com.psl.fantasy.league.model.response.SimPaisaOTP.SimPaisaOTPResponse;
 import com.psl.fantasy.league.model.ui.PlayerBean;
 import com.psl.fantasy.league.model.ui.TelcoBean;
 
@@ -46,8 +53,10 @@ import retrofit2.Response;
 public class PaymentFragment extends Fragment implements View.OnClickListener {
     private View mView;
     private Button btn_pay;
+    private TextView txt_amount;
     private DbHelper dbHelper;
     int ContestId; int userId;
+    int contestAmt;
     TextView edt_mobile_no;
     String mobileNo;
     double credit;
@@ -56,6 +65,10 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
     String[] telcoName={"Mobilink","Warid","Telenor","Zong","Ufone"};
     Spinner spinner_telco;
     TelephonyManager telephonyManager;
+    RelativeLayout relativePay,relativeOTP;
+    EditText edt_otp;
+    Button btn_submit;
+
     public PaymentFragment() {
         // Required empty public constructor
     }
@@ -67,46 +80,39 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         mView=inflater.inflate(R.layout.fragment_payment, container, false);
         btn_pay=mView.findViewById(R.id.btn_pay);
+        txt_amount=mView.findViewById(R.id.txt_amount);
         edt_mobile_no=mView.findViewById(R.id.edt_mobile_no);
         preferences=mView.getContext().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
         dbHelper=new DbHelper(mView.getContext());
         spinner_telco=mView.findViewById(R.id.spinner_telco);
+        relativePay=mView.findViewById(R.id.relativePay);
+        relativeOTP=mView.findViewById(R.id.relativeOTP);
 
         telephonyManager = (TelephonyManager) mView.getContext().getSystemService(Context.TELEPHONY_SERVICE);
         String provider = telephonyManager.getSimOperatorName();
-
+        edt_otp=mView.findViewById(R.id.edt_otp);
+        btn_submit=mView.findViewById(R.id.btn_submit);
 
         if(getArguments()!=null){
             ContestId=getArguments().getInt("conId");
             credit=getArguments().getDouble("credit");
+            contestAmt=getArguments().getInt("contestAmt");
         }
         try {
-            /*if(Helper.getUserSession(preferences,"MyUser")!=null) {
-                JSONObject jsonObject = new JSONObject(String.valueOf(Helper.getUserSession(preferences, "MyUser")));
-
-                mobileNo=String.format("%.0f",jsonObject.getDouble("mobile_no"));
-                userId = jsonObject.getInt("user_id");
-
-            }else{
-                if(!TextUtils.isEmpty(Helper.getUserIdFromText())) {
-                    JSONObject object=new JSONObject(Helper.getUserIdFromText());
-                    mobileNo=object.getString("mobile_no");
-                    userId = object.getInt("user_id");
-
-                }
-            }*/
+            txt_amount.setText(String.valueOf(contestAmt));
             JSONObject jsonObject = new JSONObject(String.valueOf(Helper.getUserSession(preferences, "MyUser")));
 
             mobileNo=String.format("%.0f",jsonObject.getDouble("mobile_no"));
             userId = jsonObject.getInt("user_id");
             //if(!TextUtils.isEmpty(mobileNo)) {
-                edt_mobile_no.setText("0"+mobileNo);
+            edt_mobile_no.setText(mobileNo);
             //}
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         btn_pay.setOnClickListener(this);
+        btn_submit.setOnClickListener(this);
         TelcoAdapter adapter=new TelcoAdapter(mView.getContext(),R.layout.telco_adapter,icon,telcoName);
         spinner_telco.setAdapter(adapter);
 
@@ -120,6 +126,98 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        if(v.getId()==R.id.btn_pay){
+            mobileNo=edt_mobile_no.getText().toString();
+            paySimPaisa();
+        }if(v.getId()==R.id.btn_submit){
+            paySimPaisaOTP();
+        }
+    }
+
+    public void paySimPaisaOTP(){
+        try{
+            btn_submit.setEnabled(false);
+            JSONObject object=new JSONObject();
+            object.put("productID",1193);
+            object.put("mobileNo",mobileNo);
+            object.put("operatorID",100002);
+            object.put("codeOTP",Integer.parseInt(edt_otp.getText().toString()));
+            object.put("amt",contestAmt);
+            if(Helper.getUserSession(preferences,Helper.MY_USER)!=null) {
+                JSONObject jsonObject=new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
+                object.put("user_id", jsonObject.getInt("user_id"));
+            }
+
+            ApiClient.getInstance().verifyPaymentSimPaisa(Helper.encrypt(object.toString()))
+                    .enqueue(new Callback<SimPaisaOTPResponse>() {
+                        @Override
+                        public void onResponse(Call<SimPaisaOTPResponse> call, Response<SimPaisaOTPResponse> response) {
+                            if(response.isSuccessful()){
+                                btn_submit.setEnabled(true);
+                                if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Helper.showAlertNetural(mView.getContext(),"Success",response.body().getMessage());
+                                        }
+                                    },1000);
+                                    AppCompatActivity activity=(AppCompatActivity)getActivity();
+                                    Fragment fragment=new DashboardFragment();
+                                    FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
+                                    ft.replace(R.id.main_content,fragment);
+                                    ft.commit();
+                                }else{
+                                    Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<SimPaisaOTPResponse> call, Throwable t) {
+                            t.printStackTrace();
+                            Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
+                            btn_submit.setEnabled(true);
+                        }
+                    });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void paySimPaisa(){
+        try {
+            btn_pay.setEnabled(false);
+            JSONObject object=new JSONObject();
+            object.put("productID",1193);
+            object.put("mobileNo",mobileNo);
+            object.put("operatorID",100002);
+            ApiClient.getInstance().makePaymentSimPaisa(Helper.encrypt(object.toString()))
+                    .enqueue(new Callback<SimPaisaResponse>() {
+                        @Override
+                        public void onResponse(Call<SimPaisaResponse> call, Response<SimPaisaResponse> response) {
+                            if(response.isSuccessful()){
+                                btn_pay.setEnabled(true);
+                                if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+                                    relativePay.setVisibility(View.GONE);
+                                    relativeOTP.setVisibility(View.VISIBLE);
+                                }
+                                else{
+                                    Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<SimPaisaResponse> call, Throwable t) {
+                            t.printStackTrace();
+                            btn_pay.setEnabled(true);
+                        }
+                    });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void payment(){
         List<PlayerBean> list= dbHelper.getMyTeam();
         JSONArray jsonArray = new JSONArray();
         for(PlayerBean bean:list) {

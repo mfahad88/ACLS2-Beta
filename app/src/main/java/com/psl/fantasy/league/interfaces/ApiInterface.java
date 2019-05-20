@@ -15,6 +15,8 @@ import com.psl.fantasy.league.model.response.Player.PlayerResponse;
 import com.psl.fantasy.league.model.response.PlayerInfo.PlayerInfoResponse;
 import com.psl.fantasy.league.model.response.PrizeClaim.PrizeClaimResponse;
 import com.psl.fantasy.league.model.response.Prizes.PrizesResponse;
+import com.psl.fantasy.league.model.response.SimPaisa.SimPaisaResponse;
+import com.psl.fantasy.league.model.response.SimPaisaOTP.SimPaisaOTPResponse;
 import com.psl.fantasy.league.model.ui.PlayerBean;
 import com.psl.fantasy.league.model.ui.PlayerInfoBean;
 
@@ -67,4 +69,10 @@ public interface ApiInterface {
 
     @POST("insertPrizeClaim")
     Call<PrizeClaimResponse> insertPrizeClaim(@Body TestBeanRequest beanRequest);
+
+    @POST("makePaymentSimPaisa")
+    Call<SimPaisaResponse> makePaymentSimPaisa(@Body TestBeanRequest beanRequest);
+
+    @POST("verifyPaymentSimPaisa")
+    Call<SimPaisaOTPResponse> verifyPaymentSimPaisa(@Body TestBeanRequest beanRequest);
 }
