@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -56,18 +57,19 @@ public class JoinedContestAdapter extends ArrayAdapter<JoinedContestBean> {
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView=LayoutInflater.from(context).inflate(resource,null);
         JoinedContestBean bean=list.get(position);
-        LinearLayout linear_leaderboard=convertView.findViewById(R.id.linear_leaderboard);
+
         TextView txt_contest_name=convertView.findViewById(R.id.txt_contest_name);
         TextView txt_contest_desc=convertView.findViewById(R.id.txt_contest_desc);
-        TextView txt_entry_fee=convertView.findViewById(R.id.txt_entry_fee);
+        Button btn_pay=convertView.findViewById(R.id.btn_pay);
         TextView txt_team_name=convertView.findViewById(R.id.txt_team_name);
         TextView txt_points=convertView.findViewById(R.id.txt_points);
         txt_contest_name.setText(bean.getContestName());
         txt_contest_desc.setText(bean.getContestDesc());
-        txt_entry_fee.setText(String.valueOf(bean.getEntryFee()));
+
         txt_team_name.setText(bean.getTeamName());
         txt_points.setText(String.valueOf(bean.getPoints()));
-        linear_leaderboard.setOnClickListener(new View.OnClickListener() {
+
+        btn_pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Fragment fragment=new LeaderboardFragment();
