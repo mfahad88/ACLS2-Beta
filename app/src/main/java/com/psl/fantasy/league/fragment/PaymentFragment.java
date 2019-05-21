@@ -53,7 +53,7 @@ import retrofit2.Response;
 public class PaymentFragment extends Fragment implements View.OnClickListener {
     private View mView;
     private Button btn_pay;
-    private TextView txt_amount;
+    private EditText edt_amount;
     private DbHelper dbHelper;
     int ContestId; int userId;
     int contestAmt;
@@ -80,7 +80,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         mView=inflater.inflate(R.layout.fragment_payment, container, false);
         btn_pay=mView.findViewById(R.id.btn_pay);
-        txt_amount=mView.findViewById(R.id.txt_amount);
+        edt_amount=mView.findViewById(R.id.edt_amount);
         edt_mobile_no=mView.findViewById(R.id.edt_mobile_no);
         preferences=mView.getContext().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
         dbHelper=new DbHelper(mView.getContext());
@@ -99,14 +99,18 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
             contestAmt=getArguments().getInt("contestAmt");
         }
         try {
-            txt_amount.setText(String.valueOf(contestAmt));
+            edt_amount.setText(String.valueOf(contestAmt));
             JSONObject jsonObject = new JSONObject(String.valueOf(Helper.getUserSession(preferences, "MyUser")));
 
             mobileNo=String.format("%.0f",jsonObject.getDouble("mobile_no"));
             userId = jsonObject.getInt("user_id");
-            //if(!TextUtils.isEmpty(mobileNo)) {
-            edt_mobile_no.setText(mobileNo);
-            //}
+            if(!TextUtils.isEmpty(mobileNo)) {
+                if(!mobileNo.startsWith("0")){
+                    edt_mobile_no.setText("0"+mobileNo);
+                }else{
+                    edt_mobile_no.setText(mobileNo);
+                }
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -127,8 +131,14 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if(v.getId()==R.id.btn_pay){
-            mobileNo=edt_mobile_no.getText().toString();
-            paySimPaisa();
+            if(!TextUtils.isEmpty(edt_mobile_no.getText().toString())) {
+                if(edt_mobile_no.getText().toString().startsWith("0")){
+                    mobileNo =  edt_mobile_no.getText().toString().substring(1,edt_mobile_no.getText().length()) ;
+                }else{
+                    mobileNo =  edt_mobile_no.getText().toString();
+                }
+                paySimPaisa();
+            }
         }if(v.getId()==R.id.btn_submit){
             paySimPaisaOTP();
         }
@@ -203,6 +213,12 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                                 else{
                                     Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
                                 }
+                            }else{
+                                try {
+                                    Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
 
@@ -210,6 +226,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                         public void onFailure(Call<SimPaisaResponse> call, Throwable t) {
                             t.printStackTrace();
                             btn_pay.setEnabled(true);
+                            Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
                         }
                     });
         }catch (Exception e){

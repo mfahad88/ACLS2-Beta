@@ -65,13 +65,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     // private static final int RC_SIGN_IN =100 ;
     private View mView;
     private static final String EMAIL = "email";
-    private EditText edt_mobile_no,edt_password,edt_mobile_number,edt_pass_word,edt_referral;
+    private EditText edt_mobile_no,edt_password,edt_mobile_number,edt_pass_word,edt_referral,edt_confirm_password;
     private TextView txt_register;
     private Button btn_next,btn_sign_up;
     private SharedPreferences sharedpreferences;
     private int contestId;
     private double credit;
-    private LinearLayout linear_sign_up;
+    private CardView card_view_sign_up;
     private LinearLayout linear_sign_in;
     private String signupType="form";
     private SharedPreferences preferences;
@@ -117,7 +117,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 linear_sign_in.setVisibility(View.GONE);
-                linear_sign_up.setVisibility(View.VISIBLE);
+                card_view_sign_up.setVisibility(View.VISIBLE);
             }
         });
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -151,12 +151,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         edt_referral=mView.findViewById(R.id.edt_referral);
         sharedpreferences = mView.getContext().getSharedPreferences(Helper.SHARED_PREF, Context.MODE_PRIVATE);
         linear_sign_in=mView.findViewById(R.id.linear_sign_in);
-        linear_sign_up=mView.findViewById(R.id.linear_sign_up);
+
         btn_sign_up=mView.findViewById(R.id.btn_sign_up);
         txt_register=mView.findViewById(R.id.txt_register);
         preferences=mView.getContext().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
         progressBar=mView.findViewById(R.id.progressBar);
-
+        card_view_sign_up=mView.findViewById(R.id.card_view_sign_up);
+        edt_confirm_password=mView.findViewById(R.id.edt_confirm_password);
     }
 
 
@@ -194,59 +195,68 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             try{
                 String mobileNo=edt_mobile_number.getText().toString();
                 String password=edt_pass_word.getText().toString();
+                String confirmPassword=edt_confirm_password.getText().toString();
                 String referral=edt_referral.getText().toString();
-                if((!TextUtils.isEmpty(mobileNo)) && (!TextUtils.isEmpty(password))){
-                    JSONObject object=new JSONObject();
-                    object.put("pws",password);
-                    object.put("mobile_no",mobileNo);
-                    object.put("app_version",BuildConfig.VERSION_NAME);
-                    object.put("os","Android");
-                    object.put("referal_code",referral);
-                    object.put("source",signupType);
-                    object.put("sts",1);
-                    object.put("is_updated","0");
-                    object.put("method_Name",this.getClass().getSimpleName()+".btn_sign_up.onClick");
+                if((!TextUtils.isEmpty(mobileNo)) && (!TextUtils.isEmpty(password)) && (!TextUtils.isEmpty(confirmPassword))){
+                   if(password.equalsIgnoreCase(confirmPassword)){
+                       JSONObject object=new JSONObject();
+                       object.put("pws",password);
+                       object.put("mobile_no",mobileNo);
+                       object.put("app_version",BuildConfig.VERSION_NAME);
+                       object.put("os","Android");
+                       object.put("referal_code",referral);
+                       object.put("source",signupType);
+                       object.put("sts",1);
+                       object.put("is_updated","0");
+                       object.put("method_Name",this.getClass().getSimpleName()+".btn_sign_up.onClick");
+                       btn_sign_up.setEnabled(false);
+                       ApiClient.getInstance().insertUser(Helper.encrypt(object.toString()))
+                               .enqueue(new Callback<InsertResponse>() {
+                                   @Override
+                                   public void onResponse(Call<InsertResponse> call, Response<InsertResponse> response) {
+                                       if(response.isSuccessful()){
+                                           btn_sign_up.setEnabled(true);
+                                           if(response.body().getResponseCode().equals("1001")){
+                                               //Helper.showAlertNetural(mView.getContext(),"Success","Done");
 
-                    ApiClient.getInstance().insertUser(Helper.encrypt(object.toString()))
-                            .enqueue(new Callback<InsertResponse>() {
-                                @Override
-                                public void onResponse(Call<InsertResponse> call, Response<InsertResponse> response) {
-                                    if(response.isSuccessful()){
-                                        if(response.body().getResponseCode().equals("1001")){
-                                            //Helper.showAlertNetural(mView.getContext(),"Success","Done");
-                                            JSONObject obj=new JSONObject();
-                                            try {
-                                                obj.put("mobile_no",mobileNo);
-                                                obj.put("pws",password);
-                                                login(obj);
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
+                                               JSONObject obj=new JSONObject();
+                                               try {
+                                                   obj.put("mobile_no",mobileNo);
+                                                   obj.put("pws",password);
+                                                   login(obj);
+                                               } catch (JSONException e) {
+                                                   e.printStackTrace();
+                                               }
 
 
-                                        }else{
-                                            Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                                        }
-                                    }else{
-                                        if (response.errorBody() != null) {
-                                            try {
+                                           }else{
+                                               Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                           }
+                                       }else{
+                                           if (response.errorBody() != null) {
+                                               try {
+                                                   btn_sign_up.setEnabled(true);
+                                                   Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
+                                               } catch (IOException e) {
 
-                                                Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
-                                            } catch (IOException e) {
+                                                   e.printStackTrace();
 
-                                                e.printStackTrace();
+                                               }
+                                           }
+                                       }
+                                   }
 
-                                            }
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<InsertResponse> call, Throwable t) {
-                                    t.printStackTrace();
-                                    Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
-                                }
-                            });
+                                   @Override
+                                   public void onFailure(Call<InsertResponse> call, Throwable t) {
+                                       t.printStackTrace();
+                                       Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
+                                       btn_sign_up.setEnabled(true);
+                                   }
+                               });
+                   }else{
+                       Helper.showAlertNetural(mView.getContext(),"Error","Please check password and confirm password");
+                       btn_sign_up.setEnabled(true);
+                   }
                 }
             }catch (Exception e){
                 e.printStackTrace();

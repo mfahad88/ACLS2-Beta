@@ -9,7 +9,7 @@
     <item
         android:id="@+id/my_details"
         android:icon="@drawable/trophy"
-        android:title="My Matches" />
+        android:title="My Teams" />
 
     <item
         android:id="@+id/balance"

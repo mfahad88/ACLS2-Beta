@@ -43,7 +43,7 @@ public class LeaderboardFragment extends Fragment {
 
     private void setupTabLayout() {
 
-        allTabs.addTab(allTabs.newTab().setText("My Matches"),true);
+        allTabs.addTab(allTabs.newTab().setText("My Teams"),true);
         allTabs.addTab(allTabs.newTab().setText("My Leaderboard"));
     }
 

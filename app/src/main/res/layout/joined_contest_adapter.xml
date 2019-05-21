@@ -47,6 +47,7 @@
                 android:layout_alignParentRight="true"
                 android:text="Entry Fee"
                 android:textAlignment="viewEnd"
+                android:visibility="gone"
                 android:id="@+id/txt_entry"
                 android:textColor="#9b9b9b"
                 android:gravity="end" />
@@ -56,6 +57,7 @@
                 android:layout_height="25dp"
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/txt_entry"
+                android:visibility="gone"
                 android:text="Rs. 0"
                 android:id="@+id/txt_entry_fee"
                 android:textAlignment="viewEnd"

@@ -73,6 +73,57 @@ public class MyMatchesFragment extends Fragment {
             try {
                 JSONObject object=new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
                 userId=object.getInt("user_id");
+
+                JSONObject obj=new JSONObject();
+                try {
+                    obj.put("user_id",userId);
+                    ApiClient.getInstance().getAllMatchByUserId(Helper.encrypt(obj.toString())).enqueue(new Callback<MyMatchesResponse>() {
+                        @Override
+                        public void onResponse(Call<MyMatchesResponse> call, Response<MyMatchesResponse> response) {
+                            if(response.isSuccessful()){
+                                if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
+                                    if(response.body().getData()!=null) {
+                                        for (Datum datum : response.body().getData())
+                                            list.add(new MyMatchesBean(userId, datum.getMatchId(), datum.getTeamId1().intValue(), datum.getTeamId2().intValue()
+                                                    , datum.getTeamName1(), datum.getTeamName2(), datum.getMatchSts(), ""));
+                                        progressBar.setVisibility(View.GONE);
+
+                                        list_matches.setVisibility(View.VISIBLE);
+
+                                        MyMatchesAdapter adapter = new MyMatchesAdapter(mView.getContext(), R.layout.my_matches_adapter, list);
+                                        list_matches.setAdapter(adapter);
+                                    }else{
+                                        progressBar.setVisibility(View.GONE);
+                                        txt_error.setVisibility(View.VISIBLE);
+                                        txt_error.setText(response.message());
+                                    }
+                                }else{
+                                    progressBar.setVisibility(View.GONE);
+                                    txt_error.setVisibility(View.VISIBLE);
+                                    txt_error.setText(response.message());
+                                }
+                            }else{
+                                try {
+                                    progressBar.setVisibility(View.GONE);
+                                    txt_error.setVisibility(View.VISIBLE);
+                                    txt_error.setText(response.errorBody().string());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<MyMatchesResponse> call, Throwable t) {
+                            t.printStackTrace();
+                            progressBar.setVisibility(View.GONE);
+                            txt_error.setVisibility(View.VISIBLE);
+                            txt_error.setText(t.getMessage());
+                        }
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -86,50 +137,7 @@ public class MyMatchesFragment extends Fragment {
             ft.replace(R.id.main_content,fragment);
             ft.commit();
         }
-        JSONObject obj=new JSONObject();
-        try {
-            obj.put("user_id",userId);
-            ApiClient.getInstance().getAllMatchByUserId(Helper.encrypt(obj.toString())).enqueue(new Callback<MyMatchesResponse>() {
-                @Override
-                public void onResponse(Call<MyMatchesResponse> call, Response<MyMatchesResponse> response) {
-                    if(response.isSuccessful()){
-                        if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
-                            for (Datum datum : response.body().getData())
-                                list.add(new MyMatchesBean(userId,datum.getMatchId(), datum.getTeamId1().intValue(), datum.getTeamId2().intValue()
-                                        , datum.getTeamName1(), datum.getTeamName2(), datum.getMatchSts(), ""));
-                            progressBar.setVisibility(View.GONE);
 
-                            list_matches.setVisibility(View.VISIBLE);
-
-                            MyMatchesAdapter adapter = new MyMatchesAdapter(mView.getContext(), R.layout.my_matches_adapter, list);
-                            list_matches.setAdapter(adapter);
-                        }else{
-                            progressBar.setVisibility(View.GONE);
-                            txt_error.setVisibility(View.VISIBLE);
-                            txt_error.setText(response.message());
-                        }
-                    }else{
-                        try {
-                            progressBar.setVisibility(View.GONE);
-                            txt_error.setVisibility(View.VISIBLE);
-                            txt_error.setText(response.errorBody().string());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<MyMatchesResponse> call, Throwable t) {
-                    t.printStackTrace();
-                    progressBar.setVisibility(View.GONE);
-                    txt_error.setVisibility(View.VISIBLE);
-                    txt_error.setText(t.getMessage());
-                }
-            });
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
         return mView;
     }

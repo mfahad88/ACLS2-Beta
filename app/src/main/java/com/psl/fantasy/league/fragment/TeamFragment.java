@@ -151,6 +151,8 @@ public class TeamFragment extends Fragment {
                             ft.replace(R.id.main_content, fragment);
 
                             ft.commit();
+                        }else{
+                            Toast.makeText(mView.getContext(), "Please create team of 11 players", Toast.LENGTH_SHORT).show();
                         }
 
                     }
