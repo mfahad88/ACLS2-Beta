@@ -45,6 +45,7 @@ public class BalanceFragment extends Fragment {
         mView = inflater.inflate(R.layout.fragment_leaderboard, container, false);
         allTabs = mView.findViewById(R.id.tabs);
         mCallback.communicate("disable");
+
         bindWidgetsWithAnEvent();
         setupTabLayout();
         return mView;
@@ -78,9 +79,9 @@ public class BalanceFragment extends Fragment {
         {
             case 0 :
 
-                /*fragment = new PointsFragment();
+                fragment = new AccountLinkFragment();
 
-                replaceFragment(fragment);*/
+                replaceFragment(fragment);
                 break;
             case 1 :
 

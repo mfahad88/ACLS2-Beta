@@ -77,6 +77,7 @@ public class DashboardFragment extends Fragment {
         mView=inflater.inflate(R.layout.fragment_dashboard, container, false);
         init();
         try{
+            list_matches.setSmoothScrollbarEnabled(true);
             mCallback.communicate("disable");
             mCallback.communicate("DashboardFragment");
             pullToRefresh.setVisibility(View.VISIBLE);

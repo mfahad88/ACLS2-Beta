@@ -119,6 +119,7 @@ public class CaptainFragment extends Fragment {
                             Bundle bundle = new Bundle();
                             bundle.putDouble("credit", credit);
                             bundle.putInt("contestId", contestId);
+                            bundle.putInt("contestAmt",contestAmt);
                             bundle.putString("screen","Payment");
                             fragment.setArguments(bundle);
                         } else {

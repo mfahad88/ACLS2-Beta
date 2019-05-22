@@ -69,7 +69,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private TextView txt_register;
     private Button btn_next,btn_sign_up;
     private SharedPreferences sharedpreferences;
-    private int contestId;
+    private int contestId,contestAmt;
     private double credit;
     private CardView card_view_sign_up;
     private LinearLayout linear_sign_in;
@@ -107,6 +107,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             credit=getArguments().getDouble("credit");
             contestId=getArguments().getInt("contestId");
             screen=getArguments().getString("screen");
+            contestAmt=getArguments().getInt("contestAmt");
         }
         loginButton = mView.findViewById(R.id.login_button);
         loginButton.setReadPermissions(Arrays.asList(EMAIL));
@@ -296,6 +297,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                                     Bundle bundle=new Bundle();
                                     bundle.putInt("conId",contestId);
                                     bundle.putDouble("credit",credit);
+                                    bundle.putInt("contestAmt",contestAmt);
                                     fragment.setArguments(bundle);
                                     FragmentTransaction ft=getFragmentManager().beginTransaction();
                                     ft.replace(R.id.main_content,fragment);
@@ -307,6 +309,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                                     ft.commit();
                                 }if(screen.equalsIgnoreCase("mymatches")){
                                     Fragment fragment=new MyMatchesFragment();
+                                    FragmentTransaction ft=getFragmentManager().beginTransaction();
+                                    ft.replace(R.id.main_content,fragment);
+                                    ft.commit();
+                                }if(screen.equalsIgnoreCase("accountlinking")){
+                                    Fragment fragment=new AccountLinkFragment();
                                     FragmentTransaction ft=getFragmentManager().beginTransaction();
                                     ft.replace(R.id.main_content,fragment);
                                     ft.commit();

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.psl.fantasy.league.R;
@@ -55,6 +56,7 @@ public class ContestFragment extends Fragment {
     private SwipeRefreshLayout pullToRefresh;
     private String teamOne,teamTwo;
     private ContestAdapter adapter;
+    private ScrollView scrollView;
     public ContestFragment() {
         // Required empty public constructor
     }
@@ -88,6 +90,7 @@ public class ContestFragment extends Fragment {
         list_contest_3=mView.findViewById(R.id.list_contest_3);
         txt_status=mView.findViewById(R.id.txt_status);
         pullToRefresh=mView.findViewById(R.id.pullToRefresh);
+        scrollView=mView.findViewById(R.id.scrollView);
         mCallback.communicate("ContestFragment");
         try {
             if(getArguments()!=null) {
@@ -103,10 +106,16 @@ public class ContestFragment extends Fragment {
                 @Override
                 public void onRefresh() {
 
+                    adapter.clear();
+                    adapter.notifyDataSetChanged();
+
+
                     populateContest();
                     pullToRefresh.setRefreshing(false);
                 }
             });
+
+
 
             txt_view_more_mega.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -274,6 +283,8 @@ public class ContestFragment extends Fragment {
                                 }else{
                                     Helper.displayError(txt_status,response.body().getMessage());
                                 }
+                            }else{
+                                Helper.showAlertNetural(mView.getContext(),"Error",response.raw().toString());
                             }
                         }
 

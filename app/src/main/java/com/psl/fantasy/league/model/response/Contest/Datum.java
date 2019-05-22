@@ -11,7 +11,7 @@ public class Datum {
     private Integer contestId;
     @SerializedName("series_match_id")
     @Expose
-    private Integer seriesMatchId;
+    private String seriesMatchId;
     @SerializedName("contest_name")
     @Expose
     private String contestName;
@@ -66,11 +66,11 @@ public class Datum {
         this.contestId = contestId;
     }
 
-    public Integer getSeriesMatchId() {
+    public String getSeriesMatchId() {
         return seriesMatchId;
     }
 
-    public void setSeriesMatchId(Integer seriesMatchId) {
+    public void setSeriesMatchId(String seriesMatchId) {
         this.seriesMatchId = seriesMatchId;
     }
 

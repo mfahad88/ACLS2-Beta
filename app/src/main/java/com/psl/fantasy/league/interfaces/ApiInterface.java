@@ -1,5 +1,8 @@
 package com.psl.fantasy.league.interfaces;
 
+import com.psl.fantasy.league.model.response.AccountLinking.BankInfo;
+import com.psl.fantasy.league.model.response.AccountLinking.LinkingBean;
+import com.psl.fantasy.league.model.response.AccountLinking.OTPBean;
 import com.psl.fantasy.league.model.response.Insert.InsertResponse;
 import com.psl.fantasy.league.model.response.JoinContest.JoinContenstResponse;
 import com.psl.fantasy.league.model.request.TestBeanRequest;
@@ -75,4 +78,13 @@ public interface ApiInterface {
 
     @POST("verifyPaymentSimPaisa")
     Call<SimPaisaOTPResponse> verifyPaymentSimPaisa(@Body TestBeanRequest beanRequest);
+
+    @POST("verifyAccount")
+    Call<LinkingBean> verifyAccount(@Body TestBeanRequest beanRequest);
+
+    @POST("verifyOtp")
+    Call<OTPBean> verifyOtp(@Body TestBeanRequest beanRequest);
+
+    @POST("updateBankTitle")
+    Call<BankInfo> updateBankTitle(@Body TestBeanRequest beanRequest);
 }

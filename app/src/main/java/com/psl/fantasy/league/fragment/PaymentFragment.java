@@ -141,6 +141,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
             }
         }if(v.getId()==R.id.btn_submit){
             paySimPaisaOTP();
+
         }
     }
 
@@ -165,6 +166,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                             if(response.isSuccessful()){
                                 btn_submit.setEnabled(true);
                                 if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+                                    payment();
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
@@ -274,7 +276,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                         if(response.isSuccessful()){
                             if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
                                 dbHelper.deleteMyTeam();
-                                Helper.showAlertNetural(mView.getContext(), "Success", response.body().getMessage());
+//                                Helper.showAlertNetural(mView.getContext(), "Success", response.body().getMessage());
                             }else{
                                 Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
                                 Log.e("Pay",response.body().getMessage());
@@ -288,8 +290,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                                 e.printStackTrace();
                             }
                         }
-                        Intent intent=new Intent(mView.getContext(),StartActivity.class);
-                        startActivity(intent);
+
 
                     }
 
