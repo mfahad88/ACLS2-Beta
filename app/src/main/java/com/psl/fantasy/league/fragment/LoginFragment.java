@@ -275,8 +275,16 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                             progressBar.setVisibility(View.GONE);
                             btn_next.setEnabled(true);
                             if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-                                Helper.putUserSession(sharedpreferences,Helper.MY_USER,response.body().getData().getMyUser());
-                                Helper.putUserSession(sharedpreferences,Helper.MY_USER_MSC,response.body().getData().getMyUsermsc());
+                                try {
+                                    JSONObject object=new JSONObject();
+                                    object.put(Helper.MY_USER,response.body().getData().getMyUser());
+                                    object.put(Helper.MY_USER_MSC,response.body().getData().getMyUsermsc());
+                                    Helper.putUserSession(sharedpreferences,Helper.MY_USER,object);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+//                                Helper.putUserSession(sharedpreferences,Helper.MY_USER,response.body().getData().getMyUser());
+//                                Helper.putUserSession(sharedpreferences,Helper.MY_USER_MSC,response.body().getData().getMyUsermsc());
                                 Helper.createDirectory();
 
                                 if(Helper.getUserSession(preferences,"MyUser")!=null) {
