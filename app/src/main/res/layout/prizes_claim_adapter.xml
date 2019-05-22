@@ -63,6 +63,7 @@
                 android:textColor="@android:color/white"
                 android:background="@drawable/drawable_btn_square"
                 android:enabled="true"
+                android:text="claim"
                 android:id="@+id/btn_claim"
                 android:layout_below="@id/image_view_icon"
                 android:layout_alignParentRight="true"/>

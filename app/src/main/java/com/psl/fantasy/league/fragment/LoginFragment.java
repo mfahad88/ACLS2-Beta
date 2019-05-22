@@ -317,6 +317,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                                     FragmentTransaction ft=getFragmentManager().beginTransaction();
                                     ft.replace(R.id.main_content,fragment);
                                     ft.commit();
+                                }if(screen.equalsIgnoreCase("prizes")){
+                                    Fragment fragment=new PrizesFragment();
+                                    FragmentTransaction ft=getFragmentManager().beginTransaction();
+                                    ft.replace(R.id.main_content,fragment);
+                                    ft.commit();
                                 }
 
                             }else{

@@ -5,12 +5,14 @@ public class RedeemBean {
     private String teamName;
     private String matchName;
     private String earnPoints;
+    private int teamId;
 
-    public RedeemBean(int redeemId, String teamName, String matchName, String earnPoints) {
+    public RedeemBean(int redeemId, String teamName, String matchName, String earnPoints, int teamId) {
         this.redeemId = redeemId;
         this.teamName = teamName;
         this.matchName = matchName;
         this.earnPoints = earnPoints;
+        this.teamId = teamId;
     }
 
     public int getRedeemId() {
@@ -43,5 +45,13 @@ public class RedeemBean {
 
     public void setEarnPoints(String earnPoints) {
         this.earnPoints = earnPoints;
+    }
+
+    public int getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(int teamId) {
+        this.teamId = teamId;
     }
 }
