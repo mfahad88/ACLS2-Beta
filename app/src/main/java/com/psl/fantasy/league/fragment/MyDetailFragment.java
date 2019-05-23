@@ -82,7 +82,7 @@ public class MyDetailFragment extends Fragment {
 
                                     String shareId=response.body().getData().getMyUser().getMobileNo().substring(4,7).trim()+""+user_id;
                                     txt_coins.setText(response.body().getData().getMyUsermsc().getCoinsBalance().toString());
-                                    txt_points.setText(response.body().getData().getMyUsermsc().getBudgetPoint().toString());
+                                    txt_points.setText(response.body().getData().getMyUsermsc().getPoint_balance().toString());
                                     txt_mobile_no.setText(response.body().getData().getMyUser().getMobileNo());
                                     txt_referral_code.setText(shareId);
                                 }else{

@@ -31,6 +31,9 @@ public class MyUsermsc {
     @Expose
     private Integer budgetPoint;
 
+    @SerializedName("point_balance")
+    @Expose
+    private Integer point_balance;
     public Integer getMscId() {
         return mscId;
     }
@@ -95,4 +98,11 @@ public class MyUsermsc {
         this.budgetPoint = budgetPoint;
     }
 
+    public Integer getPoint_balance() {
+        return point_balance;
+    }
+
+    public void setPoint_balance(Integer point_balance) {
+        this.point_balance = point_balance;
+    }
 }
