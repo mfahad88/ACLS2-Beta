@@ -52,8 +52,11 @@ public class PrizesRedeemFragment extends Fragment {
 
         if(Helper.getUserSession(preferences,Helper.MY_USER)!=null){
             try{
-                JSONObject object=new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
-                user_id=object.getInt("user_id");
+                JSONObject object = new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
+                JSONObject nameValuePairs=object.getJSONObject("nameValuePairs");
+                user_id=nameValuePairs.getJSONObject("MyUser").getInt("user_id");
+
+                /////Request//////////
                 JSONObject jsonObject=new JSONObject();
                 jsonObject.put("user_id",user_id);
                 ApiClient.getInstance().getAllRedeemTeams(Helper.encrypt(jsonObject.toString()))

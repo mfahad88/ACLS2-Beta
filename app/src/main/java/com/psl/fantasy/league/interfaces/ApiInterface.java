@@ -20,6 +20,7 @@ import com.psl.fantasy.league.model.response.PrizeClaim.PrizeClaimResponse;
 import com.psl.fantasy.league.model.response.Prizes.PrizesResponse;
 import com.psl.fantasy.league.model.response.Redeem.GetRedeem;
 import com.psl.fantasy.league.model.response.Redeem.TeamWiseRedeem;
+import com.psl.fantasy.league.model.response.SelectUser.SelectUserBean;
 import com.psl.fantasy.league.model.response.SimPaisa.SimPaisaResponse;
 import com.psl.fantasy.league.model.response.SimPaisaOTP.SimPaisaOTPResponse;
 import com.psl.fantasy.league.model.ui.PlayerBean;
@@ -95,4 +96,7 @@ public interface ApiInterface {
 
     @POST("RedeemPointTeamWise")
     Call<TeamWiseRedeem> RedeemPointTeamWise(@Body TestBeanRequest beanRequest);
+
+    @POST("SelectUser")
+    Call<SelectUserBean> SelectUser(@Body TestBeanRequest beanRequest);
 }

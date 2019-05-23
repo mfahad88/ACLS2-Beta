@@ -68,8 +68,9 @@ public class FragmentClaimPrizes extends Fragment {
         }*/
         try {
             if(Helper.getUserSession(preferences,Helper.MY_USER)!=null) {
-                JSONObject object = new JSONObject(Helper.getUserSession(preferences, Helper.MY_USER).toString());
-                userId = object.getInt("user_id");
+                JSONObject object = new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
+                JSONObject nameValuePairs=object.getJSONObject("nameValuePairs");
+                userId = nameValuePairs.getInt("user_id");
             }else {
                 AppCompatActivity activity=(AppCompatActivity)getActivity();
                 Fragment fragment=new LoginFragment();

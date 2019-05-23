@@ -71,9 +71,9 @@ public class MyMatchesFragment extends Fragment {
         mCallback.communicate("disable");
         if(Helper.getUserSession(preferences,Helper.MY_USER)!=null) {
             try {
-                JSONObject object=new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
-                userId=object.getInt("user_id");
-
+                JSONObject object = new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
+                JSONObject nameValuePairs=object.getJSONObject("nameValuePairs");
+                userId=nameValuePairs.getJSONObject("MyUser").getInt("user_id");
                 JSONObject obj=new JSONObject();
                 try {
                     obj.put("user_id",userId);

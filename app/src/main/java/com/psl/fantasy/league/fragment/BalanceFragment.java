@@ -52,9 +52,8 @@ public class BalanceFragment extends Fragment {
     }
 
     private void setupTabLayout() {
-        allTabs.addTab(allTabs.newTab().setText("Account Linking"));
-        allTabs.addTab(allTabs.newTab().setText("Points"),true);
-        allTabs.addTab(allTabs.newTab().setText("Coins"));
+        allTabs.addTab(allTabs.newTab().setText("Account Linking"),true);
+        allTabs.addTab(allTabs.newTab().setText("My Detail"));
     }
 
     private void bindWidgetsWithAnEvent()
@@ -85,14 +84,11 @@ public class BalanceFragment extends Fragment {
                 break;
             case 1 :
 
-                fragment = new PointsFragment();
+                fragment = new MyDetailFragment();
 
                 replaceFragment(fragment);
                 break;
-            case 2 :
-                fragment = new CoinsFragment();
-                replaceFragment(fragment);
-                break;
+
         }
     }
     public void replaceFragment(Fragment fragment) {

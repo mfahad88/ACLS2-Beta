@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -68,6 +69,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
     RelativeLayout relativePay,relativeOTP;
     EditText edt_otp;
     Button btn_submit;
+    ProgressBar progressBar;
 
     public PaymentFragment() {
         // Required empty public constructor
@@ -92,7 +94,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
         String provider = telephonyManager.getSimOperatorName();
         edt_otp=mView.findViewById(R.id.edt_otp);
         btn_submit=mView.findViewById(R.id.btn_submit);
-
+        progressBar=mView.findViewById(R.id.progressBar);
         if(getArguments()!=null){
             ContestId=getArguments().getInt("conId");
             credit=getArguments().getDouble("credit");
@@ -100,10 +102,11 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
         }
         try {
             edt_amount.setText(String.valueOf(contestAmt));
-            JSONObject jsonObject = new JSONObject(String.valueOf(Helper.getUserSession(preferences, "MyUser")));
+            JSONObject object = new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
+            JSONObject nameValuePairs=object.getJSONObject("nameValuePairs");
 
-            mobileNo=String.format("%.0f",jsonObject.getDouble("mobile_no"));
-            userId = jsonObject.getInt("user_id");
+            mobileNo=String.format("%.0f",nameValuePairs.getJSONObject(Helper.MY_USER).getDouble("mobile_no"));
+            userId = nameValuePairs.getJSONObject(Helper.MY_USER).getInt("user_id");
             if(!TextUtils.isEmpty(mobileNo)) {
                 if(!mobileNo.startsWith("0")){
                     edt_mobile_no.setText("0"+mobileNo);
@@ -130,6 +133,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        progressBar.setVisibility(View.VISIBLE);
         if(v.getId()==R.id.btn_pay){
             if(!TextUtils.isEmpty(edt_mobile_no.getText().toString())) {
                 if(edt_mobile_no.getText().toString().startsWith("0")){
@@ -155,8 +159,9 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
             object.put("codeOTP",Integer.parseInt(edt_otp.getText().toString()));
             object.put("amt",contestAmt);
             if(Helper.getUserSession(preferences,Helper.MY_USER)!=null) {
-                JSONObject jsonObject=new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
-                object.put("user_id", jsonObject.getInt("user_id"));
+                JSONObject jsonObject = new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
+                JSONObject nameValuePairs=jsonObject.getJSONObject("nameValuePairs");
+                object.put("user_id", nameValuePairs.getJSONObject("MyUser").getInt("user_id"));
             }
 
             ApiClient.getInstance().verifyPaymentSimPaisa(Helper.encrypt(object.toString()))
@@ -164,6 +169,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                         @Override
                         public void onResponse(Call<SimPaisaOTPResponse> call, Response<SimPaisaOTPResponse> response) {
                             if(response.isSuccessful()){
+                                progressBar.setVisibility(View.GONE);
                                 btn_submit.setEnabled(true);
                                 if(response.body().getResponseCode().equalsIgnoreCase("1001")){
                                     payment();
@@ -181,6 +187,8 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                                 }else{
                                     Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
                                 }
+                            }else{
+                                progressBar.setVisibility(View.GONE);
                             }
                         }
 
@@ -189,6 +197,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                             t.printStackTrace();
                             Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
                             btn_submit.setEnabled(true);
+                            progressBar.setVisibility(View.GONE);
                         }
                     });
         }catch (Exception e){
@@ -207,6 +216,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                         @Override
                         public void onResponse(Call<SimPaisaResponse> call, Response<SimPaisaResponse> response) {
                             if(response.isSuccessful()){
+                                progressBar.setVisibility(View.GONE);
                                 btn_pay.setEnabled(true);
                                 if(response.body().getResponseCode().equalsIgnoreCase("1001")){
                                     relativePay.setVisibility(View.GONE);
@@ -218,6 +228,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                             }else{
                                 try {
                                     Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
+                                    progressBar.setVisibility(View.GONE);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -229,6 +240,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                             t.printStackTrace();
                             btn_pay.setEnabled(true);
                             Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
+                            progressBar.setVisibility(View.GONE);
                         }
                     });
         }catch (Exception e){
@@ -237,68 +249,73 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
     }
 
     public void payment(){
-        List<PlayerBean> list= dbHelper.getMyTeam();
-        JSONArray jsonArray = new JSONArray();
-        for(PlayerBean bean:list) {
+       try{
+           List<PlayerBean> list= dbHelper.getMyTeam();
+           JSONArray jsonArray = new JSONArray();
+           for(PlayerBean bean:list) {
 
-            JSONArray array = new JSONArray();
-            array.put(bean.getId());
-            if(bean.isCaptain()) {
-                array.put(1);
-            }else{
-                array.put(0);
-            }
-            if(bean.isViceCaptain()) {
-                array.put(1);
-            }else {
-                array.put(0);
-            }
-            jsonArray.put(array);
-        }
-        Log.e("beanList",jsonArray.toString());
+               JSONArray array = new JSONArray();
+               array.put(bean.getId());
+               if(bean.isCaptain()) {
+                   array.put(1);
+               }else{
+                   array.put(0);
+               }
+               if(bean.isViceCaptain()) {
+                   array.put(1);
+               }else {
+                   array.put(0);
+               }
+               jsonArray.put(array);
+           }
+           Log.e("beanList",jsonArray.toString());
 
-        JSONObject object=new JSONObject();
-        try {
-            object.put("user_id",userId);
-            object.put("contest_id",ContestId);
-            object.put("name","Android");
-            object.put("method_Name",this.getClass().getSimpleName()+".btn_done.onClick");
-            object.put("playersInfo",jsonArray);
-            object.put("coins",0);
-            object.put("rem_budget",credit);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        ApiClient.getInstance().JoinContest(Helper.encrypt(object.toString()))
-                .enqueue(new Callback<JoinContenstResponse>() {
-                    @Override
-                    public void onResponse(Call<JoinContenstResponse> call, Response<JoinContenstResponse> response) {
-                        if(response.isSuccessful()){
-                            if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
-                                dbHelper.deleteMyTeam();
+           JSONObject object=new JSONObject();
+
+           object.put("user_id",userId);
+           object.put("contest_id",ContestId);
+           object.put("name","Android");
+           object.put("method_Name",this.getClass().getSimpleName()+".btn_done.onClick");
+           object.put("playersInfo",jsonArray);
+           object.put("coins",0);
+           object.put("rem_budget",credit);
+
+           ApiClient.getInstance().JoinContest(Helper.encrypt(object.toString()))
+                   .enqueue(new Callback<JoinContenstResponse>() {
+                       @Override
+                       public void onResponse(Call<JoinContenstResponse> call, Response<JoinContenstResponse> response) {
+                           if(response.isSuccessful()){
+                               progressBar.setVisibility(View.GONE);
+                               if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
+                                   dbHelper.deleteMyTeam();
 //                                Helper.showAlertNetural(mView.getContext(), "Success", response.body().getMessage());
-                            }else{
-                                Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                                Log.e("Pay",response.body().getMessage());
-                            }
+                               }else{
+                                   Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                   Log.e("Pay",response.body().getMessage());
+                               }
 
-                        }else{
-                            try {
-                                Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
-                                Log.e("Error",response.errorBody().string());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
+                           }else{
+                               try {
+                                   Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
+                                   Log.e("Error",response.errorBody().string());
+                                   progressBar.setVisibility(View.GONE);
+                               } catch (IOException e) {
+                                   e.printStackTrace();
+                               }
+                           }
 
 
-                    }
+                       }
 
-                    @Override
-                    public void onFailure(Call<JoinContenstResponse> call, Throwable t) {
-                        t.printStackTrace();
+                       @Override
+                       public void onFailure(Call<JoinContenstResponse> call, Throwable t) {
+                           t.printStackTrace();
+                           progressBar.setVisibility(View.GONE);
 
-                    }
-                });
+                       }
+                   });
+       }catch (Exception e){
+           e.printStackTrace();
+       }
     }
 }

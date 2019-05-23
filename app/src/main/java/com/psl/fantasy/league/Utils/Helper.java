@@ -70,6 +70,7 @@ public class Helper {
     public static final String SHARED_PREF = "PSL_FANTSY";
     public static final String MY_USER = "MyUser";
     public static final String MY_USER_MSC = "MyUserMsc";
+    public static final String CNIC = "cnic";
     public static final String isFromLogin="isFromLogin";
     public static void showAlertNetural(Context ctx, String title, String message){
         AlertDialog.Builder builder=new AlertDialog.Builder(ctx);
@@ -392,6 +393,7 @@ public class Helper {
         AnalyticsApplication application = (AnalyticsApplication) app;
         return application.getDefaultTracker();
     }
+
 
 
 }

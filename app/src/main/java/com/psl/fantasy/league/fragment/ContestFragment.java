@@ -292,6 +292,8 @@ public class ContestFragment extends Fragment {
                         public void onFailure(Call<ContestResponse> call, Throwable t) {
                             t.printStackTrace();
                             Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
+                            progressBar.setVisibility(View.GONE);
+
                         }
                     });
         }catch (JSONException e){

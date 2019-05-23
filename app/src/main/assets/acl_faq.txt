@@ -1,7 +1,5 @@
-
-FAQs
-
 ABOUT
+
 > What is Apni Cricket league (ACL)?
 Apni Cricket league is an online cricket game where participants create virtual teams of real players and compete based on the performance of those real players in actual games.
 > Are there any charges for using the ACL app?
@@ -10,10 +8,12 @@ There are no charges of using the app. Participants may choose to enter free or 
 Yes, the app provides a safe and secure way to carry out transactions:
 i. No information is stored on your mobile phone which means your username and password are never exposed even if your mobile phone is lost or stolen
 ii. All transactions are secured through advanced encryption methodologies
-REGISTRATION
+
+REGISTRATION:
+
 > How do I register?
 Register yourself using your mobile number.
-> What if I don’t have a valid email address?
+> What if I don't have a valid email address?
 Simply register using your mobile number.
 > From where can I download the app?
 The app can be downloaded from Google Play Store (Android Only)
@@ -24,9 +24,9 @@ No, you can play without opening a wallet.
 > How many accounts can I create using the same mobile number on the app?
 You can create one account per mobile number.
 App Registration Steps
-* Search for “Apni Cricket League” on Google Play Store or Apple App store
+* Search for 'Apni Cricket League' on Google Play Store or Apple App store
 * Download App
-* Click “Register”
+* Click 'Register'
 * Enter Mobile Number (mandatory)
 * Accept terms and conditions
 Purchasing Coins and Entering Contest
@@ -38,7 +38,8 @@ o Bill your postpaid mobile phone
 > How do I get a notification for a successful transaction?
 You will get an inapp notification confirming your coins purchase.
 
-PLAYING THE GAME
+PLAYING THE GAME:
+
 > How do I play?
 Follow these simple steps to play on ACL App:
 i. Register/ Log into your account
@@ -61,13 +62,8 @@ Yes, you can edit your team prior to the start of the match. Team creation will 
 > When I make changes to my team, how long does it take to reflect?
 Once you make changes to your team, the changes are updated immediately
 
+SCORES & POINTS:
 
-
-
-
-
-
-SCORES & POINTS
 > How will I score points?
 You will score points depending on how the players in your team perform in the live match
 .
@@ -78,10 +74,9 @@ The points get updated immediately.
 > How can I cross check my points?
 You can cross check your points through your dashboard
 
-PRIZES
+PRIZES:
+
 > How is the winner of the match decided?
 The winner is decided based on the highest points calculated at the end of a match. Top players will receive special prizes. Refer to the prize section for the prize details.
 > How will I be informed if I win a prize?
 You will receive an in-app notification and announcement will be done on the official Apni Cricket League page on Facebook.
-
-

@@ -20,6 +20,7 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.Toast;
 
 import com.psl.fantasy.league.R;
 import com.psl.fantasy.league.Utils.Helper;
@@ -78,7 +79,18 @@ public class AccountLinkFragment extends Fragment implements View.OnClickListene
         preferences=mView.getContext().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
         progressBar=mView.findViewById(R.id.progressBar);
         spinner_bank=mView.findViewById(R.id.spinner_bank);
-        if(Helper.getUserSession(preferences,Helper.MY_USER)==null){
+        if(Helper.getUserSession(preferences,Helper.MY_USER)!=null){
+            JSONObject object= null;
+            try {
+                object = new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
+                JSONObject nameValuePairs=object.getJSONObject("nameValuePairs");
+                user_id=nameValuePairs.getJSONObject("MyUser").getInt("user_id");
+                populateItems();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }else{
             Fragment fragment=new LoginFragment();
             Bundle bundle=new Bundle();
             bundle.putString("screen","accountlinking");
@@ -87,20 +99,12 @@ public class AccountLinkFragment extends Fragment implements View.OnClickListene
             FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.frame_container,fragment);
             ft.commit();
-        }else{
-            JSONObject object= null;
-            try {
-                object = new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
-                user_id=object.getInt("user_id");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
 
         }
 
         (mView.findViewById(R.id.radio_js_wallet)).setSelected(true);
         radio_group_linking.check(R.id.radio_js_wallet);
-        populateItems();
+
         relative_linking.setVisibility(View.VISIBLE);
 
         radio_group_linking.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -137,15 +141,24 @@ public class AccountLinkFragment extends Fragment implements View.OnClickListene
     }
     private void populateItems(){
         try {
-            JSONObject jsonObject = new JSONObject(String.valueOf(Helper.getUserSession(preferences, "MyUser")));
 
-            mobileNo=String.format("%.0f",jsonObject.getDouble("mobile_no"));
+            JSONObject object = new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
+            JSONObject nameValuePairs=object.getJSONObject("nameValuePairs");
+
+            //JSONObject jsonObject = new JSONObject(String.valueOf(Helper.getUserSession(preferences, "MyUser")));
+
+            mobileNo=String.format("%.0f",nameValuePairs.getJSONObject("MyUser").getDouble("mobile_no"));
             if(!TextUtils.isEmpty(mobileNo)) {
                 if(!mobileNo.startsWith("0")){
                     edt_mobile_no.setText("0"+mobileNo);
                 }else{
                     edt_mobile_no.setText(mobileNo);
                 }
+            }
+            JSONObject jsonObject=new JSONObject(Helper.getUserSession(preferences,Helper.CNIC).toString());
+            JSONObject nameValuePairs2=jsonObject.getJSONObject("nameValuePairs");
+            if(!TextUtils.isEmpty(nameValuePairs2.getString(Helper.CNIC))){
+                edt_cnic.setText(nameValuePairs2.getString(Helper.CNIC));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -219,43 +232,57 @@ public class AccountLinkFragment extends Fragment implements View.OnClickListene
                     progressBar.setVisibility(View.GONE);
                 }else{
                     if(edt_otp.getText().length()==4){
-                        JSONObject object=new JSONObject();
-                        object.put("cnic",edt_cnic.getText());
-                        object.put("mobileNumber",edt_mobile_no.getText());
-                        object.put("otp",edt_otp.getText());
-                        ApiClient.getInstance().verifyOtp(Helper.encrypt(object.toString()))
-                                .enqueue(new Callback<OTPBean>() {
-                                    @Override
-                                    public void onResponse(Call<OTPBean> call, Response<OTPBean> response) {
-                                        progressBar.setVisibility(View.GONE);
-                                        if(response.isSuccessful()){
-                                            btn_submit.setEnabled(true);
-                                            if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-                                                new Handler().postDelayed(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        Helper.showAlertNetural(mView.getContext(),"Success",response.body().getMessage());
+                        try {
+                            JSONObject object=new JSONObject();
+                            object.put("cnic",edt_cnic.getText());
+                            object.put("mobileNumber",edt_mobile_no.getText());
+                            object.put("otp",edt_otp.getText());
+                            ApiClient.getInstance().verifyOtp(Helper.encrypt(object.toString()))
+                                    .enqueue(new Callback<OTPBean>() {
+                                        @Override
+                                        public void onResponse(Call<OTPBean> call, Response<OTPBean> response) {
+                                            progressBar.setVisibility(View.GONE);
+                                            if(response.isSuccessful()){
+                                                btn_submit.setEnabled(true);
+                                                if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+
+                                                    try {
+                                                        JSONObject object=new JSONObject();
+                                                        object.put(Helper.CNIC,edt_cnic.getText().toString());
+                                                        Helper.putUserSession(preferences,Helper.CNIC,object);
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
                                                     }
-                                                },1000);
-                                                AppCompatActivity activity=(AppCompatActivity)getActivity();
-                                                Fragment fragment=new DashboardFragment();
-                                                FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
-                                                ft.replace(R.id.main_content,fragment);
-                                                ft.commit();
-                                            }else {
-                                                Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+
+
+                                                    new Handler().postDelayed(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            Helper.showAlertNetural(mView.getContext(),"Success",response.body().getMessage());
+                                                        }
+                                                    },1000);
+                                                    AppCompatActivity activity=(AppCompatActivity)getActivity();
+                                                    Fragment fragment=new DashboardFragment();
+                                                    FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
+                                                    ft.replace(R.id.main_content,fragment);
+                                                    ft.commit();
+                                                }else {
+                                                    Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                                }
                                             }
                                         }
-                                    }
 
-                                    @Override
-                                    public void onFailure(Call<OTPBean> call, Throwable t) {
-                                        t.printStackTrace();
-                                        Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
-                                        btn_submit.setEnabled(true);
-                                        progressBar.setVisibility(View.GONE);
-                                    }
-                                });
+                                        @Override
+                                        public void onFailure(Call<OTPBean> call, Throwable t) {
+                                            t.printStackTrace();
+                                            Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
+                                            btn_submit.setEnabled(true);
+                                            progressBar.setVisibility(View.GONE);
+                                        }
+                                    });
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                     }else{
                         Helper.showAlertNetural(mView.getContext(),"Error","Invalid OTP length");
                         btn_submit.setEnabled(true);

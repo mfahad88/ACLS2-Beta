@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.facebook.FacebookSdk;
 import com.facebook.LoggingBehavior;
 import com.google.android.gms.analytics.Tracker;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -31,6 +33,8 @@ import com.psl.fantasy.league.Utils.Helper;
 import com.psl.fantasy.league.client.ApiClient;
 import com.psl.fantasy.league.model.response.Config.ConfigBeanResponse;
 import com.psl.fantasy.league.model.response.Player.PlayerResponse;
+import com.psl.fantasy.league.services.MyFirebaseInstanceIDService;
+import com.psl.fantasy.league.services.MyFirebaseMessagingService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,6 +55,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
 
         dbHelper=new DbHelper(this);
         JSONObject obj=new JSONObject();

@@ -200,6 +200,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 String referral=edt_referral.getText().toString();
                 if((!TextUtils.isEmpty(mobileNo)) && (!TextUtils.isEmpty(password)) && (!TextUtils.isEmpty(confirmPassword))){
                    if(password.equalsIgnoreCase(confirmPassword)){
+                       progressBar.setVisibility(View.VISIBLE);
                        JSONObject object=new JSONObject();
                        object.put("pws",password);
                        object.put("mobile_no",mobileNo);
@@ -217,6 +218,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                                    public void onResponse(Call<InsertResponse> call, Response<InsertResponse> response) {
                                        if(response.isSuccessful()){
                                            btn_sign_up.setEnabled(true);
+                                           progressBar.setVisibility(View.GONE);
                                            if(response.body().getResponseCode().equals("1001")){
                                                //Helper.showAlertNetural(mView.getContext(),"Success","Done");
 
@@ -238,6 +240,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                                                try {
                                                    btn_sign_up.setEnabled(true);
                                                    Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
+                                                   progressBar.setVisibility(View.GONE);
                                                } catch (IOException e) {
 
                                                    e.printStackTrace();
@@ -283,8 +286,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-//                                Helper.putUserSession(sharedpreferences,Helper.MY_USER,response.body().getData().getMyUser());
-//                                Helper.putUserSession(sharedpreferences,Helper.MY_USER_MSC,response.body().getData().getMyUsermsc());
                                 Helper.createDirectory();
 
                                 if(Helper.getUserSession(preferences,"MyUser")!=null) {
@@ -329,6 +330,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                                     Fragment fragment=new PrizesFragment();
                                     FragmentTransaction ft=getFragmentManager().beginTransaction();
                                     ft.replace(R.id.main_content,fragment);
+                                    ft.commit();
+                                }if(screen.equalsIgnoreCase("detailfragment")){
+                                    Fragment fragment=new MyDetailFragment();
+                                    FragmentTransaction ft=getFragmentManager().beginTransaction();
+                                    ft.replace(R.id.frame_container,fragment);
                                     ft.commit();
                                 }
 
