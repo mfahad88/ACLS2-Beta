@@ -88,7 +88,8 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> implements Locatio
         convertView=LayoutInflater.from(context).inflate(resource,null);
         final MatchesBean bean=list.get(position);
 
-        Drawable drawable = null;
+        //Drawable drawable = null;
+        int resource=0;
         ImageView image_team_one = convertView.findViewById(R.id.image_team_one);
         ImageView image_team_two = convertView.findViewById(R.id.image_team_two);
 
@@ -104,76 +105,90 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> implements Locatio
             txt_short_team_two.setText(bean.getShortName2());
 
             if(bean.getTeamOne().trim().equals("Pakistan")){
-                drawable= context.getDrawable(R.drawable.pakistan);
-                image_team_one.setImageDrawable(drawable);
+//                drawable= context.getDrawable(R.drawable.pakistan);
+                resource=R.drawable.pakistan;
+//                image_team_one.setImageDrawable(drawable);
             }if(bean.getTeamOne().trim().equals("Bangladesh")){
-                drawable= context.getDrawable(R.drawable.bangladesh);
-                image_team_one.setImageDrawable(drawable);
+//                drawable= context.getDrawable(R.drawable.bangladesh);
+                resource=R.drawable.bangladesh;
+//                image_team_one.setImageDrawable(drawable);
             }if(bean.getTeamOne().trim().equals("India")){
-                drawable= context.getDrawable(R.drawable.india);
-                image_team_one.setImageDrawable(drawable);
+//                drawable= context.getDrawable(R.drawable.india);
+//                image_team_one.setImageDrawable(drawable);
+                resource=R.drawable.india;
             }if(bean.getTeamOne().trim().equals("Sri Lanka")){
-                drawable= context.getDrawable(R.drawable.srilanka);
-                image_team_one.setImageDrawable(drawable);
+//                drawable= context.getDrawable(R.drawable.srilanka);
+//                image_team_one.setImageDrawable(drawable);
+                resource=R.drawable.srilanka;
             }if(bean.getTeamOne().trim().equals("Australia")){
-                drawable= context.getDrawable(R.drawable.australia);
-                image_team_one.setImageDrawable(drawable);
+//                drawable= context.getDrawable(R.drawable.australia);
+//                image_team_one.setImageDrawable(drawable);
+                resource=R.drawable.australia;
             }if(bean.getTeamOne().trim().equals("Afghanistan")){
-                drawable= context.getDrawable(R.drawable.afghanistan);
-                image_team_one.setImageDrawable(drawable);
+//                drawable= context.getDrawable(R.drawable.afghanistan);
+//                image_team_one.setImageDrawable(drawable);
+                resource=R.drawable.afghanistan;
             }if(bean.getTeamOne().trim().equals("South Africa")){
-                drawable= context.getDrawable(R.drawable.southafrica);
-                image_team_one.setImageDrawable(drawable);
+//                drawable= context.getDrawable(R.drawable.southafrica);
+//                image_team_one.setImageDrawable(drawable);
+                resource=R.drawable.southafrica;
             }if(bean.getTeamOne().trim().equals("England")){
-                drawable= context.getDrawable(R.drawable.england);
-                image_team_one.setImageDrawable(drawable);
-            }if(bean.getTeamOne().trim().equals("India")){
-                drawable= context.getDrawable(R.drawable.india);
-                image_team_one.setImageDrawable(drawable);
+//                drawable= context.getDrawable(R.drawable.england);
+//                image_team_one.setImageDrawable(drawable);
+                resource=R.drawable.england;
             }if(bean.getTeamOne().trim().equals("New Zealand")){
-                drawable= context.getDrawable(R.drawable.newzealand);
-                image_team_one.setImageDrawable(drawable);
+//                drawable= context.getDrawable(R.drawable.newzealand);
+//                image_team_one.setImageDrawable(drawable);
+                resource=R.drawable.newzealand;
             }if(bean.getTeamOne().trim().equals("West Indies")){
-                drawable= context.getDrawable(R.drawable.westindies);
-                image_team_one.setImageDrawable(drawable);
+//                drawable= context.getDrawable(R.drawable.westindies);
+//                image_team_one.setImageDrawable(drawable);
+                resource=R.drawable.westindies;
             }
-
+            image_team_one.setImageResource(resource);
 
             if(bean.getTeamTwo().trim().equals("Pakistan")){
-                drawable= context.getDrawable(R.drawable.pakistan);
-                image_team_two.setImageDrawable(drawable);
+//                drawable= context.getDrawable(R.drawable.pakistan);
+                resource=R.drawable.pakistan;
+//                image_team_one.setImageDrawable(drawable);
             }if(bean.getTeamTwo().trim().equals("Bangladesh")){
-                drawable= context.getDrawable(R.drawable.bangladesh);
-                image_team_two.setImageDrawable(drawable);
+//                drawable= context.getDrawable(R.drawable.bangladesh);
+                resource=R.drawable.bangladesh;
+//                image_team_one.setImageDrawable(drawable);
             }if(bean.getTeamTwo().trim().equals("India")){
-                drawable= context.getDrawable(R.drawable.india);
-                image_team_two.setImageDrawable(drawable);
+//                drawable= context.getDrawable(R.drawable.india);
+//                image_team_one.setImageDrawable(drawable);
+                resource=R.drawable.india;
             }if(bean.getTeamTwo().trim().equals("Sri Lanka")){
-                drawable= context.getDrawable(R.drawable.srilanka);
-                image_team_two.setImageDrawable(drawable);
+//                drawable= context.getDrawable(R.drawable.srilanka);
+//                image_team_one.setImageDrawable(drawable);
+                resource=R.drawable.srilanka;
             }if(bean.getTeamTwo().trim().equals("Australia")){
-                drawable= context.getDrawable(R.drawable.australia);
-                image_team_two.setImageDrawable(drawable);
+//                drawable= context.getDrawable(R.drawable.australia);
+//                image_team_one.setImageDrawable(drawable);
+                resource=R.drawable.australia;
             }if(bean.getTeamTwo().trim().equals("Afghanistan")){
-                drawable= context.getDrawable(R.drawable.afghanistan);
-                image_team_two.setImageDrawable(drawable);
+//                drawable= context.getDrawable(R.drawable.afghanistan);
+//                image_team_one.setImageDrawable(drawable);
+                resource=R.drawable.afghanistan;
             }if(bean.getTeamTwo().trim().equals("South Africa")){
-                drawable= context.getDrawable(R.drawable.southafrica);
-                image_team_two.setImageDrawable(drawable);
+//                drawable= context.getDrawable(R.drawable.southafrica);
+//                image_team_one.setImageDrawable(drawable);
+                resource=R.drawable.southafrica;
             }if(bean.getTeamTwo().trim().equals("England")){
-                drawable= context.getDrawable(R.drawable.england);
-                image_team_two.setImageDrawable(drawable);
-            }if(bean.getTeamTwo().trim().equals("India")){
-                drawable= context.getDrawable(R.drawable.india);
-                image_team_two.setImageDrawable(drawable);
+//                drawable= context.getDrawable(R.drawable.england);
+//                image_team_one.setImageDrawable(drawable);
+                resource=R.drawable.england;
             }if(bean.getTeamTwo().trim().equals("New Zealand")){
-                drawable= context.getDrawable(R.drawable.newzealand);
-                image_team_two.setImageDrawable(drawable);
+//                drawable= context.getDrawable(R.drawable.newzealand);
+//                image_team_one.setImageDrawable(drawable);
+                resource=R.drawable.newzealand;
             }if(bean.getTeamTwo().trim().equals("West Indies")){
-                drawable= context.getDrawable(R.drawable.westindies);
-                image_team_two.setImageDrawable(drawable);
+//                drawable= context.getDrawable(R.drawable.westindies);
+//                image_team_one.setImageDrawable(drawable);
+                resource=R.drawable.westindies;
             }
-
+            image_team_two.setImageResource(resource);
 
 
             new Thread(new Runnable() {
