@@ -1,6 +1,7 @@
 package com.psl.fantasy.league.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.psl.fantasy.league.R;
 import com.psl.fantasy.league.Utils.Helper;
+import com.psl.fantasy.league.activity.StartActivity;
 import com.psl.fantasy.league.fragment.AboutUsFragment;
 import com.psl.fantasy.league.fragment.FaqFragment;
 import com.psl.fantasy.league.fragment.PrizesFragment;
@@ -64,8 +66,9 @@ public class MoreAdapter extends ArrayAdapter {
                     if(objects[position].toString().equalsIgnoreCase("Logout")){
                             preferences.edit().clear().commit();
                             Helper.deleteDirectory();
+                            Intent intent=new Intent(context,StartActivity.class);
+                            context.startActivity(intent);
                             ((AppCompatActivity) context).finish();
-                            System.exit(0);
                     }
                 }
             }

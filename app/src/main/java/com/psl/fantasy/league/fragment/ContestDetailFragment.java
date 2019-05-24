@@ -80,8 +80,7 @@ public class ContestDetailFragment extends Fragment {
                                             Log.e("ContestId--->", String.valueOf(datum.getContestId().intValue()));
                                             Log.e("PoolConsumed---->", String.valueOf(datum.getPoolConsumed().intValue()));
                                             Log.e("Pool---->",datum.getPool().toString());
-                                            float perc= ((datum.getPoolConsumed().intValue() / datum.getPool().intValue()) * 100);
-                                            Log.e("Perc--->", String.valueOf(datum.getPoolConsumed().intValue() / datum.getPool().intValue()));
+                                            float perc= ((datum.getPoolConsumed().floatValue() / datum.getPool().floatValue()) * 100);
                                             int percent = Math.round(perc);
                                             list.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
                                                     , String.valueOf(datum.getPool()), datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));

@@ -18,7 +18,9 @@ import android.widget.Toast;
 import com.facebook.FacebookSdk;
 import com.facebook.LoggingBehavior;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -67,6 +69,7 @@ public class SplashActivity extends AppCompatActivity {
         tracker=Helper.getGoogleAnalytics(getApplication());
         Helper.updateGoogleAnalytics(tracker,this.getClass().getSimpleName());
         requestMultiplePermissions();
+
 
     }
 

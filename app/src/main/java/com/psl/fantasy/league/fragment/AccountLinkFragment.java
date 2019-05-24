@@ -231,7 +231,7 @@ public class AccountLinkFragment extends Fragment implements View.OnClickListene
                     btn_submit.setEnabled(true);
                     progressBar.setVisibility(View.GONE);
                 }else{
-                    if(edt_otp.getText().length()==4){
+                    if(edt_otp.getText().length()==5){
                         try {
                             JSONObject object=new JSONObject();
                             object.put("cnic",edt_cnic.getText());

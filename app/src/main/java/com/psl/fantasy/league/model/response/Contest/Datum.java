@@ -194,4 +194,26 @@ public class Datum {
         this.md = md;
     }
 
+    @Override
+    public String toString() {
+        return "Datum{" +
+                "contestId=" + contestId +
+                ", seriesMatchId='" + seriesMatchId + '\'' +
+                ", contestName='" + contestName + '\'' +
+                ", description='" + description + '\'' +
+                ", multipleAllowed='" + multipleAllowed + '\'' +
+                ", confirmedWinning='" + confirmedWinning + '\'' +
+                ", enteryFee='" + enteryFee + '\'' +
+                ", pool=" + pool +
+                ", contestWinDistId=" + contestWinDistId +
+                ", poolConsumed=" + poolConsumed +
+                ", winners='" + winners + '\'' +
+                ", contestType='" + contestType + '\'' +
+                ", winningPoints='" + winningPoints + '\'' +
+                ", isVisible='" + isVisible + '\'' +
+                ", discount=" + discount +
+                ", cd='" + cd + '\'' +
+                ", md='" + md + '\'' +
+                '}';
+    }
 }

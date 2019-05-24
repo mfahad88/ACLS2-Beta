@@ -398,10 +398,9 @@ public class Helper {
     public static void deleteDirectory(){
         try{
             File direct = new File(Environment.getExternalStorageDirectory()+File.separator+"ACL");
-
-            if(!direct.exists()) {
-               direct.delete();
-            }
+            File file=new File(Environment.getExternalStorageDirectory()+File.separator+"ACL"+File.separator+"user.txt");
+            direct.delete();
+            file.delete();
         }catch (Exception e){
             e.printStackTrace();
         }

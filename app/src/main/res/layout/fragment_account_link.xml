@@ -139,7 +139,7 @@
                         android:layout_width="190dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/edt_otp"
-                        android:maxLength="4"
+                        android:maxLength="5"
                         android:inputType="number"
                         android:hint="Enter OTP"/>
                 </LinearLayout>
