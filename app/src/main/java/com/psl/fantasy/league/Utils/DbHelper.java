@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.psl.fantasy.league.model.response.Player.Datum;
+import com.psl.fantasy.league.model.response.PrizeDistribution.PrizeDistributionBean;
 import com.psl.fantasy.league.model.ui.PlayerBean;
 
 import java.util.ArrayList;
@@ -49,6 +50,14 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String	price="price";
     public static final String	cd="cd";
     public static final String	md="md";
+
+    public static final String PRIZE_DISTRIBUTION = "prize_distribution";
+    public static final String contestWinDistId =   "contestWinDistId";
+    public static final String formationId =   "formationId";
+    public static final String winningCategory =   "winningCategory";
+    public static final String catDesc =   "catDesc";
+    public static final String distValue =   "distValue";
+    public static final String distPercent =   "distPercent";
 
 
     public static final String CREATE_CONFIG = "CREATE TABLE " +TBL_CONFIG + "(" + PARAM_CODE + " INTEGER PRIMARY KEY " +
@@ -93,6 +102,13 @@ public class DbHelper extends SQLiteOpenHelper {
             ", "+ISCAPTAIN+" INTEGER" +
             ", "+ISWCAPTAIN+" INTEGER" +
             ", "+ISCHECKED+" INTEGER)";
+
+    public static final String CREATE_PRIZE_DISTRIBUTION="CREATE TABLE "+PRIZE_DISTRIBUTION+ "("+contestWinDistId+" INTEGER" +
+            ", "+formationId+" TEXT " +
+            ", " +winningCategory+" TEXT " +
+            ", "+catDesc+" TEXT " +
+            ", "+distValue+" TEXT " +
+            ", "+distPercent+" TEXT)";
     Context cntxt;
 
 
@@ -105,9 +121,11 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         Log.e("SQLiteDatabase",CREATE_CONFIG);
         Log.e("SQLiteDatabase",CREATE_PLAYERS);
+        Log.e("SQLiteDatabase",CREATE_PRIZE_DISTRIBUTION);
         db.execSQL(CREATE_CONFIG);
         db.execSQL(CREATE_PLAYERS);
         db.execSQL(CREATE_TBL_MY_TEAM);
+        db.execSQL(CREATE_PRIZE_DISTRIBUTION);
 
     }
 
@@ -116,6 +134,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TBL_CONFIG);
         db.execSQL("DROP TABLE IF EXISTS "+ TBL_PLAYERS);
         db.execSQL("DROP TABLE IF EXISTS "+ TBL_MY_TEAM);
+        db.execSQL("DROP TABLE IF EXISTS "+ CREATE_PRIZE_DISTRIBUTION);
         onCreate(db);
     }
 
@@ -319,14 +338,51 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
+    public List<com.psl.fantasy.league.model.response.PrizeDistribution.Datum> getPrizeDistribution(){
+        List<com.psl.fantasy.league.model.response.PrizeDistribution.Datum> list = new ArrayList<>();
+        Cursor c = null ;
+        try {
+
+            String query = "SELECT * FROM " + PRIZE_DISTRIBUTION ;
+
+            SQLiteDatabase db = this.getReadableDatabase();
+            c = db.rawQuery(query, null);
+
+            if (c.moveToFirst()) {
+                do {
+                    com.psl.fantasy.league.model.response.PrizeDistribution.Datum bean=new com.psl.fantasy.league.model.response.PrizeDistribution.Datum();
+                    bean.setContestWinDistId(c.getInt(c.getColumnIndex(contestWinDistId)));
+                    bean.setFormationId(c.getString(c.getColumnIndex(formationId)));
+                    bean.setCatDesc(c.getString(c.getColumnIndex(catDesc)));
+                    bean.setWinningCategory(c.getString(c.getColumnIndex(winningCategory)));
+                    bean.setDistPercent(c.getString(c.getColumnIndex(distPercent)));
+                    bean.setDistValue(c.getString(c.getColumnIndex(distValue)));
+
+                    list.add(bean);
+                    Log.e("Value--->",list.toString());
+                } while (c.moveToNext());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally{
+            if(c!=null)
+                c.close();
+
+        }
+        return list;
+    }
+
+
     public int getIsCaptainMyTeamCount(boolean isCaptain){
-        
+
         Cursor c = null ;
         String query;
         int count = 0;
         try {
             if(isCaptain) {
-                
+
                 query = "SELECT COUNT(*) FROM " + TBL_MY_TEAM +" WHERE "+ISCAPTAIN+"=1";
             }else{
                 query = "SELECT COUNT(*) FROM " + TBL_MY_TEAM +" WHERE "+ISWCAPTAIN+"=1";
@@ -417,27 +473,27 @@ public class DbHelper extends SQLiteOpenHelper {
             db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
 
-                values.put(ID,bean.getId());
-                values.put(NAME,bean.getName());
-                values.put(PRICE,bean.getPoints());
-                values.put(SKILLS,bean.getSkill());
-                if(bean.isCaptain()) {
-                    values.put(ISCAPTAIN, 1);
-                }else{
-                    values.put(ISCAPTAIN, 0);
-                }
-                if(bean.isViceCaptain()) {
-                    values.put(ISWCAPTAIN, 1);
-                }else{
-                    values.put(ISWCAPTAIN,0);
-                }
-                if(bean.isChecked()) {
-                    values.put(ISCHECKED, 1);
-                }else {
-                    values.put(ISCHECKED,0);
-                }
-                processId = db.insert(TBL_MY_TEAM, null, values);
-                Log.e("SQLiteDatabase",bean.toString());
+            values.put(ID,bean.getId());
+            values.put(NAME,bean.getName());
+            values.put(PRICE,bean.getPoints());
+            values.put(SKILLS,bean.getSkill());
+            if(bean.isCaptain()) {
+                values.put(ISCAPTAIN, 1);
+            }else{
+                values.put(ISCAPTAIN, 0);
+            }
+            if(bean.isViceCaptain()) {
+                values.put(ISWCAPTAIN, 1);
+            }else{
+                values.put(ISWCAPTAIN,0);
+            }
+            if(bean.isChecked()) {
+                values.put(ISCHECKED, 1);
+            }else {
+                values.put(ISCHECKED,0);
+            }
+            processId = db.insert(TBL_MY_TEAM, null, values);
+            Log.e("SQLiteDatabase",bean.toString());
 
 
 
@@ -579,6 +635,51 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
+    public long savePrizeDistribution(List<com.psl.fantasy.league.model.response.PrizeDistribution.Datum> list) {
+        // Gets the data repository in write mode
+        long processId = 0;
+        SQLiteDatabase db=null;
+
+        try{
+            db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            for(com.psl.fantasy.league.model.response.PrizeDistribution.Datum datum:list){
+                values.put(contestWinDistId,datum.getContestWinDistId());
+                values.put(formationId,datum.getFormationId());
+                values.put(winningCategory,datum.getWinningCategory());
+                values.put(catDesc,datum.getCatDesc());
+                values.put(distValue,datum.getDistValue());
+                values.put(distPercent,datum.getDistPercent());
+
+                processId = db.insert(PRIZE_DISTRIBUTION, null, values);
+                Log.e("SQLiteDatabase",datum.toString());
+            }
+
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }	finally
+        {
+            if(db!=null)
+                if(db.isOpen())
+                    db.close();
+        }
+
+        return processId;
+    }
+
+    public void deletePrizeDistribution(){
+        try {
+            String query="delete from "+ PRIZE_DISTRIBUTION;
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.execSQL(query);
+            Log.e("SQLiteDatabase",query);
+            db.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 
     public void deleteConfig(){
         try {

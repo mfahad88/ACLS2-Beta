@@ -1,6 +1,7 @@
 package com.psl.fantasy.league.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.psl.fantasy.league.R;
+import com.psl.fantasy.league.Utils.Helper;
 import com.psl.fantasy.league.fragment.AboutUsFragment;
 import com.psl.fantasy.league.fragment.FaqFragment;
 import com.psl.fantasy.league.fragment.PrizesFragment;
@@ -22,11 +24,13 @@ public class MoreAdapter extends ArrayAdapter {
     Context context;
     int resource;
     Object[] objects;
-    public MoreAdapter(Context context, int resource, Object[] objects) {
+    SharedPreferences preferences;
+    public MoreAdapter(Context context, int resource, Object[] objects, SharedPreferences preferences) {
         super(context, resource, objects);
         this.context=context;
         this.resource=resource;
         this.objects=objects;
+        this.preferences=preferences;
     }
 
     @Override
@@ -55,6 +59,14 @@ public class MoreAdapter extends ArrayAdapter {
                 }if(objects[position].toString().equalsIgnoreCase("About")){
                     ft.replace(R.id.main_content,new AboutUsFragment());
                     ft.commit();
+                }
+                if(Helper.getUserSession(preferences,Helper.MY_USER)!=null){
+                    if(objects[position].toString().equalsIgnoreCase("Logout")){
+                            preferences.edit().clear().commit();
+                            Helper.deleteDirectory();
+                            ((AppCompatActivity) context).finish();
+                            System.exit(0);
+                    }
                 }
             }
         });

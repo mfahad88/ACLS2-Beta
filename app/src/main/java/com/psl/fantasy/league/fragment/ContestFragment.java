@@ -116,7 +116,7 @@ public class ContestFragment extends Fragment {
             });
 
 
-
+            populateContest();
             txt_view_more_mega.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -126,7 +126,7 @@ public class ContestFragment extends Fragment {
                     bundle.putInt("match_id",match_id);
                     bundle.putInt("TeamId1",TeamId1);
                     bundle.putInt("TeamId2",TeamId2);
-                    bundle.putInt("contest_type",1);
+                    bundle.putInt("contest_type",0);
                     bundle.putString("TeamOne",teamOne);
                     bundle.putString("TeamTwo",teamTwo);
                     fragment.setArguments(bundle);
@@ -146,7 +146,7 @@ public class ContestFragment extends Fragment {
                     bundle.putInt("match_id",match_id);
                     bundle.putInt("TeamId1",TeamId1);
                     bundle.putInt("TeamId2",TeamId2);
-                    bundle.putInt("contest_type",2);
+                    bundle.putInt("contest_type",1);
                     bundle.putString("TeamOne",teamOne);
                     bundle.putString("TeamTwo",teamTwo);
                     fragment.setArguments(bundle);
@@ -165,7 +165,7 @@ public class ContestFragment extends Fragment {
                     bundle.putInt("match_id",match_id);
                     bundle.putInt("TeamId1",TeamId1);
                     bundle.putInt("TeamId2",TeamId2);
-                    bundle.putInt("contest_type",3);
+                    bundle.putInt("contest_type",2);
                     bundle.putString("TeamOne",teamOne);
                     bundle.putString("TeamTwo",teamTwo);
                     fragment.setArguments(bundle);
@@ -176,7 +176,7 @@ public class ContestFragment extends Fragment {
                 }
             });
 
-            populateContest();
+
 
 
 
@@ -207,7 +207,7 @@ public class ContestFragment extends Fragment {
                                         List<ContestBean> list_beginner=new ArrayList<>();
                                         for(Datum datum:response.body().getData()){
                                             if(datum.getIsVisible().equals("1")){
-                                                txt_view_more_mega.setVisibility(View.VISIBLE);
+
 
                                                 if(datum.getContestType().equalsIgnoreCase("0")){
                                                     //if(datum.getPoolConsumed()>0){
@@ -215,8 +215,8 @@ public class ContestFragment extends Fragment {
                                                         txt_cat1.setText("Mega Contest");
 
                                                         if(counter_mega<3) {
-                                                            int percent=((datum.getPoolConsumed()*datum.getPool())/100);
-//                                                            int percent=datum.getPoolConsumed();
+                                                            float perc= ((datum.getPoolConsumed() / datum.getPool()) * 100);
+                                                            int percent = Math.round(perc);
                                                             txt_cat1.setVisibility(View.VISIBLE);
                                                             list.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
                                                                     , String.valueOf(datum.getPool()),datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
@@ -226,7 +226,9 @@ public class ContestFragment extends Fragment {
                                                             list_contest_1.setAdapter(adapter);
                                                             counter_mega++;
                                                         }
-
+                                                        if(counter_mega==3){
+                                                            txt_view_more_mega.setVisibility(View.VISIBLE);
+                                                        }
 
                                                     //}
                                                 }
@@ -239,8 +241,8 @@ public class ContestFragment extends Fragment {
                                                         txt_cat2.setText("Expert Contest");
 
                                                         if(counter_expert<3) {
-                                                            int percent=((datum.getPoolConsumed()*datum.getPool())/100);
-//                                                            int percent=datum.getPoolConsumed();
+                                                            float perc= ((datum.getPoolConsumed() / datum.getPool()) * 100);
+                                                            int percent = Math.round(perc);
                                                             txt_cat2.setVisibility(View.VISIBLE);
                                                             list_expert.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
                                                                    ,String.valueOf(datum.getPool()) , datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
@@ -250,7 +252,9 @@ public class ContestFragment extends Fragment {
                                                             list_contest_2.setAdapter(adapter);
                                                             counter_expert++;
                                                         }
-
+                                                    if(counter_expert==3){
+                                                        txt_view_more_expert.setVisibility(View.VISIBLE);
+                                                    }
 
 //                                                    }
                                                 }
@@ -261,8 +265,8 @@ public class ContestFragment extends Fragment {
                                                         txt_cat3.setText("Beginner Contest");
 
                                                         if(counter_beginner<3) {
-                                                            int percent=((datum.getPoolConsumed()*datum.getPool())/100);
-//                                                            int percent=datum.getPoolConsumed();
+                                                            float perc= ((datum.getPoolConsumed() / datum.getPool()) * 100);
+                                                            int percent = Math.round(perc);
                                                             txt_cat3.setVisibility(View.VISIBLE);
                                                             list_beginner.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
                                                                     ,String.valueOf(datum.getPool()), datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
@@ -271,7 +275,9 @@ public class ContestFragment extends Fragment {
                                                             list_contest_3.setAdapter(adapter);
                                                             counter_beginner++;
                                                         }
-
+                                                    if(counter_beginner==3){
+                                                        txt_view_more_beginner.setVisibility(View.VISIBLE);
+                                                    }
                                                     //}
                                                 }
                                             }

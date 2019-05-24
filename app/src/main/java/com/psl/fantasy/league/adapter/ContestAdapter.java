@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +19,23 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
+import com.psl.fantasy.league.Utils.Helper;
+import com.psl.fantasy.league.client.ApiClient;
 import com.psl.fantasy.league.fragment.DashboardFragment;
 import com.psl.fantasy.league.fragment.TeamFragment;
 import com.psl.fantasy.league.fragment.WinnerBottomFragment;
+import com.psl.fantasy.league.model.response.PrizeDistribution.Datum;
+import com.psl.fantasy.league.model.response.PrizeDistribution.PrizeDistributionBean;
 import com.psl.fantasy.league.model.ui.ContestBean;
 import com.psl.fantasy.league.R;
+import com.psl.fantasy.league.model.ui.WinnerBean;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ContestAdapter extends ArrayAdapter<ContestBean> {
 
@@ -57,6 +68,9 @@ public class ContestAdapter extends ArrayAdapter<ContestBean> {
         TextView txt_confirm_winning=convertView.findViewById(R.id.txt_confirm_winning);
         TextView txt_multi=convertView.findViewById(R.id.txt_multi);
         TextView txt_pool=convertView.findViewById(R.id.txt_pool);
+
+
+
         txt_winners.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,6 +90,7 @@ public class ContestAdapter extends ArrayAdapter<ContestBean> {
             btn_pay.setText(bean.getActual_price());
         }
         txt_pool.setText(bean.getSpots()+" Spots");
+        Log.e("Bean---->", String.valueOf(bean.getProgress()));
         progressBar.setProgress(bean.getProgress());
         txt_spots_left.setText(bean.getSpots_left()+" spots left");
         txt_price.setText(bean.getPrice());

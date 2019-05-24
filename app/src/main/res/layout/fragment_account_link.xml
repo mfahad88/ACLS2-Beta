@@ -235,8 +235,7 @@
                         android:layout_width="190dp"
                         android:layout_height="wrap_content"
                         android:maxLength="13"
-                        android:focusable="false"
-                        android:enabled="false"
+                        android:enabled="true"
                         android:longClickable="false"
                         android:id="@+id/edt_toa"
                         android:inputType="number"/>

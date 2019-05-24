@@ -172,7 +172,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                                 progressBar.setVisibility(View.GONE);
                                 btn_submit.setEnabled(true);
                                 if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-                                    payment();
+                                    saveTeam();
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
@@ -248,7 +248,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    public void payment(){
+    public void saveTeam(){
        try{
            List<PlayerBean> list= dbHelper.getMyTeam();
            JSONArray jsonArray = new JSONArray();

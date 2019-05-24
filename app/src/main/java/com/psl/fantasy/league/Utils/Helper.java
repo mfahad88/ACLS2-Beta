@@ -71,6 +71,7 @@ public class Helper {
     public static final String MY_USER = "MyUser";
     public static final String MY_USER_MSC = "MyUserMsc";
     public static final String CNIC = "cnic";
+    public static final String PrizeDistributionBean = "PrizeDistributionBean";
     public static final String isFromLogin="isFromLogin";
     public static void showAlertNetural(Context ctx, String title, String message){
         AlertDialog.Builder builder=new AlertDialog.Builder(ctx);
@@ -394,6 +395,17 @@ public class Helper {
         return application.getDefaultTracker();
     }
 
+    public static void deleteDirectory(){
+        try{
+            File direct = new File(Environment.getExternalStorageDirectory()+File.separator+"ACL");
+
+            if(!direct.exists()) {
+               direct.delete();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
 
 }

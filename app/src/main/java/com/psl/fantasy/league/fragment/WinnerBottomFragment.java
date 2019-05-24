@@ -3,6 +3,8 @@ package com.psl.fantasy.league.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -24,11 +26,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.psl.fantasy.league.R;
+import com.psl.fantasy.league.Utils.DbHelper;
+import com.psl.fantasy.league.Utils.Helper;
 import com.psl.fantasy.league.adapter.WinnerBottomAdapter;
+import com.psl.fantasy.league.client.ApiClient;
+import com.psl.fantasy.league.model.response.PrizeDistribution.Datum;
+import com.psl.fantasy.league.model.response.PrizeDistribution.PrizeDistributionBean;
 import com.psl.fantasy.league.model.ui.WinnerBean;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.view.View.GONE;
 
@@ -47,11 +58,12 @@ public class WinnerBottomFragment extends BottomSheetDialogFragment {
     @Override
     public void setupDialog(Dialog dialog, int style) {
         super.setupDialog(dialog, style);
+
         View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_winner_bottom, null);
         TextView txt_close = view.findViewById(R.id.txt_close);
         TextView txt_more= view.findViewById(R.id.txt_more);
         ListView list_winner = view.findViewById(R.id.list_winner);
-        List<WinnerBean> list = new ArrayList<>();
+        /*List<WinnerBean> list = new ArrayList<>();
         list.add(new WinnerBean("Rank1", "10000"));
         list.add(new WinnerBean("Rank2", "10000"));
         list.add(new WinnerBean("Rank3", "10000"));
@@ -64,10 +76,34 @@ public class WinnerBottomFragment extends BottomSheetDialogFragment {
         list.add(new WinnerBean("Rank10", "10000"));
         list.add(new WinnerBean("Rank11", "10000"));
         list.add(new WinnerBean("Rank11", "10000"));
-        list.add(new WinnerBean("Rank12", "10000"));
+        list.add(new WinnerBean("Rank12", "10000"));*/
 
-        WinnerBottomAdapter adapter = new WinnerBottomAdapter(view.getContext(), R.layout.winner_bottom_adapter, list);
-        list_winner.setAdapter(adapter);
+
+        ApiClient.getInstance().getAllContestWinningDist()
+                .enqueue(new Callback<PrizeDistributionBean>() {
+                    @Override
+                    public void onResponse(Call<PrizeDistributionBean> call, Response<PrizeDistributionBean> response) {
+                        if(response.isSuccessful()){
+                            if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+
+                                WinnerBottomAdapter adapter = new WinnerBottomAdapter(view.getContext(), R.layout.winner_bottom_adapter, response.body().getData());
+                                list_winner.setAdapter(adapter);
+
+
+                            }else{
+                                Helper.showAlertNetural(view.getContext(),"Error",response.body().getMessage());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PrizeDistributionBean> call, Throwable t) {
+                        t.printStackTrace();
+                        Helper.showAlertNetural(view.getContext(),"Error",t.getMessage());
+                    }
+                });
+
+
         dialog.setContentView(view);
 
         txt_close.setOnClickListener(new View.OnClickListener() {

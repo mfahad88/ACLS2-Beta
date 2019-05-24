@@ -4,6 +4,7 @@ package com.psl.fantasy.league.fragment;
 import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,7 +77,12 @@ public class ContestDetailFragment extends Fragment {
                                     for (Datum datum : response.body().getData()) {
 //                                if(datum.getPoolConsumed()>0){
                                         if (datum.getContestType().equalsIgnoreCase(String.valueOf(contest_type))) {
-                                            int percent = ((datum.getPoolConsumed() * datum.getPool()) / 100);
+                                            Log.e("ContestId--->", String.valueOf(datum.getContestId().intValue()));
+                                            Log.e("PoolConsumed---->", String.valueOf(datum.getPoolConsumed().intValue()));
+                                            Log.e("Pool---->",datum.getPool().toString());
+                                            float perc= ((datum.getPoolConsumed().intValue() / datum.getPool().intValue()) * 100);
+                                            Log.e("Perc--->", String.valueOf(datum.getPoolConsumed().intValue() / datum.getPool().intValue()));
+                                            int percent = Math.round(perc);
                                             list.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
                                                     , String.valueOf(datum.getPool()), datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
                                             ContestAdapter adapter = new ContestAdapter(mView.getContext(), R.layout.list_contest, list, TeamId1, TeamId2, teamOne, teamTwo);

@@ -17,6 +17,7 @@ import com.psl.fantasy.league.model.response.MyMatchesTab.MyMatchesTabResponse;
 import com.psl.fantasy.league.model.response.Player.PlayerResponse;
 import com.psl.fantasy.league.model.response.PlayerInfo.PlayerInfoResponse;
 import com.psl.fantasy.league.model.response.PrizeClaim.PrizeClaimResponse;
+import com.psl.fantasy.league.model.response.PrizeDistribution.PrizeDistributionBean;
 import com.psl.fantasy.league.model.response.Prizes.PrizesResponse;
 import com.psl.fantasy.league.model.response.Redeem.GetRedeem;
 import com.psl.fantasy.league.model.response.Redeem.TeamWiseRedeem;
@@ -99,4 +100,7 @@ public interface ApiInterface {
 
     @POST("SelectUser")
     Call<SelectUserBean> SelectUser(@Body TestBeanRequest beanRequest);
+
+    @POST("getAllContestWinningDist")
+    Call<PrizeDistributionBean> getAllContestWinningDist();
 }
