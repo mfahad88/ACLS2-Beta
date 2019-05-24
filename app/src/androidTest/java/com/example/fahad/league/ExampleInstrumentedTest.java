@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.psl.fantasy.league", appContext.getPackageName());
+        assertEquals("com.psl.fantasy.league.revamp", appContext.getPackageName());
     }
 }

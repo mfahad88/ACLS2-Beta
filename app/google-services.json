@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1057229910860:android:a738ee74a17442af",
         "android_client_info": {
-          "package_name": "com.psl.fantasy.league"
+          "package_name": "com.psl.fantasy.league.revamp"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "1057229910860-4i3qm0jekvjt07gevr17bs51m8faeg65.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.psl.fantasy.league",
+            "package_name": "com.psl.fantasy.league.revamp",
             "certificate_hash": "44cb917965174ba48d218e36255348575e64070f"
           }
         },
