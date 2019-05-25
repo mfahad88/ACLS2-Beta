@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -51,7 +52,6 @@ public class ContestFragment extends Fragment {
     int TeamId1,TeamId2;
     private ProgressBar progressBar;
     private TextView txt_status,txt_cat1,txt_cat2,txt_cat3,txt_view_more_mega,txt_view_more_expert,txt_view_more_beginner;
-    int counter_mega=0; int counter_expert=0; int counter_beginner=0;
     private FragmentToActivity mCallback;
     private SwipeRefreshLayout pullToRefresh;
     private String teamOne,teamTwo;
@@ -105,13 +105,19 @@ public class ContestFragment extends Fragment {
             pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-
+//                    pullToRefresh.setRefreshing(true);
                     adapter.clear();
-                    adapter.notifyDataSetChanged();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
 
+                            populateContest();
+                            adapter.notifyDataSetChanged();
 
-                    populateContest();
-                    pullToRefresh.setRefreshing(false);
+                            pullToRefresh.setRefreshing(false);
+                        }
+                    },1000);
+
                 }
             });
 
@@ -198,8 +204,9 @@ public class ContestFragment extends Fragment {
                         @Override
                         public void onResponse(Call<ContestResponse> call, Response<ContestResponse> response) {
                             progressBar.setVisibility(View.GONE);
-
+                            int counter_mega=0; int counter_expert=0; int counter_beginner=0;
                             if(response.isSuccessful()){
+//                                adapter.clear();
                                 if(response.body().getResponseCode().equals("1001")){
                                     if(response.body().getData().size()>0){
                                         List<ContestBean> list=new ArrayList<>();
@@ -219,18 +226,27 @@ public class ContestFragment extends Fragment {
                                                             int percent = Math.round(perc);
                                                             txt_cat1.setVisibility(View.VISIBLE);
                                                             Log.e("Float-------->",datum.getPoolConsumed().floatValue()+"/"+datum.getPool().floatValue());
+
                                                             list.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
                                                                     , String.valueOf(datum.getPool()),datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
+
+
                                                             list_contest_1.setVisibility(View.VISIBLE);
 
                                                             adapter = new ContestAdapter(mView.getContext(),R.layout.list_contest,list,TeamId1,TeamId2,teamOne,teamTwo);
                                                             list_contest_1.setAdapter(adapter);
+
                                                             counter_mega++;
                                                             Log.e("Mega--->",datum.toString());
+                                                            if(counter_mega==3) {
+                                                                txt_view_more_mega.setVisibility(View.VISIBLE);
+                                                            }
+                                                            ViewGroup.LayoutParams params = list_contest_1.getLayoutParams();
+                                                            params.height=Helper.dpToPx(144*counter_mega,mView.getContext());
+                                                            list_contest_1.setLayoutParams(params);
+                                                            list_contest_1.requestLayout();
                                                         }
-                                                        if(counter_mega==3){
-                                                            txt_view_more_mega.setVisibility(View.VISIBLE);
-                                                        }
+
 
                                                     //}
                                                 }
@@ -254,10 +270,15 @@ public class ContestFragment extends Fragment {
                                                             list_contest_2.setAdapter(adapter);
                                                             counter_expert++;
                                                             Log.e("Expert--->",datum.toString());
+                                                            if(counter_expert==3){
+                                                                txt_view_more_expert.setVisibility(View.VISIBLE);
+                                                            }
+                                                            ViewGroup.LayoutParams params = list_contest_2.getLayoutParams();
+                                                            params.height=Helper.dpToPx(144*counter_expert,mView.getContext());
+                                                            list_contest_2.setLayoutParams(params);
+                                                            list_contest_2.requestLayout();
                                                         }
-                                                    if(counter_expert==3){
-                                                        txt_view_more_expert.setVisibility(View.VISIBLE);
-                                                    }
+
 
 //                                                    }
                                                 }
@@ -278,14 +299,21 @@ public class ContestFragment extends Fragment {
                                                             list_contest_3.setAdapter(adapter);
                                                             counter_beginner++;
                                                             Log.e("Beginner--->",datum.toString());
+                                                            if(counter_beginner==3){
+                                                                txt_view_more_beginner.setVisibility(View.VISIBLE);
+                                                            }
+
+                                                            ViewGroup.LayoutParams params = list_contest_3.getLayoutParams();
+                                                            params.height=Helper.dpToPx(144*counter_beginner,mView.getContext());
+                                                            list_contest_3.setLayoutParams(params);
+                                                            list_contest_3.requestLayout();
                                                         }
-                                                    if(counter_beginner==3){
-                                                        txt_view_more_beginner.setVisibility(View.VISIBLE);
-                                                    }
+
                                                     //}
                                                 }
                                             }
                                         }
+
                                     }else{
                                         Helper.displayError(txt_status,"No Record found...");
                                     }

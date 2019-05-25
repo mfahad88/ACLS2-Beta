@@ -11,6 +11,7 @@
         android:layout_centerInParent="true"
         android:id="@+id/progressBar"
         android:visibility="gone"/>
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,5 +23,6 @@
         android:elevation="5dp"
         android:dividerHeight="10dp"
         android:id="@+id/list_contest"></ListView>
+
 
 </RelativeLayout>

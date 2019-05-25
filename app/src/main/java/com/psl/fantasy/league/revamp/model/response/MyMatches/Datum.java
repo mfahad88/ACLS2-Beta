@@ -24,6 +24,39 @@ public class Datum {
     @SerializedName("match_sts")
     @Expose
     private String matchSts;
+    @SerializedName("series_name")
+    @Expose
+    private String series_name;
+    @SerializedName("team_name1_short")
+    @Expose
+    private String team_name1_short;
+    @SerializedName("team_name2_short")
+    @Expose
+    private String team_name2_short;
+
+    public String getSeries_name() {
+        return series_name;
+    }
+
+    public void setSeries_name(String series_name) {
+        this.series_name = series_name;
+    }
+
+    public String getTeam_name1_short() {
+        return team_name1_short;
+    }
+
+    public void setTeam_name1_short(String team_name1_short) {
+        this.team_name1_short = team_name1_short;
+    }
+
+    public String getTeam_name2_short() {
+        return team_name2_short;
+    }
+
+    public void setTeam_name2_short(String team_name2_short) {
+        this.team_name2_short = team_name2_short;
+    }
 
     public Integer getMatchId() {
         return matchId;

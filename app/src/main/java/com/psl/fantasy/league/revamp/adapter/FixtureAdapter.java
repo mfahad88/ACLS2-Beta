@@ -65,7 +65,10 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> implements Locatio
 
         mprovider = locationManager.getBestProvider(criteria, false);
         mlocation=locationManager.getLastKnownLocation(mprovider);
-        locationManager.requestLocationUpdates(mprovider,5000,0,this);
+        if(mlocation==null) {
+            locationManager.requestLocationUpdates(mprovider, 0, 0, this);
+        }
+
     }
 
     @Override
@@ -237,6 +240,7 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> implements Locatio
                     android.support.v4.app.FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
                     ft.replace(R.id.main_content,fragment);
                     ft.addToBackStack(new DashboardFragment().getClass().getName());
+
                     ft.commit();
                 }
             });
@@ -302,6 +306,9 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> implements Locatio
     @Override
     public void onLocationChanged(Location location) {
         mlocation=location;
+        if(mlocation!=null){
+            locationManager.removeUpdates(this);
+        }
     }
 
     @Override

@@ -17,7 +17,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.psl.fantasy.league.model.response.AppVersion.AppVersionBean;
+import com.psl.fantasy.league.revamp.model.response.AppVersion.AppVersionBean;
 import com.psl.fantasy.league.revamp.BuildConfig;
 import com.psl.fantasy.league.revamp.R;
 import com.psl.fantasy.league.revamp.Utils.Helper;
@@ -168,6 +168,8 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
                                                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
                                                     browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                     startActivity(browserIntent);
+                                                    finish();
+                                                    System.exit(0);
 
                                                 }
                                             }else if(response.body().getData().getMyUser().getSts().intValue()==0){
@@ -176,7 +178,7 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
                                                     try {
                                                         JSONObject jsonObject=new JSONObject();
                                                         jsonObject.put("user_id",user_id);
-                                                        jsonObject.put("sts",0);
+                                                        jsonObject.put("sts",1);
 
                                                         ApiClient.getInstance().updateAppVersion(Helper.encrypt(jsonObject.toString()))
                                                                 .enqueue(new Callback<AppVersionBean>() {
@@ -226,4 +228,10 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
 
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+        System.exit(0);
+        super.onBackPressed();
+    }
 }

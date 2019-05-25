@@ -9,8 +9,11 @@ public class MyMatchesBean {
     private String teamTwo;
     private String matchStatus;
     private String numberOfContest;
+    private String shortName1;
+    private String shortName2;
+    private String seriesName;
 
-    public MyMatchesBean(int userId, int match_id, int team1Id, int team2Id, String teamOne, String teamTwo, String matchStatus, String numberOfContest) {
+    public MyMatchesBean(int userId, int match_id, int team1Id, int team2Id, String teamOne, String teamTwo, String matchStatus, String numberOfContest, String shortName1, String shortName2, String seriesName) {
         this.userId = userId;
         this.match_id = match_id;
         this.team1Id = team1Id;
@@ -19,6 +22,9 @@ public class MyMatchesBean {
         this.teamTwo = teamTwo;
         this.matchStatus = matchStatus;
         this.numberOfContest = numberOfContest;
+        this.shortName1 = shortName1;
+        this.shortName2 = shortName2;
+        this.seriesName = seriesName;
     }
 
     public int getUserId() {
@@ -83,5 +89,29 @@ public class MyMatchesBean {
 
     public void setNumberOfContest(String numberOfContest) {
         this.numberOfContest = numberOfContest;
+    }
+
+    public String getShortName1() {
+        return shortName1;
+    }
+
+    public void setShortName1(String shortName1) {
+        this.shortName1 = shortName1;
+    }
+
+    public String getShortName2() {
+        return shortName2;
+    }
+
+    public void setShortName2(String shortName2) {
+        this.shortName2 = shortName2;
+    }
+
+    public String getSeriesName() {
+        return seriesName;
+    }
+
+    public void setSeriesName(String seriesName) {
+        this.seriesName = seriesName;
     }
 }

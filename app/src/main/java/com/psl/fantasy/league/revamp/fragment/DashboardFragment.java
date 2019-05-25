@@ -5,15 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.internal.BottomNavigationMenuView;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +17,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.psl.fantasy.league.model.response.AppVersion.AppVersionBean;
 import com.psl.fantasy.league.revamp.BuildConfig;
 import com.psl.fantasy.league.revamp.R;
 import com.psl.fantasy.league.revamp.Utils.Helper;
@@ -29,6 +24,7 @@ import com.psl.fantasy.league.revamp.adapter.FixtureAdapter;
 import com.psl.fantasy.league.revamp.adapter.ImageAdapter;
 import com.psl.fantasy.league.revamp.client.ApiClient;
 import com.psl.fantasy.league.revamp.interfaces.FragmentToActivity;
+import com.psl.fantasy.league.revamp.model.response.AppVersion.AppVersionBean;
 import com.psl.fantasy.league.revamp.model.response.Matches.Datum;
 import com.psl.fantasy.league.revamp.model.response.Matches.MatchesResponse;
 
@@ -63,8 +59,15 @@ public class DashboardFragment extends Fragment {
         // Required empty public constructor
     }
 
-
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(fixtureAdapter!=null) {
+            fixtureAdapter.clear();
+            populateMatches();
+            fixtureAdapter.notifyDataSetChanged();
+        }
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -76,6 +79,7 @@ public class DashboardFragment extends Fragment {
                     + " must implement FragmentToActivity");
         }
     }
+
 
 
     @Override
@@ -128,6 +132,7 @@ public class DashboardFragment extends Fragment {
         viewPage.setAdapter(adapter);
         pullToRefresh=mView.findViewById(R.id.pullToRefresh);
         preferences=mView.getContext().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
+        checkAppVersion();
     }
 
     public void populateMatches(){
@@ -176,6 +181,86 @@ public class DashboardFragment extends Fragment {
         }
     }
 
+    public void checkAppVersion(){
+        if(Helper.getUserSession(preferences,Helper.MY_USER)!=null){
+            JSONObject object= null;
+            try {
+                object = new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
+                JSONObject nameValuePairs=object.getJSONObject("nameValuePairs");
+                user_id=nameValuePairs.getJSONObject("MyUser").getInt("user_id");
+                try {
+                    JSONObject jsonObject=new JSONObject();
+                    jsonObject.put("user_id",user_id);
+                    ApiClient.getInstance().SelectUser(Helper.encrypt(jsonObject.toString()))
+                            .enqueue(new Callback<SelectUserBean>() {
+                                @Override
+                                public void onResponse(Call<SelectUserBean> call, Response<SelectUserBean> response) {
+                                    if(response.isSuccessful()){
+                                        if(response.body().getResponseCode().equalsIgnoreCase("1001")){
 
+                                            if(Integer.parseInt(response.body().getData().getMyUser().getApp_version())>BuildConfig.VERSION_CODE){
+                                                if(response.body().getData().getMyUser().getSts().intValue()==0){
+                                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
+                                                    browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    startActivity(browserIntent);
+                                                    getActivity().finish();
+                                                    System.exit(0);
+
+                                                }
+                                            }else if(response.body().getData().getMyUser().getSts().intValue()==0){
+                                                if(Integer.parseInt(response.body().getData().getMyUser().getApp_version())==BuildConfig.VERSION_CODE){
+
+                                                    try {
+                                                        JSONObject jsonObject=new JSONObject();
+                                                        jsonObject.put("user_id",user_id);
+                                                        jsonObject.put("sts",1);
+
+                                                        ApiClient.getInstance().updateAppVersion(Helper.encrypt(jsonObject.toString()))
+                                                                .enqueue(new Callback<AppVersionBean>() {
+                                                                    @Override
+                                                                    public void onResponse(Call<AppVersionBean> call, Response<AppVersionBean> response) {
+                                                                        if(response.isSuccessful()){
+                                                                            if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+
+                                                                            }else{
+                                                                                Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                                                            }
+                                                                        }
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onFailure(Call<AppVersionBean> call, Throwable t) {
+                                                                        t.printStackTrace();
+                                                                        Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
+                                                                    }
+                                                                });
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            }
+
+                                        }else{
+                                            Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<SelectUserBean> call, Throwable t) {
+                                    t.printStackTrace();
+                                    Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
+                                }
+                            });
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
 
 }

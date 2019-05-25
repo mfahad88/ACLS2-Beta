@@ -58,7 +58,9 @@ public class MyMatchesAdapter extends ArrayAdapter<MyMatchesBean> {
         int resId=0;
         ImageView image_team_one=convertView.findViewById(R.id.image_team_one);
         ImageView image_team_two=convertView.findViewById(R.id.image_team_two);
-
+        TextView txt_short_team_one=convertView.findViewById(R.id.txt_short_team_one);
+        TextView txt_short_team_two=convertView.findViewById(R.id.txt_short_team_two);
+        TextView txt_series=convertView.findViewById(R.id.txt_series);
         TextView txt_contest_joined=convertView.findViewById(R.id.txt_contest_joined);
         MyMatchesBean bean= list.get(position);
 
@@ -147,7 +149,9 @@ public class MyMatchesAdapter extends ArrayAdapter<MyMatchesBean> {
             resId=R.drawable.westindies;
         }
         image_team_two.setImageResource(resId);
-
+        txt_short_team_one.setText(bean.getShortName1());
+        txt_short_team_two.setText(bean.getShortName2());
+        txt_series.setText(bean.getSeriesName());
         txt_contest_joined.setText(bean.getMatchStatus());
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override

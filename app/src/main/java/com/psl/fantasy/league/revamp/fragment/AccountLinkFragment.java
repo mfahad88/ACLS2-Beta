@@ -4,11 +4,13 @@ package com.psl.fantasy.league.revamp.fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,7 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.psl.fantasy.league.revamp.R;
@@ -35,6 +38,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,6 +54,7 @@ public class AccountLinkFragment extends Fragment implements View.OnClickListene
     EditText edt_cnic,edt_mobile_no,edt_otp,edt_acc,edt_toa;
     SharedPreferences preferences;
     String mobileNo;
+    TextView txt_expires;
     Button btn_ok,btn_submit,btn_other;
     Spinner spinner_bank;
     ProgressBar progressBar;
@@ -76,6 +81,7 @@ public class AccountLinkFragment extends Fragment implements View.OnClickListene
         btn_ok=mView.findViewById(R.id.btn_ok);
         btn_submit=mView.findViewById(R.id.btn_submit);
         btn_other=mView.findViewById(R.id.btn_other);
+        txt_expires=mView.findViewById(R.id.txt_expires);
         preferences=mView.getContext().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
         progressBar=mView.findViewById(R.id.progressBar);
         spinner_bank=mView.findViewById(R.id.spinner_bank);
@@ -191,6 +197,28 @@ public class AccountLinkFragment extends Fragment implements View.OnClickListene
                                             if(response.body().getResponseCode().equalsIgnoreCase("1001")){
                                                 relative_linking.setVisibility(View.GONE);
                                                 relative_OTP.setVisibility(View.VISIBLE);
+                                                new CountDownTimer(60000,1000){
+
+                                                    @Override
+                                                    public void onTick(long millisUntilFinished) {
+                                                        txt_expires.setText(""+String.format("%d min, %d sec",
+                                                                TimeUnit.MILLISECONDS.toMinutes( millisUntilFinished),
+                                                                TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                                                                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+                                                        Log.e("Counter---->",""+String.format("%d min, %d sec",
+                                                                TimeUnit.MILLISECONDS.toMinutes( millisUntilFinished),
+                                                                TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                                                                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+                                                    }
+
+                                                    @Override
+                                                    public void onFinish() {
+                                                        Fragment fragment=new AccountLinkFragment();
+                                                        FragmentTransaction ft=getFragmentManager().beginTransaction();
+                                                        ft.replace(R.id.frame_container,fragment);
+                                                        ft.commit();
+                                                    }
+                                                }.start();
                                                 //Helper.showAlertNetural(mView.getContext(),"Success",response.body().getMessage());
                                             }else{
                                                 Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());

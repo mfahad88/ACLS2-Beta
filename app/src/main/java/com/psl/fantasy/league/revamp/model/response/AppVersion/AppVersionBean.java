@@ -1,4 +1,4 @@
-package com.psl.fantasy.league.model.response.AppVersion;
+package com.psl.fantasy.league.revamp.model.response.AppVersion;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

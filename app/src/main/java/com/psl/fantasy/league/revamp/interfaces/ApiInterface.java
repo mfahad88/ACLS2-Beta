@@ -1,6 +1,6 @@
 package com.psl.fantasy.league.revamp.interfaces;
 
-import com.psl.fantasy.league.model.response.AppVersion.AppVersionBean;
+import com.psl.fantasy.league.revamp.model.response.AppVersion.AppVersionBean;
 import com.psl.fantasy.league.revamp.model.response.AccountLinking.BankInfo;
 import com.psl.fantasy.league.revamp.model.response.AccountLinking.LinkingBean;
 import com.psl.fantasy.league.revamp.model.response.AccountLinking.OTPBean;
@@ -25,8 +25,6 @@ import com.psl.fantasy.league.revamp.model.response.Redeem.TeamWiseRedeem;
 import com.psl.fantasy.league.revamp.model.response.SelectUser.SelectUserBean;
 import com.psl.fantasy.league.revamp.model.response.SimPaisa.SimPaisaResponse;
 import com.psl.fantasy.league.revamp.model.response.SimPaisaOTP.SimPaisaOTPResponse;
-import com.psl.fantasy.league.revamp.model.ui.PlayerBean;
-import com.psl.fantasy.league.revamp.model.ui.PlayerInfoBean;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

@@ -149,6 +149,30 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/linear_OTP"
                     android:layout_centerHorizontal="true"
+                    android:id="@+id/linear_expires"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="OTP Expires In: "/>
+
+                    <TextView
+                        android:layout_width="130dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:id="@+id/txt_expires"
+                        android:textAlignment="viewStart"
+                        android:layout_gravity="start" />
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/linear_expires"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:orientation="horizontal">

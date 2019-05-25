@@ -4,6 +4,7 @@ package com.psl.fantasy.league.revamp.fragment;
 import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,7 @@ public class ContestDetailFragment extends Fragment {
     private List<ContestBean> list;
     private String teamOne,teamTwo;
     private ProgressBar progressBar;
+    private SwipeRefreshLayout pullToRefresh;
     public ContestDetailFragment() {
         // Required empty public constructor
     }
@@ -51,6 +53,7 @@ public class ContestDetailFragment extends Fragment {
         View mView=inflater.inflate(R.layout.fragment_contest_detail, container, false);
         ListView list_contest=mView.findViewById(R.id.list_contest);
         progressBar=mView.findViewById(R.id.progressBar);
+        pullToRefresh=mView.findViewById(R.id.pullToRefresh);
         if(getArguments()!=null){
             match_id=getArguments().getInt("match_id");
             contest_type=getArguments().getInt("contest_type");
@@ -60,7 +63,13 @@ public class ContestDetailFragment extends Fragment {
             teamTwo=getArguments().getString("TeamTwo");
         }
         list=new ArrayList<>();
+        populateContest(mView,list_contest);
 
+
+        return mView;
+    }
+
+    void populateContest(View mView,ListView list_contest){
         try {
             progressBar.setVisibility(View.VISIBLE);
             JSONObject object=new JSONObject();
@@ -77,9 +86,6 @@ public class ContestDetailFragment extends Fragment {
                                     for (Datum datum : response.body().getData()) {
 //                                if(datum.getPoolConsumed()>0){
                                         if (datum.getContestType().equalsIgnoreCase(String.valueOf(contest_type))) {
-                                            Log.e("ContestId--->", String.valueOf(datum.getContestId().intValue()));
-                                            Log.e("PoolConsumed---->", String.valueOf(datum.getPoolConsumed().intValue()));
-                                            Log.e("Pool---->",datum.getPool().toString());
                                             float perc= ((datum.getPoolConsumed().floatValue() / datum.getPool().floatValue()) * 100);
                                             int percent = Math.round(perc);
                                             list.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
@@ -105,8 +111,5 @@ public class ContestDetailFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return mView;
     }
-
 }
