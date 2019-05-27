@@ -21,7 +21,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.psl.fantasy.league.revamp.BuildConfig;
-import com.psl.fantasy.league.revamp.activity.AnalyticsApplication;
 import com.psl.fantasy.league.revamp.client.ApiClient;
 import com.psl.fantasy.league.revamp.model.request.TestBeanRequest;
 import com.google.android.gms.analytics.HitBuilders;
@@ -382,7 +381,7 @@ public class Helper {
         tv.setText(msg);
     }
 
-    public static void updateGoogleAnalytics(Tracker mTracker,String screenName){
+    /*public static void updateGoogleAnalytics(Tracker mTracker,String screenName){
 
         mTracker.setScreenName(screenName);
         mTracker.setAppId(BuildConfig.APPLICATION_ID);
@@ -395,7 +394,7 @@ public class Helper {
     public  static Tracker getGoogleAnalytics(Application app){
         AnalyticsApplication application = (AnalyticsApplication) app;
         return application.getDefaultTracker();
-    }
+    }*/
 
     public static void deleteDirectory(){
         try{
