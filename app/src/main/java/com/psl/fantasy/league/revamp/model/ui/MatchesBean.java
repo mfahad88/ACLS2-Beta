@@ -4,7 +4,7 @@ package com.psl.fantasy.league.revamp.model.ui;
 import java.util.Date;
 
 public class MatchesBean {
-    private int MatchId;
+    private String MatchId;
     private String TeamOne;
     private String TeamTwo;
     private String shortName1;
@@ -14,7 +14,7 @@ public class MatchesBean {
     private int team_id2;
     private String txt_series;
 
-    public MatchesBean(int matchId, String teamOne, String teamTwo, String shortName1, String shortName2, Date time, int team_id1, int team_id2, String txt_series) {
+    public MatchesBean(String matchId, String teamOne, String teamTwo, String shortName1, String shortName2, Date time, int team_id1, int team_id2, String txt_series) {
         MatchId = matchId;
         TeamOne = teamOne;
         TeamTwo = teamTwo;
@@ -26,11 +26,11 @@ public class MatchesBean {
         this.txt_series = txt_series;
     }
 
-    public int getMatchId() {
+    public String getMatchId() {
         return MatchId;
     }
 
-    public void setMatchId(int matchId) {
+    public void setMatchId(String matchId) {
         MatchId = matchId;
     }
 

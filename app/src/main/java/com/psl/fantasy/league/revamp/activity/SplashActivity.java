@@ -2,19 +2,27 @@ package com.psl.fantasy.league.revamp.activity;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.facebook.LoggingBehavior;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -22,12 +30,15 @@ import com.karumi.dexter.listener.DexterError;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.psl.fantasy.league.revamp.BuildConfig;
 import com.psl.fantasy.league.revamp.R;
 import com.psl.fantasy.league.revamp.Utils.DbHelper;
 import com.psl.fantasy.league.revamp.Utils.Helper;
 import com.psl.fantasy.league.revamp.client.ApiClient;
+import com.psl.fantasy.league.revamp.model.response.AppVersion.AppVersionBean;
 import com.psl.fantasy.league.revamp.model.response.Config.ConfigBeanResponse;
 import com.psl.fantasy.league.revamp.model.response.Player.PlayerResponse;
+import com.psl.fantasy.league.revamp.model.response.SelectUser.SelectUserBean;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,22 +53,30 @@ import retrofit2.Response;
 public class SplashActivity extends AppCompatActivity {
     DbHelper dbHelper;
     Tracker tracker;
+    SharedPreferences preferences;
+    int user_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
 
-        dbHelper=new DbHelper(this);
-        JSONObject obj=new JSONObject();
-        Helper.printHashKey(this);
-        FacebookSdk.setApplicationId(getString(R.string.facebook_app_id));
-        FacebookSdk.sdkInitialize(this.getApplicationContext());
-        FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
-        FacebookSdk.setAutoLogAppEventsEnabled(true);
-        tracker=Helper.getGoogleAnalytics(getApplication());
-        Helper.updateGoogleAnalytics(tracker,this.getClass().getSimpleName());
-        requestMultiplePermissions();
+        try{
+            preferences=getSharedPreferences(Helper.SHARED_PREF,MODE_PRIVATE);
+            dbHelper=new DbHelper(this);
+            JSONObject obj=new JSONObject();
+            Helper.printHashKey(this);
+            FacebookSdk.setApplicationId(getString(R.string.facebook_app_id));
+            FacebookSdk.sdkInitialize(this.getApplicationContext());
+            FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
+            FacebookSdk.setAutoLogAppEventsEnabled(true);
+            tracker=Helper.getGoogleAnalytics(getApplication());
+            Helper.updateGoogleAnalytics(tracker,this.getClass().getSimpleName());
+            requestMultiplePermissions();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
 
     }
@@ -100,8 +119,7 @@ public class SplashActivity extends AppCompatActivity {
     private void getConfig(){
         try{
             JSONObject obj=new JSONObject();
-            obj.put("param_type","GF");
-            obj.put("userId","1001");
+            obj.put("param_type","version_update");
             obj.put("method_Name",this.getClass().getSimpleName()+".onCreate");
             System.out.println(obj.toString());
             dbHelper.deletePlayer();
@@ -158,8 +176,8 @@ public class SplashActivity extends AppCompatActivity {
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.READ_PHONE_STATE)
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
+//                        Manifest.permission.READ_PHONE_STATE)
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
@@ -168,13 +186,14 @@ public class SplashActivity extends AppCompatActivity {
 
                             getMatches();
                             getConfig();
+                            Helper.checkAppVersion(SplashActivity.this,preferences,dbHelper);
                         }
-                         if(!report.areAllPermissionsGranted()){
+                        if(!report.areAllPermissionsGranted()){
                             Toast toast=Toast.makeText(getApplicationContext(),"To continue allow permission",Toast.LENGTH_SHORT);
                             toast.setGravity(Gravity.CENTER,0,0);
                             toast.show();
-                             finish();
-                         }
+                            finish();
+                        }
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
                             // show alert dialog navigating to Settings
@@ -224,4 +243,7 @@ public class SplashActivity extends AppCompatActivity {
         builder.show();
 
     }
+
+
+
 }

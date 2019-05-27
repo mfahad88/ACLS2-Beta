@@ -80,7 +80,7 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> implements Locatio
 
     @Override
     public long getItemId(int position) {
-        return list.get(position).getMatchId();
+        return Long.parseLong(list.get(position).getMatchId());
     }
 
     @SuppressLint("NewApi")
@@ -229,7 +229,7 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> implements Locatio
                     //Helper.showAlertNetural(context,"Id",bean.getTeam_id1()+","+bean.getTeam_id2());
                     Fragment fragment=new ContestFragment();
                     Bundle bundle=new Bundle();
-                    bundle.putInt("match_id",bean.getMatchId());
+                    bundle.putString("match_id",bean.getMatchId());
                     bundle.putInt("TeamId1",bean.getTeam_id1());
                     bundle.putInt("TeamId2",bean.getTeam_id2());
                     bundle.putString("TeamOne",bean.getTeamOne().trim());

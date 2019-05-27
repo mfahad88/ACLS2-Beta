@@ -94,4 +94,18 @@ public class MyUser {
     public void setApp_version(String app_version) {
         this.app_version = app_version;
     }
+
+    @Override
+    public String toString() {
+        return "MyUser{" +
+                "userId=" + userId +
+                ", firstName='" + firstName + '\'' +
+                ", pws='" + pws + '\'' +
+                ", email='" + email + '\'' +
+                ", mobileNo='" + mobileNo + '\'' +
+                ", sts=" + sts +
+                ", isUpdated='" + isUpdated + '\'' +
+                ", app_version='" + app_version + '\'' +
+                '}';
+    }
 }

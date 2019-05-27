@@ -19,7 +19,9 @@ import android.widget.TextView;
 
 import com.psl.fantasy.league.revamp.BuildConfig;
 import com.psl.fantasy.league.revamp.R;
+import com.psl.fantasy.league.revamp.Utils.DbHelper;
 import com.psl.fantasy.league.revamp.Utils.Helper;
+import com.psl.fantasy.league.revamp.activity.StartActivity;
 import com.psl.fantasy.league.revamp.adapter.FixtureAdapter;
 import com.psl.fantasy.league.revamp.adapter.ImageAdapter;
 import com.psl.fantasy.league.revamp.client.ApiClient;
@@ -55,6 +57,7 @@ public class DashboardFragment extends Fragment {
     private FixtureAdapter fixtureAdapter;
     private SharedPreferences preferences;
     private int user_id;
+    private DbHelper dbHelper;
     public DashboardFragment() {
         // Required empty public constructor
     }
@@ -88,7 +91,7 @@ public class DashboardFragment extends Fragment {
         // Inflate the layout for this fragment
         mView=inflater.inflate(R.layout.fragment_dashboard, container, false);
         init();
-        Log.e("Build Version---->", String.valueOf(BuildConfig.VERSION_CODE));
+
         try{
 
             list_matches.setSmoothScrollbarEnabled(true);
@@ -132,7 +135,9 @@ public class DashboardFragment extends Fragment {
         viewPage.setAdapter(adapter);
         pullToRefresh=mView.findViewById(R.id.pullToRefresh);
         preferences=mView.getContext().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
-        checkAppVersion();
+        dbHelper=new DbHelper(mView.getContext());
+//        checkAppVersion();
+        Helper.checkAppVersion(getActivity(),preferences,dbHelper);
     }
 
     public void populateMatches(){
@@ -149,7 +154,7 @@ public class DashboardFragment extends Fragment {
                                     for(Datum bean:response.body().getData()){
                                         if(response.body().getData().size()>0) {
                                             if(bean.getMatchSts().equalsIgnoreCase("1")){
-                                                list.add(new MatchesBean(bean.getMatchId().intValue(),bean.getTeamId1Name(),bean.getTeamId2Name(),bean.getTeam_id1_shortName(),bean.getTeam_id2_shortName(),bean.getStartDate(),bean.getTeamId1().intValue(),bean.getTeamId2().intValue(),bean.getSeries_name()));
+                                                list.add(new MatchesBean(bean.getMatch_series_id(),bean.getTeamId1Name(),bean.getTeamId2Name(),bean.getTeam_id1_shortName(),bean.getTeam_id2_shortName(),bean.getStartDate(),bean.getTeamId1().intValue(),bean.getTeamId2().intValue(),bean.getSeries_name()));
                                                 list_matches.setVisibility(View.VISIBLE);
 
                                                 fixtureAdapter = new FixtureAdapter(mView.getContext(), R.layout.list_fixture, list);
@@ -198,7 +203,7 @@ public class DashboardFragment extends Fragment {
                                     if(response.isSuccessful()){
                                         if(response.body().getResponseCode().equalsIgnoreCase("1001")){
 
-                                            if(Integer.parseInt(response.body().getData().getMyUser().getApp_version())>BuildConfig.VERSION_CODE){
+                                            if(Float.parseFloat(response.body().getData().getMyUser().getApp_version())>Float.parseFloat(BuildConfig.VERSION_NAME)){
                                                 if(response.body().getData().getMyUser().getSts().intValue()==0){
                                                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
                                                     browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -208,7 +213,7 @@ public class DashboardFragment extends Fragment {
 
                                                 }
                                             }else if(response.body().getData().getMyUser().getSts().intValue()==0){
-                                                if(Integer.parseInt(response.body().getData().getMyUser().getApp_version())==BuildConfig.VERSION_CODE){
+                                                if(Float.parseFloat(response.body().getData().getMyUser().getApp_version())==Float.parseFloat(BuildConfig.VERSION_NAME)){
 
                                                     try {
                                                         JSONObject jsonObject=new JSONObject();

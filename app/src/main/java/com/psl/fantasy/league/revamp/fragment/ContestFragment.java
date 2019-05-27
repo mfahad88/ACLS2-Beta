@@ -48,7 +48,7 @@ public class ContestFragment extends Fragment {
     private int match_Id;
 
     private ListView list_contest_1,list_contest_2,list_contest_3;
-    int match_id;
+    String match_id;
     int TeamId1,TeamId2;
     private ProgressBar progressBar;
     private TextView txt_status,txt_cat1,txt_cat2,txt_cat3,txt_view_more_mega,txt_view_more_expert,txt_view_more_beginner;
@@ -95,7 +95,7 @@ public class ContestFragment extends Fragment {
         try {
             if(getArguments()!=null) {
 
-                match_id = getArguments().getInt("match_id");
+                match_id = getArguments().getString("match_id");
                 TeamId1=getArguments().getInt("TeamId1");
                 TeamId2=getArguments().getInt("TeamId2");
                 teamOne=getArguments().getString("TeamOne");
@@ -129,7 +129,7 @@ public class ContestFragment extends Fragment {
 
                     Fragment fragment=new ContestDetailFragment();
                     Bundle bundle=new Bundle();
-                    bundle.putInt("match_id",match_id);
+                    bundle.putString("match_id",match_id);
                     bundle.putInt("TeamId1",TeamId1);
                     bundle.putInt("TeamId2",TeamId2);
                     bundle.putInt("contest_type",0);
@@ -149,7 +149,7 @@ public class ContestFragment extends Fragment {
 
                     Fragment fragment=new ContestDetailFragment();
                     Bundle bundle=new Bundle();
-                    bundle.putInt("match_id",match_id);
+                    bundle.putString("match_id",match_id);
                     bundle.putInt("TeamId1",TeamId1);
                     bundle.putInt("TeamId2",TeamId2);
                     bundle.putInt("contest_type",1);
@@ -168,7 +168,7 @@ public class ContestFragment extends Fragment {
 
                     Fragment fragment=new ContestDetailFragment();
                     Bundle bundle=new Bundle();
-                    bundle.putInt("match_id",match_id);
+                    bundle.putString("match_id",match_id);
                     bundle.putInt("TeamId1",TeamId1);
                     bundle.putInt("TeamId2",TeamId2);
                     bundle.putInt("contest_type",2);
@@ -196,7 +196,7 @@ public class ContestFragment extends Fragment {
     public void populateContest(){
         try{
             JSONObject object=new JSONObject();
-            object.put("match_id",match_id);
+            object.put("match_series_id",match_id);
             object.put("method_Name",this.getClass().getSimpleName()+".onCreateView");
             Log.e("Fragment",object.toString());
             ApiClient.getInstance().getAllContest(Helper.encrypt(object.toString()))

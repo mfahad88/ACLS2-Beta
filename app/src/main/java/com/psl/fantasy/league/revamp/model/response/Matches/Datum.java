@@ -62,6 +62,9 @@ public class Datum {
     @SerializedName("series_name")
     @Expose
     private String series_name;
+    @SerializedName("match_series_id")
+    @Expose
+    private String match_series_id;
 
     public Integer getMatchId() {
         return matchId;
@@ -205,5 +208,13 @@ public class Datum {
 
     public void setSeries_name(String series_name) {
         this.series_name = series_name;
+    }
+
+    public String getMatch_series_id() {
+        return match_series_id;
+    }
+
+    public void setMatch_series_id(String match_series_id) {
+        this.match_series_id = match_series_id;
     }
 }

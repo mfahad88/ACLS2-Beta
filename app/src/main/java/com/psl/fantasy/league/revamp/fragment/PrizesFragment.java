@@ -41,8 +41,8 @@ public class PrizesFragment extends Fragment {
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         viewPager.setOffscreenPageLimit(tabLayout.getTabCount());
         tabLayout.setTabTextColors(ColorStateList.valueOf(Color.BLACK));
-        tabLayout.addTab(tabLayout.newTab().setText("Redeem"),true);
-        tabLayout.addTab(tabLayout.newTab().setText("Claim"));
+        tabLayout.addTab(tabLayout.newTab().setText("Claim"),true);
+        tabLayout.addTab(tabLayout.newTab().setText("Redeem"));
         if(Helper.getUserSession(mView.getContext().getSharedPreferences(Helper.MY_USER,Context.MODE_PRIVATE),Helper.MY_USER)==null){
             Fragment fragment=new LoginFragment();
             Bundle bundle=new Bundle();

@@ -34,7 +34,7 @@ import retrofit2.Response;
  * A simple {@link Fragment} subclass.
  */
 public class ContestDetailFragment extends Fragment {
-    int match_id;
+    String match_id;
     int contest_type; //1 mega, 2 expert,3 beginner
     int TeamId1;int TeamId2;
     private List<ContestBean> list;
@@ -55,7 +55,7 @@ public class ContestDetailFragment extends Fragment {
         progressBar=mView.findViewById(R.id.progressBar);
         pullToRefresh=mView.findViewById(R.id.pullToRefresh);
         if(getArguments()!=null){
-            match_id=getArguments().getInt("match_id");
+            match_id=getArguments().getString("match_id");
             contest_type=getArguments().getInt("contest_type");
             TeamId1=getArguments().getInt("TeamId1");
             TeamId2=getArguments().getInt("TeamId2");
@@ -73,7 +73,7 @@ public class ContestDetailFragment extends Fragment {
         try {
             progressBar.setVisibility(View.VISIBLE);
             JSONObject object=new JSONObject();
-            object.put("match_id",match_id);
+            object.put("match_series_id",match_id);
             object.put("method_Name",this.getClass().getSimpleName()+".onCreateView");
             ApiClient.getInstance().getAllContest(Helper.encrypt(object.toString()))
                     .enqueue(new Callback<ContestResponse>() {

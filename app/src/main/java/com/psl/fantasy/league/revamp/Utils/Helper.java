@@ -1,15 +1,18 @@
 package com.psl.fantasy.league.revamp.Utils;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.AssetManager;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.util.Base64;
@@ -19,10 +22,16 @@ import android.widget.TextView;
 
 import com.psl.fantasy.league.revamp.BuildConfig;
 import com.psl.fantasy.league.revamp.activity.AnalyticsApplication;
+import com.psl.fantasy.league.revamp.client.ApiClient;
 import com.psl.fantasy.league.revamp.model.request.TestBeanRequest;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
+import com.psl.fantasy.league.revamp.model.response.AppVersion.AppVersionBean;
+import com.psl.fantasy.league.revamp.model.response.SelectUser.SelectUserBean;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -48,6 +57,10 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class Helper {
@@ -400,6 +413,90 @@ public class Helper {
                 .getDisplayMetrics()
                 .density;
         return Math.round((float) dp * density);
+    }
+
+    public static void checkAppVersion(Activity activity, SharedPreferences preferences, DbHelper dbHelper){
+        int user_id;
+        if(Helper.getUserSession(preferences,Helper.MY_USER)!=null){
+            JSONObject object= null;
+            try {
+                object = new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
+                JSONObject nameValuePairs=object.getJSONObject("nameValuePairs");
+                user_id=nameValuePairs.getJSONObject("MyUser").getInt("user_id");
+                try {
+                    JSONObject jsonObject=new JSONObject();
+                    jsonObject.put("user_id",user_id);
+                    ApiClient.getInstance().SelectUser(Helper.encrypt(jsonObject.toString()))
+                            .enqueue(new Callback<SelectUserBean>() {
+                                @Override
+                                public void onResponse(Call<SelectUserBean> call, Response<SelectUserBean> response) {
+                                    if(response.isSuccessful()){
+                                        if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+                                            if(response.body().getData().getMyUser().getIsUpdated().equalsIgnoreCase("0")){
+                                                if(Float.parseFloat(dbHelper.getConfig())>Float.parseFloat(BuildConfig.VERSION_NAME)) {
+                                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
+                                                    browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    activity.startActivity(browserIntent);
+                                                    activity.finish();
+                                                    System.exit(0);
+                                                }else if(Float.parseFloat(dbHelper.getConfig())<Float.parseFloat(BuildConfig.VERSION_NAME)){
+                                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
+                                                    browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    activity.startActivity(browserIntent);
+                                                    activity.finish();
+                                                    System.exit(0);
+                                                }else{
+                                                    try {
+                                                        JSONObject jsonObject=new JSONObject();
+                                                        jsonObject.put("user_id",user_id);
+                                                        jsonObject.put("isUpdated",1);
+
+                                                        ApiClient.getInstance().updateAppVersion(Helper.encrypt(jsonObject.toString()))
+                                                                .enqueue(new Callback<AppVersionBean>() {
+                                                                    @Override
+                                                                    public void onResponse(Call<AppVersionBean> call, Response<AppVersionBean> response) {
+                                                                        if(response.isSuccessful()){
+                                                                            if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+
+                                                                            }else{
+                                                                                Helper.showAlertNetural(activity.getApplicationContext(),"Error",response.body().getMessage());
+                                                                            }
+                                                                        }
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onFailure(Call<AppVersionBean> call, Throwable t) {
+                                                                        t.printStackTrace();
+                                                                        Helper.showAlertNetural(activity.getApplicationContext(),"Error",t.getMessage());
+                                                                    }
+                                                                });
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            }
+
+                                        }else{
+                                            Helper.showAlertNetural(activity.getApplicationContext(),"Error",response.body().getMessage());
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<SelectUserBean> call, Throwable t) {
+                                    t.printStackTrace();
+                                    Helper.showAlertNetural(activity.getApplicationContext(),"Error",t.getMessage());
+                                }
+                            });
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
     }
 
 }

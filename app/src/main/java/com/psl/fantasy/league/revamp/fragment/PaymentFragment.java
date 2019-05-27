@@ -1,6 +1,7 @@
 package com.psl.fantasy.league.revamp.fragment;
 
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +22,15 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.DexterError;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.PermissionRequestErrorListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.psl.fantasy.league.revamp.R;
 import com.psl.fantasy.league.revamp.Utils.DbHelper;
 import com.psl.fantasy.league.revamp.Utils.Helper;
@@ -56,15 +66,16 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
     String mobileNo;
     double credit;
     SharedPreferences preferences;
-    int[] icon={R.drawable.mobilink_logo, R.drawable.warid_logo, R.drawable.telenor_logo, R.drawable.zong_logo,R.drawable.ufone_logo};
-    String[] telcoName={"Mobilink","Warid","Telenor","Zong","Ufone"};
+    int[] icon={R.drawable.mobilink_logo, R.drawable.warid_logo, R.drawable.telenor_logo, R.drawable.zong_logo};
+    String[] telcoName={"Mobilink","Warid","Telenor","Zong"};
     Spinner spinner_telco;
     TelephonyManager telephonyManager;
     RelativeLayout relativePay,relativeOTP;
     EditText edt_otp;
     Button btn_submit;
+    int operatorID;
     ProgressBar progressBar;
-
+    String provider="";
     public PaymentFragment() {
         // Required empty public constructor
     }
@@ -84,11 +95,11 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
         relativePay=mView.findViewById(R.id.relativePay);
         relativeOTP=mView.findViewById(R.id.relativeOTP);
 
-        telephonyManager = (TelephonyManager) mView.getContext().getSystemService(Context.TELEPHONY_SERVICE);
-        String provider = telephonyManager.getSimOperatorName();
+
         edt_otp=mView.findViewById(R.id.edt_otp);
         btn_submit=mView.findViewById(R.id.btn_submit);
         progressBar=mView.findViewById(R.id.progressBar);
+        requestMultiplePermissions();
         if(getArguments()!=null){
             ContestId=getArguments().getInt("conId");
             credit=getArguments().getDouble("credit");
@@ -135,9 +146,19 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                 }else{
                     mobileNo =  edt_mobile_no.getText().toString();
                 }
+
                 paySimPaisa();
             }
         }if(v.getId()==R.id.btn_submit){
+            if(spinner_telco.getSelectedItem().toString().equals("Mobilink")){
+                operatorID=100001;
+            }if(spinner_telco.getSelectedItem().toString().equals("Telenor")){
+                operatorID=100002;
+            }if(spinner_telco.getSelectedItem().toString().equals("Zong")){
+                operatorID=100003;
+            }if(spinner_telco.getSelectedItem().toString().equals("Warid")){
+                operatorID=100004;
+            }
             paySimPaisaOTP();
 
         }
@@ -149,7 +170,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
             JSONObject object=new JSONObject();
             object.put("productID",1193);
             object.put("mobileNo",mobileNo);
-            object.put("operatorID",100002);
+            object.put("operatorID",operatorID);
             object.put("codeOTP",Integer.parseInt(edt_otp.getText().toString()));
             object.put("amt",contestAmt);
             if(Helper.getUserSession(preferences,Helper.MY_USER)!=null) {
@@ -218,11 +239,13 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                                 }
                                 else{
                                     Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                    btn_pay.setEnabled(true);
                                 }
                             }else{
                                 try {
                                     Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
                                     progressBar.setVisibility(View.GONE);
+                                    btn_pay.setEnabled(true);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -311,5 +334,50 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
        }catch (Exception e){
            e.printStackTrace();
        }
+    }
+
+    private void requestMultiplePermissions(){
+
+        Dexter.withActivity(getActivity())
+                .withPermissions(
+                        Manifest.permission.READ_PHONE_STATE)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        // check if all permissions are granted
+                        if (report.areAllPermissionsGranted()) {
+
+                            telephonyManager = (TelephonyManager) mView.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+                             provider = telephonyManager.getSimOperatorName();
+                        }
+                        /*if(!report.areAllPermissionsGranted()){
+                            Toast toast=Toast.makeText(mView.getContext(),"To continue allow permission",Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER,0,0);
+                            toast.show();
+                            finish();
+                        }*/
+                        // check for permanent denial of any permission
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+                            // show alert dialog navigating to Settings
+//                            openSettingsDialog();
+                        }
+                    }
+
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+
+                    }
+                }).
+                withErrorListener(new PermissionRequestErrorListener() {
+                    @Override
+                    public void onError(DexterError error) {
+                        Toast.makeText(mView.getContext(), "Some Error! ", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .onSameThread()
+                .check();
+
     }
 }

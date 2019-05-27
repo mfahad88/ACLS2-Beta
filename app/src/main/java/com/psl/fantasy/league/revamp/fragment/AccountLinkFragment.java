@@ -329,7 +329,7 @@ public class AccountLinkFragment extends Fragment implements View.OnClickListene
                     object.put("bank_IMD",036);
                     object.put("bank_Name",spinner_bank.getSelectedItem().toString());
                     object.put("core_account",edt_acc.getText());
-                    object.put("title_of_account","Rizwan Nasir");
+                    object.put("title_of_account",edt_toa.getText());
                     ApiClient.getInstance().updateBankTitle(Helper.encrypt(object.toString()))
                             .enqueue(new Callback<BankInfo>() {
                                 @Override
@@ -371,7 +371,7 @@ public class AccountLinkFragment extends Fragment implements View.OnClickListene
                                     Helper.showAlertNetural(mView.getContext(),"Success",t.getMessage());
                                 }
                             });
-                    edt_toa.setText("Rizwan Nasir");
+                    //edt_toa.setText("Rizwan Nasir");
                 }catch (Exception e){
                     e.printStackTrace();
                 }

@@ -139,7 +139,32 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
+    public String getConfig() {
+        String appVersion="";
+        Cursor c = null ;
+        try {
 
+            String query = "SELECT * FROM " + TBL_CONFIG ;
+
+            SQLiteDatabase db = this.getReadableDatabase();
+            c = db.rawQuery(query, null);
+
+            if (c.moveToFirst()) {
+                do {
+                    appVersion=c.getString(c.getColumnIndex(CONFIG_VAL));
+                } while (c.moveToNext());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally{
+            if(c!=null)
+                c.close();
+
+        }
+        return appVersion;
+    }
     public List<com.psl.fantasy.league.revamp.model.response.Player.Datum> getPlayers(String team_id){
         List<com.psl.fantasy.league.revamp.model.response.Player.Datum> list=new ArrayList<>();
         Cursor c = null ;

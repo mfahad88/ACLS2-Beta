@@ -16,7 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.psl.fantasy.league.revamp.Utils.DbHelper;
 import com.psl.fantasy.league.revamp.model.response.AppVersion.AppVersionBean;
 import com.psl.fantasy.league.revamp.BuildConfig;
 import com.psl.fantasy.league.revamp.R;
@@ -46,17 +48,18 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
     private LinearLayout linear_pointer;
     SharedPreferences preferences;
     private int user_id;
+    private DbHelper dbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         preferences=getSharedPreferences(Helper.SHARED_PREF,MODE_PRIVATE);
-        mTextMessage = (TextView) findViewById(R.id.message);
+        dbHelper=new DbHelper(this);
         txt_bullet_1 = findViewById(R.id.txt_bullet_1);
         txt_bullet_2 = findViewById(R.id.txt_bullet_2);
         txt_bullet_3 = findViewById(R.id.txt_bullet_3);
         linear_pointer= findViewById(R.id.linear_pointer);
-        checkAppVersion();
+        Helper.checkAppVersion(StartActivity.this,preferences,dbHelper);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         setBottomNavigationLabelsTextSize(navigation,0.9f);
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -146,7 +149,7 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
         }
     }
 
-    public void checkAppVersion(){
+    /*public void checkAppVersion(){
         if(Helper.getUserSession(preferences,Helper.MY_USER)!=null){
             JSONObject object= null;
             try {
@@ -163,7 +166,7 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
                                     if(response.isSuccessful()){
                                         if(response.body().getResponseCode().equalsIgnoreCase("1001")){
 
-                                            if(Integer.parseInt(response.body().getData().getMyUser().getApp_version())>BuildConfig.VERSION_CODE){
+                                            if(Float.parseFloat(response.body().getData().getMyUser().getApp_version())>Float.parseFloat(BuildConfig.VERSION_NAME)){
                                                 if(response.body().getData().getMyUser().getSts().intValue()==0){
                                                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
                                                     browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -173,12 +176,12 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
 
                                                 }
                                             }else if(response.body().getData().getMyUser().getSts().intValue()==0){
-                                                if(Integer.parseInt(response.body().getData().getMyUser().getApp_version())==BuildConfig.VERSION_CODE){
+                                                if(Float.parseFloat(response.body().getData().getMyUser().getApp_version())==Float.parseFloat(BuildConfig.VERSION_NAME)){
 
                                                     try {
                                                         JSONObject jsonObject=new JSONObject();
                                                         jsonObject.put("user_id",user_id);
-                                                        jsonObject.put("sts",1);
+                                                        jsonObject.put("isUpdated",1);
 
                                                         ApiClient.getInstance().updateAppVersion(Helper.encrypt(jsonObject.toString()))
                                                                 .enqueue(new Callback<AppVersionBean>() {
@@ -226,7 +229,7 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
 
         }
 
-    }
+    }*/
 
     @Override
     public void onBackPressed() {

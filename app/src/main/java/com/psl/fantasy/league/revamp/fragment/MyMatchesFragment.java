@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.psl.fantasy.league.revamp.BuildConfig;
 import com.psl.fantasy.league.revamp.R;
+import com.psl.fantasy.league.revamp.Utils.DbHelper;
 import com.psl.fantasy.league.revamp.Utils.Helper;
 import com.psl.fantasy.league.revamp.adapter.MyMatchesAdapter;
 import com.psl.fantasy.league.revamp.client.ApiClient;
@@ -50,6 +51,7 @@ public class MyMatchesFragment extends Fragment {
     private FragmentToActivity mCallback;
     SharedPreferences preferences;
     View mView;
+    private DbHelper dbHelper;
     public MyMatchesFragment() {
         // Required empty public constructor
     }
@@ -76,7 +78,9 @@ public class MyMatchesFragment extends Fragment {
         ListView list_matches=mView.findViewById(R.id.list_matches);
         TextView txt_error=mView.findViewById(R.id.txt_error);
         ProgressBar progressBar=mView.findViewById(R.id.progressBar);
+        dbHelper=new DbHelper(mView.getContext());
         list=new ArrayList<>();
+        Helper.checkAppVersion(getActivity(),preferences,dbHelper);
         mCallback.communicate("disable");
         if(Helper.getUserSession(preferences,Helper.MY_USER)!=null) {
             try {
@@ -151,85 +155,4 @@ public class MyMatchesFragment extends Fragment {
         return mView;
     }
 
-    public void checkAppVersion(){
-        if(Helper.getUserSession(preferences,Helper.MY_USER)!=null){
-            JSONObject object= null;
-            try {
-                object = new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
-                JSONObject nameValuePairs=object.getJSONObject("nameValuePairs");
-                user_id=nameValuePairs.getJSONObject("MyUser").getInt("user_id");
-                try {
-                    JSONObject jsonObject=new JSONObject();
-                    jsonObject.put("user_id",user_id);
-                    ApiClient.getInstance().SelectUser(Helper.encrypt(jsonObject.toString()))
-                            .enqueue(new Callback<SelectUserBean>() {
-                                @Override
-                                public void onResponse(Call<SelectUserBean> call, Response<SelectUserBean> response) {
-                                    if(response.isSuccessful()){
-                                        if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-
-                                            if(Integer.parseInt(response.body().getData().getMyUser().getApp_version())>BuildConfig.VERSION_CODE){
-                                                if(response.body().getData().getMyUser().getSts().intValue()==0){
-                                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
-                                                    browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                    startActivity(browserIntent);
-                                                    getActivity().finish();
-                                                    System.exit(0);
-
-                                                }
-                                            }else if(response.body().getData().getMyUser().getSts().intValue()==0){
-                                                if(Integer.parseInt(response.body().getData().getMyUser().getApp_version())==BuildConfig.VERSION_CODE){
-
-                                                    try {
-                                                        JSONObject jsonObject=new JSONObject();
-                                                        jsonObject.put("user_id",user_id);
-                                                        jsonObject.put("sts",1);
-
-                                                        ApiClient.getInstance().updateAppVersion(Helper.encrypt(jsonObject.toString()))
-                                                                .enqueue(new Callback<AppVersionBean>() {
-                                                                    @Override
-                                                                    public void onResponse(Call<AppVersionBean> call, Response<AppVersionBean> response) {
-                                                                        if(response.isSuccessful()){
-                                                                            if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-
-                                                                            }else{
-                                                                                Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                                                                            }
-                                                                        }
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onFailure(Call<AppVersionBean> call, Throwable t) {
-                                                                        t.printStackTrace();
-                                                                        Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
-                                                                    }
-                                                                });
-                                                    } catch (JSONException e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                }
-                                            }
-
-                                        }else{
-                                            Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<SelectUserBean> call, Throwable t) {
-                                    t.printStackTrace();
-                                    Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
-                                }
-                            });
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-    }
 }

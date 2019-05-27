@@ -35,12 +35,12 @@ public class TelcoAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return telcoName[position];
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @SuppressLint("NewApi")

@@ -19,11 +19,12 @@ public class PrizesAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int i) {
         switch (i) {
             case 0:
-                fragment = new PrizesRedeemFragment();
+                fragment = new FragmentClaimPrizes();
                 return fragment;
 
             case 1:
-                fragment = new FragmentClaimPrizes();
+
+                fragment = new PrizesRedeemFragment();
                 return fragment;
 
             default:

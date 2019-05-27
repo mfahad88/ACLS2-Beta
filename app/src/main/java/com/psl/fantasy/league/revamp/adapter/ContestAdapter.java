@@ -96,12 +96,12 @@ public class ContestAdapter extends ArrayAdapter<ContestBean> {
         txt_price.setText(bean.getPrice());
         txt_winners.setText(bean.getWinners()+" Winners");
         txt_contest_type_one.setText(bean.getContest_type());
-        if(bean.getMultiple().equalsIgnoreCase("1")) {
+        if(bean.getMultiple().equalsIgnoreCase("y")) {
             txt_multi.setText("M");
         }else{
             txt_multi.setText("S");
         }
-        if(bean.getConfirm_winning().equalsIgnoreCase("1")){
+        if(bean.getConfirm_winning().equalsIgnoreCase("y")){
             txt_confirm_winning.setVisibility(View.VISIBLE);
             txt_confirm_winning.setText("C");
         }

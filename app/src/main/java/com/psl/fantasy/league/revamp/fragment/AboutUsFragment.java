@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.psl.fantasy.league.revamp.BuildConfig;
 import com.psl.fantasy.league.revamp.R;
 import com.psl.fantasy.league.revamp.Utils.Helper;
 
@@ -29,6 +30,8 @@ public class AboutUsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_about_us, container, false);
         TextView txt_about_us_doc=view.findViewById(R.id.txt_about_us_doc);
+        TextView txt_version=view.findViewById(R.id.txt_version);
+        txt_version.setText("version: "+String.valueOf(BuildConfig.VERSION_NAME));
         txt_about_us_doc.setText(Helper.readFile(view.getContext(),"about_us.txt"));
         txt_about_us_doc.setMovementMethod(new ScrollingMovementMethod());
         return view;
