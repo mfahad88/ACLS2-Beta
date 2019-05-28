@@ -4,110 +4,112 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#e2e2e2"
     tools:context=".fragment.PaymentFragment">
 
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_margin="10dp"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/js_wallet"
+            android:id="@+id/img_js_wallet"
+            android:layout_alignParentLeft="true" />
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="270dp"
-        android:layout_centerInParent="true"
-        app:cardElevation="5dp"
-        app:cardCornerRadius="7dp"
-        android:id="@+id/card_view"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp">
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_margin="10dp"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/ic_launcher"
+        android:layout_alignParentRight="true" />
 
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/img_js_wallet"
+            android:visibility="visible"
+            android:layout_margin="10dp"
             android:id="@+id/relativePay">
 
-            <LinearLayout
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="Enter Mobile Number"
+               android:padding="3dp"
+               android:layout_marginTop="10dp"
+               android:textSize="8sp"
+               android:id="@+id/txt_mobile"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txt_mobile"
+                android:maxLength="11"
+                android:longClickable="false"
+                android:background="@drawable/square_border"
+                android:inputType="number"
+                android:id="@+id/edt_mobile_no"
+                android:textSize="12sp"/>
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="15dp"
-                android:id="@+id/linear_mobile_no">
+                android:text="Amount"
+                android:padding="3dp"
+                android:layout_marginTop="10dp"
+                android:textSize="8sp"
+                android:id="@+id/txt_amt"
+                android:layout_below="@id/edt_mobile_no"
+                />
 
-                <TextView
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:text="Mobile Number" />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txt_amt"
+                android:inputType="number"
+                android:background="@drawable/square_border"
+                android:id="@+id/edt_amount"
+                android:focusable="false"
+                android:longClickable="false"
+                android:textSize="12sp" />
 
-                <EditText
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:maxLength="11"
-                    android:longClickable="false"
-                    android:hint="Mobile No."
-                    android:inputType="number"
-                    android:id="@+id/edt_mobile_no"
-                    android:textSize="15sp"/>
 
-            </LinearLayout>
 
-            <LinearLayout
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:id="@+id/linear_amount"
-                android:padding="15dp"
-                android:layout_below="@id/linear_mobile_no">
+                android:text="Telco Name"
+                android:padding="3dp"
+                android:layout_marginTop="10dp"
+                android:textSize="8sp"
+                android:id="@+id/txt_telco"
+                android:layout_below="@id/edt_amount"
+                />
 
-                <TextView
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:text="Amount" />
-                <EditText
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:hint="Amount"
-                    android:inputType="number"
-                    android:id="@+id/edt_amount"
-                    android:focusable="false"
-                    android:longClickable="false"
-                    android:textSize="15sp" />
-            </LinearLayout>
-
-
-          <LinearLayout
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_below="@id/linear_amount"
-              android:padding="15dp"
-              android:id="@+id/linear_telco">
-
-              <TextView
-                  android:layout_width="100dp"
-                  android:layout_height="wrap_content"
-                  android:text="Telco Name"/>
-
-              <Spinner
-                  android:layout_width="200dp"
-                  android:layout_height="wrap_content"
-                  android:id="@+id/spinner_telco"/>
-
-
-
-          </LinearLayout>
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner_telco"
+                android:layout_below="@id/txt_telco"/>
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
                 android:text="Pay"
                 android:textColor="@android:color/white"
                 android:background="@drawable/drawable_btn_square"
-                android:layout_below="@id/linear_telco"
+                android:layout_below="@id/spinner_telco"
                 android:id="@+id/btn_pay"
                 android:layout_centerInParent="true"/>
-
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
+            android:layout_below="@id/img_js_wallet"
             android:visibility="gone"
             android:id="@+id/relativeOTP">
 
@@ -115,13 +117,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLength="4"
+                android:background="@drawable/square_border"
                 android:inputType="number"
                 android:hint="Enter OTP"
                 android:id="@+id/edt_otp"/>
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
                 android:layout_marginTop="10dp"
                 android:layout_below="@id/edt_otp"
                 android:background="@drawable/drawable_btn_square"
@@ -131,7 +134,6 @@
                 android:textColor="@android:color/white"/>
         </RelativeLayout>
 
-    </android.support.v7.widget.CardView>
 
     <ProgressBar
         android:layout_width="wrap_content"

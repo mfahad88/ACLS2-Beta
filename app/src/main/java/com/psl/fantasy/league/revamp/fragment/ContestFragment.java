@@ -71,6 +71,21 @@ public class ContestFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        if(adapter!=null){
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    progressBar.setVisibility(View.VISIBLE);
+                    adapter.clear();
+                    populateContest();
+                    adapter.notifyDataSetChanged();
+                }
+            },1000);
+        }
+        super.onResume();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -106,17 +121,20 @@ public class ContestFragment extends Fragment {
                 @Override
                 public void onRefresh() {
 //                    pullToRefresh.setRefreshing(true);
-                    adapter.clear();
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
+                    if(adapter!=null){
+                        adapter.clear();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
 
-                            populateContest();
-                            adapter.notifyDataSetChanged();
+                                populateContest();
+                                adapter.notifyDataSetChanged();
 
-                            pullToRefresh.setRefreshing(false);
-                        }
-                    },1000);
+                                pullToRefresh.setRefreshing(false);
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        },1000);
+                    }
 
                 }
             });
@@ -329,7 +347,7 @@ public class ContestFragment extends Fragment {
                         @Override
                         public void onFailure(Call<ContestResponse> call, Throwable t) {
                             t.printStackTrace();
-                            Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
+                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
                             progressBar.setVisibility(View.GONE);
 
                         }

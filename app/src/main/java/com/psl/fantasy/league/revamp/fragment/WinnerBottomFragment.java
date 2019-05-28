@@ -99,7 +99,7 @@ public class WinnerBottomFragment extends BottomSheetDialogFragment {
                     @Override
                     public void onFailure(Call<PrizeDistributionBean> call, Throwable t) {
                         t.printStackTrace();
-                        Helper.showAlertNetural(view.getContext(),"Error",t.getMessage());
+                        Helper.showAlertNetural(view.getContext(),"Error","Communication Error");
                     }
                 });
 

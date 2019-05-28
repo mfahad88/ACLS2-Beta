@@ -21,6 +21,7 @@ import com.facebook.LoggingBehavior;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import com.karumi.dexter.Dexter;
@@ -70,8 +71,9 @@ public class SplashActivity extends AppCompatActivity {
             FacebookSdk.sdkInitialize(this.getApplicationContext());
             FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
             FacebookSdk.setAutoLogAppEventsEnabled(true);
-
+//            Helper.printHashKey(this);
             requestMultiplePermissions();
+            //FirebaseApp.getInstance().getToken(true);
 
             Log.e("Firebase",FirebaseInstanceId.getInstance().getToken());
 
@@ -109,7 +111,7 @@ public class SplashActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<PlayerResponse> call, Throwable t) {
                     t.fillInStackTrace();
-                    Helper.showAlertNetural(SplashActivity.this,"Error",t.getMessage());
+                    Helper.showAlertNetural(SplashActivity.this,"Error","Communication Error");
                 }
             });
         }catch (JSONException e){
@@ -159,7 +161,7 @@ public class SplashActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<ConfigBeanResponse> call, Throwable t) {
                             t.printStackTrace();
-                            Helper.showAlertNetural(SplashActivity.this,"Error",t.getMessage());
+                            Helper.showAlertNetural(SplashActivity.this,"Error","Communication Error");
 
                         }
                     });

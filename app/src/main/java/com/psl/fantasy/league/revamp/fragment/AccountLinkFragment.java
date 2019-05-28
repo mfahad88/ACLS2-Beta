@@ -222,13 +222,6 @@ public class AccountLinkFragment extends Fragment implements View.OnClickListene
                                                 //Helper.showAlertNetural(mView.getContext(),"Success",response.body().getMessage());
                                             }else{
                                                 Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-
-                                            }
-                                        }else{
-                                            try {
-                                                Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
                                             }
                                         }
                                     }
@@ -236,9 +229,9 @@ public class AccountLinkFragment extends Fragment implements View.OnClickListene
                                     @Override
                                     public void onFailure(Call<LinkingBean> call, Throwable t) {
                                         t.printStackTrace();
-                                        Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
                                         btn_ok.setEnabled(true);
                                         progressBar.setVisibility(View.GONE);
+                                        Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
                                     }
                                 });
                     }catch (Exception e){
@@ -303,9 +296,9 @@ public class AccountLinkFragment extends Fragment implements View.OnClickListene
                                         @Override
                                         public void onFailure(Call<OTPBean> call, Throwable t) {
                                             t.printStackTrace();
-                                            Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
                                             btn_submit.setEnabled(true);
                                             progressBar.setVisibility(View.GONE);
+                                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
                                         }
                                     });
                         }catch (Exception e){
@@ -354,21 +347,13 @@ public class AccountLinkFragment extends Fragment implements View.OnClickListene
                                             Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
                                             btn_other.setEnabled(true);
                                         }
-                                    }else{
-                                        try {
-                                            Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
-                                            btn_other.setEnabled(true);
-                                            btn_other.setEnabled(true);
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
                                     }
                                 }
 
                                 @Override
                                 public void onFailure(Call<BankInfo> call, Throwable t) {
                                     t.printStackTrace();
-                                    Helper.showAlertNetural(mView.getContext(),"Success",t.getMessage());
+                                    Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
                                 }
                             });
                     //edt_toa.setText("Rizwan Nasir");

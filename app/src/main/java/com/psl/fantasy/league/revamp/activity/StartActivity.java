@@ -14,10 +14,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.psl.fantasy.league.model.response.UserNotification.Datum;
+import com.psl.fantasy.league.model.response.UserNotification.GetUserNotificationBean;
 import com.psl.fantasy.league.revamp.Utils.DbHelper;
 import com.psl.fantasy.league.revamp.model.response.AppVersion.AppVersionBean;
 import com.psl.fantasy.league.revamp.BuildConfig;
@@ -35,6 +40,9 @@ import com.psl.fantasy.league.revamp.model.response.SelectUser.SelectUserBean;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,17 +52,23 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
     private TextView mTextMessage;
     private Fragment fragment;
     private ViewPager viewPage;
-    private TextView txt_bullet_1,txt_bullet_2,txt_bullet_3;
+    private TextView txt_bullet_1,txt_bullet_2,txt_bullet_3,txtNotifCount;
     private LinearLayout linear_pointer;
     SharedPreferences preferences;
     private int user_id;
     private DbHelper dbHelper;
+    private RelativeLayout relative_notification;
+    private ListView list_notification;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         preferences=getSharedPreferences(Helper.SHARED_PREF,MODE_PRIVATE);
         dbHelper=new DbHelper(this);
+        txtNotifCount=findViewById(R.id.txtNotifCount);
+        relative_notification=findViewById(R.id.relative_notification);
+        list_notification=findViewById(R.id.list_notification);
         txt_bullet_1 = findViewById(R.id.txt_bullet_1);
         txt_bullet_2 = findViewById(R.id.txt_bullet_2);
         txt_bullet_3 = findViewById(R.id.txt_bullet_3);
@@ -104,6 +118,32 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
         });
 
         navigation.setSelectedItemId(R.id.navigation_home);
+        if(Helper.getUserSession(preferences,Helper.MY_USER)!=null){
+            JSONObject object= null;
+            try {
+                object = new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
+                JSONObject nameValuePairs=object.getJSONObject("nameValuePairs");
+                user_id=nameValuePairs.getJSONObject("MyUser").getInt("user_id");
+                getNotification();
+                txtNotifCount.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(Integer.parseInt(txtNotifCount.getText().toString())>0){
+//                            relative_notification.setVisibility(View.VISIBLE);
+                            /*if(relative_notification.getVisibility()==View.VISIBLE){
+                                relative_notification.setVisibility(View.GONE);
+                            }else{
+                                relative_notification.setVisibility(View.VISIBLE);
+                            }*/
+
+                        }
+                    }
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     @Override
@@ -149,87 +189,42 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
         }
     }
 
-    /*public void checkAppVersion(){
-        if(Helper.getUserSession(preferences,Helper.MY_USER)!=null){
-            JSONObject object= null;
-            try {
-                object = new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
-                JSONObject nameValuePairs=object.getJSONObject("nameValuePairs");
-                user_id=nameValuePairs.getJSONObject("MyUser").getInt("user_id");
-                try {
-                    JSONObject jsonObject=new JSONObject();
-                    jsonObject.put("user_id",user_id);
-                    ApiClient.getInstance().SelectUser(Helper.encrypt(jsonObject.toString()))
-                            .enqueue(new Callback<SelectUserBean>() {
-                                @Override
-                                public void onResponse(Call<SelectUserBean> call, Response<SelectUserBean> response) {
-                                    if(response.isSuccessful()){
-                                        if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-
-                                            if(Float.parseFloat(response.body().getData().getMyUser().getApp_version())>Float.parseFloat(BuildConfig.VERSION_NAME)){
-                                                if(response.body().getData().getMyUser().getSts().intValue()==0){
-                                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
-                                                    browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                    startActivity(browserIntent);
-                                                    finish();
-                                                    System.exit(0);
-
-                                                }
-                                            }else if(response.body().getData().getMyUser().getSts().intValue()==0){
-                                                if(Float.parseFloat(response.body().getData().getMyUser().getApp_version())==Float.parseFloat(BuildConfig.VERSION_NAME)){
-
-                                                    try {
-                                                        JSONObject jsonObject=new JSONObject();
-                                                        jsonObject.put("user_id",user_id);
-                                                        jsonObject.put("isUpdated",1);
-
-                                                        ApiClient.getInstance().updateAppVersion(Helper.encrypt(jsonObject.toString()))
-                                                                .enqueue(new Callback<AppVersionBean>() {
-                                                                    @Override
-                                                                    public void onResponse(Call<AppVersionBean> call, Response<AppVersionBean> response) {
-                                                                        if(response.isSuccessful()){
-                                                                            if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-
-                                                                            }else{
-                                                                                Helper.showAlertNetural(getApplicationContext(),"Error",response.body().getMessage());
-                                                                            }
-                                                                        }
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onFailure(Call<AppVersionBean> call, Throwable t) {
-                                                                        t.printStackTrace();
-                                                                        Helper.showAlertNetural(getApplicationContext(),"Error",t.getMessage());
-                                                                    }
-                                                                });
-                                                    } catch (JSONException e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                }
+    public void getNotification(){
+        try{
+            JSONObject object=new JSONObject();
+            object.put("user_id",user_id);
+            ApiClient.getInstance().getUserNotif(Helper.encrypt(object.toString()))
+                    .enqueue(new Callback<GetUserNotificationBean>() {
+                        @Override
+                        public void onResponse(Call<GetUserNotificationBean> call, Response<GetUserNotificationBean> response) {
+                            if(response.isSuccessful()){
+                                if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+                                    ArrayList<String> list_subject=new ArrayList<String>();
+                                    txtNotifCount.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            txtNotifCount.setText(String.valueOf(response.body().getData().size()));
+                                            for(Datum datum:response.body().getData()){
+                                                list_subject.add(datum.getSubj());
                                             }
-
-                                        }else{
-                                            Helper.showAlertNetural(getApplicationContext(),"Error",response.body().getMessage());
+                                            ArrayAdapter<String> adapter=new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,list_subject);
+                                            list_notification.setAdapter(adapter);
                                         }
-                                    }
+                                    });
                                 }
+                            }
+                        }
 
-                                @Override
-                                public void onFailure(Call<SelectUserBean> call, Throwable t) {
-                                    t.printStackTrace();
-                                    Helper.showAlertNetural(getApplicationContext(),"Error",t.getMessage());
-                                }
-                            });
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
+                        @Override
+                        public void onFailure(Call<GetUserNotificationBean> call, Throwable t) {
+                            t.printStackTrace();
+                            Helper.showAlertNetural(getApplicationContext(),"Error","Communication Error");
+                        }
+                    });
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
-    }*/
+    }
 
     @Override
     public void onBackPressed() {

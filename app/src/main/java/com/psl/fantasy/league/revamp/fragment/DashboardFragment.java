@@ -67,6 +67,7 @@ public class DashboardFragment extends Fragment {
         super.onResume();
         if(fixtureAdapter!=null) {
             fixtureAdapter.clear();
+            progressBar.setVisibility(View.VISIBLE);
             populateMatches();
             fixtureAdapter.notifyDataSetChanged();
         }
@@ -176,7 +177,7 @@ public class DashboardFragment extends Fragment {
                         @Override
                         public void onFailure(Call<MatchesResponse> call, Throwable t) {
                             t.fillInStackTrace();
-                            Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
+                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
                         }
                     });
 
@@ -186,86 +187,5 @@ public class DashboardFragment extends Fragment {
         }
     }
 
-    public void checkAppVersion(){
-        if(Helper.getUserSession(preferences,Helper.MY_USER)!=null){
-            JSONObject object= null;
-            try {
-                object = new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
-                JSONObject nameValuePairs=object.getJSONObject("nameValuePairs");
-                user_id=nameValuePairs.getJSONObject("MyUser").getInt("user_id");
-                try {
-                    JSONObject jsonObject=new JSONObject();
-                    jsonObject.put("user_id",user_id);
-                    ApiClient.getInstance().SelectUser(Helper.encrypt(jsonObject.toString()))
-                            .enqueue(new Callback<SelectUserBean>() {
-                                @Override
-                                public void onResponse(Call<SelectUserBean> call, Response<SelectUserBean> response) {
-                                    if(response.isSuccessful()){
-                                        if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-
-                                            if(Float.parseFloat(response.body().getData().getMyUser().getApp_version())>Float.parseFloat(BuildConfig.VERSION_NAME)){
-                                                if(response.body().getData().getMyUser().getSts().intValue()==0){
-                                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
-                                                    browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                    startActivity(browserIntent);
-                                                    getActivity().finish();
-                                                    System.exit(0);
-
-                                                }
-                                            }else if(response.body().getData().getMyUser().getSts().intValue()==0){
-                                                if(Float.parseFloat(response.body().getData().getMyUser().getApp_version())==Float.parseFloat(BuildConfig.VERSION_NAME)){
-
-                                                    try {
-                                                        JSONObject jsonObject=new JSONObject();
-                                                        jsonObject.put("user_id",user_id);
-                                                        jsonObject.put("sts",1);
-
-                                                        ApiClient.getInstance().updateAppVersion(Helper.encrypt(jsonObject.toString()))
-                                                                .enqueue(new Callback<AppVersionBean>() {
-                                                                    @Override
-                                                                    public void onResponse(Call<AppVersionBean> call, Response<AppVersionBean> response) {
-                                                                        if(response.isSuccessful()){
-                                                                            if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-
-                                                                            }else{
-                                                                                Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                                                                            }
-                                                                        }
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onFailure(Call<AppVersionBean> call, Throwable t) {
-                                                                        t.printStackTrace();
-                                                                        Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
-                                                                    }
-                                                                });
-                                                    } catch (JSONException e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                }
-                                            }
-
-                                        }else{
-                                            Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<SelectUserBean> call, Throwable t) {
-                                    t.printStackTrace();
-                                    Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
-                                }
-                            });
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-    }
 
 }

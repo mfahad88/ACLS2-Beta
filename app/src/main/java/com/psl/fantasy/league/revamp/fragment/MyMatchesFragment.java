@@ -131,7 +131,7 @@ public class MyMatchesFragment extends Fragment {
                             t.printStackTrace();
                             progressBar.setVisibility(View.GONE);
                             txt_error.setVisibility(View.VISIBLE);
-                            txt_error.setText(t.getMessage());
+                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
                         }
                     });
                 } catch (JSONException e) {

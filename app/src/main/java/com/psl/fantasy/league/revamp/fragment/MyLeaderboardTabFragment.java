@@ -74,19 +74,13 @@ public class MyLeaderboardTabFragment extends Fragment {
                                 } else {
                                     Helper.showAlertNetural(mView.getContext(), "Error", response.body().getMessage());
                                 }
-                            }else{
-                                try {
-                                    Helper.showAlertNetural(mView.getContext(), "Error", response.errorBody().string());
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
                             }
                         }
 
                         @Override
                         public void onFailure(Call<MyLeaderboardTabResponse> call, Throwable t) {
                             t.printStackTrace();
-                            Helper.showAlertNetural(mView.getContext(), "Error", t.getMessage());
+                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
                         }
                     });
         }catch (JSONException e){

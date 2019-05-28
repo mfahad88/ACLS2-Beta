@@ -4,44 +4,52 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#e2e2e2"
+    android:background="#66e2e2e2"
     >
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:id="@+id/linear_sign_in"
         android:visibility="visible"
-        android:layout_centerInParent="true">
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true">
 
         <android.support.v7.widget.CardView
-            android:layout_width="300dp"
-            android:layout_height="300dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            app:cardCornerRadius="5dp"
+            android:layout_margin="10dp"
             app:cardElevation="5dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal">
 
-                <com.facebook.login.widget.LoginButton
+                <Button
                     android:id="@+id/login_button"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_centerHorizontal="true"/>
+                    android:layout_height="40dp"
+                    android:padding="5dp"
+                    android:background="#FF3C5A99"
+                    android:drawableStart="@drawable/transparent_facebook"
+                    android:text="Facebook"
+                    android:textColor="@android:color/white"
+                    android:layout_marginTop="13dp"
+                    android:layout_toLeftOf="@id/txt_OR"
+                    android:layout_marginLeft="5dp"
+                    android:drawableLeft="@drawable/transparent_facebook" />
 
                 <com.google.android.gms.common.SignInButton
                     android:id="@+id/sign_in_button"
                     android:layout_marginTop="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_alignLeft="@id/login_button"
-                    android:layout_alignRight="@id/login_button"
-                    android:layout_below="@id/login_button" />
+                   android:layout_toRightOf="@id/txt_OR" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -52,30 +60,56 @@
                     android:layout_marginTop="10dp"
                     android:layout_centerHorizontal="true"/>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mobile No."
+                    android:layout_alignLeft="@id/login_button"
+                    android:textSize="10sp"
+                    android:layout_below="@id/txt_OR"
+                    android:id="@+id/txt_mobile"
+                    android:layout_marginTop="10dp"
+                    />
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/txt_OR"
+                    android:layout_below="@id/txt_mobile"
                     android:hint="Mobile No."
                     android:singleLine="true"
                     android:maxLength="11"
+                    android:layout_alignLeft="@id/login_button"
+                    android:layout_alignRight="@id/sign_in_button"
                     android:textSize="12sp"
                     android:inputType="number"
                     android:digits="@string/digits"
                     android:id="@+id/edt_mobile_no"
                     android:padding="10dp"
+                    android:layout_marginTop="5dp"
                     android:longClickable="false"
                     />
 
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Password"
+                    android:layout_marginTop="10dp"
+                    android:layout_alignLeft="@id/login_button"
+                    android:textSize="10sp"
+                    android:layout_below="@id/edt_mobile_no"
+                    android:id="@+id/txt_pass"
+                    />
 
 
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/edt_mobile_no"
+                    android:layout_below="@id/txt_pass"
                     android:hint="Password"
+                    android:layout_marginTop="5dp"
                     android:maxLength="15"
+                    android:layout_alignLeft="@id/login_button"
+                    android:layout_alignRight="@id/sign_in_button"
                     android:singleLine="true"
                     android:textSize="12sp"
                     android:id="@+id/edt_password"
@@ -89,14 +123,29 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/edt_password"
                     android:layout_centerHorizontal="true"
-                    android:text="Next"
+                    android:text="Log in"
+                    android:layout_alignLeft="@id/edt_mobile_no"
+                    android:layout_alignRight="@id/edt_mobile_no"
                     android:id="@+id/btn_next"
                     android:singleLine="true"
-                    android:textSize="12sp"
-                    android:layout_marginTop="20dp"
+                    android:textSize="10sp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="20dp"
                     android:background="@drawable/button_square"
                     android:textColor="@android:color/white"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Forget Password?"
+                    android:textStyle="bold"
+                    android:id="@+id/txt_forget"
+                    android:layout_alignLeft="@id/edt_mobile_no"
+                    android:layout_alignRight="@id/edt_mobile_no"
+                    android:gravity="center_horizontal"
+                    android:layout_below="@id/btn_next"
+                    android:textColor="#3759a5"
+                    android:layout_marginBottom="20dp"/>
             </RelativeLayout>
 
 
@@ -109,7 +158,7 @@
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal"
             android:visibility="visible"
-            android:padding="15dp">
+            android:padding="2dp">
 
             <TextView
                 android:layout_width="100dp"
@@ -140,125 +189,152 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:layout_centerInParent="true"
+        android:layout_height="wrap_content"
         android:visibility="gone"
+        android:layout_marginTop="10dp"
         android:id="@+id/card_view_sign_up"
         app:cardElevation="5dp"
         app:cardCornerRadius="7dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp">
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
 
         <RelativeLayout
+            android:layout_width="330dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:id="@+id/relative_sign_up"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mobile No."
+                android:id="@+id/txt_mobile_no"
+                android:textSize="10sp"/>
+
+            <EditText
+                android:id="@+id/edt_mobile_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txt_mobile_no"
+                android:background="@android:color/white"
+                android:digits="@string/digits"
+                android:gravity="center_vertical"
+                android:inputType="number"
+                android:paddingLeft="5dp" />
+
+            <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/relative_sign_up">
+            android:text="Password"
 
-            <LinearLayout
+            android:layout_below="@id/edt_mobile_number"
+            android:id="@+id/txt_password"
+            android:textSize="10sp"/>
+
+            <EditText
+                android:id="@+id/edt_pass_word"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+
+                android:layout_below="@id/txt_password"
+                android:background="@android:color/white"
+                android:inputType="textPassword"
+                android:paddingLeft="5dp" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="15dp"
-                android:id="@+id/linear_mobile_no">
+                android:text="Confirm Password"
+                android:layout_below="@id/edt_pass_word"
+                android:id="@+id/txt_password_confirm"
+                android:textSize="10sp"/>
+
+            <EditText
+                android:id="@+id/edt_confirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@id/txt_password_confirm"
+                android:background="@android:color/white"
+                android:inputType="textPassword"
+                android:paddingLeft="5dp" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Referral Code"
+                android:layout_below="@id/edt_confirm_password"
+                android:id="@+id/txt_referral_code"
+                android:textSize="10sp"/>
+
+            <EditText
+                android:id="@+id/edt_referral"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@id/txt_referral_code"
+                android:background="@android:color/white"
+                android:inputType="text"
+                android:paddingLeft="5dp" />
+
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edt_referral">
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/checkbox_terms_condition"
+                    android:text="By registering, I agree to T &amp; C's"/>
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/checkbox_terms_condition"
+                    android:id="@+id/checkbox_contact"
+                    android:text="I'm happy for the ICC to contact me"/>
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/checkbox_contact"
+                    android:id="@+id/checkbox_partner"
+                    android:text="I'm happy for the ICC's partners to contact me"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Register"
+                    android:visibility="visible"
+                    android:layout_alignLeft="@id/checkbox_partner"
+                    android:layout_alignRight="@id/checkbox_partner"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/drawable_btn_square"
+                    android:id="@+id/btn_sign_up"
+                    android:layout_below="@id/checkbox_partner"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="15dp"/>
+
+
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Mobile Number" />
+                    android:layout_below="@id/btn_sign_up"
+                    android:textColor="#3759a5"
+                    android:layout_marginTop="7dp"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/txt_terms_conditions"
+                    android:textStyle="bold"
+                    android:text="Terms and Condition"/>
+            </RelativeLayout>
 
-                <EditText
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:maxLength="11"
-                    android:longClickable="false"
-                    android:hint="Mobile No."
-                    android:inputType="number"
-                    android:id="@+id/edt_mobile_number"
-                    android:textSize="15sp"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:id="@+id/linear_password"
-                android:padding="15dp"
-                android:layout_below="@id/linear_mobile_no">
-
-                <TextView
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:text="Password" />
-                <EditText
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:hint="Password"
-                    android:inputType="textPassword"
-                    android:id="@+id/edt_pass_word"
-                    android:longClickable="false"
-                    android:textSize="15sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:id="@+id/linear_confirm_password"
-                android:padding="15dp"
-                android:layout_below="@id/linear_password">
-
-                <TextView
-                    android:layout_width="100dp"
-                    android:layout_height="45dp"
-                    android:text="Confirm Password" />
-                <EditText
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:hint="Confirm Password"
-                    android:inputType="textPassword"
-                    android:id="@+id/edt_confirm_password"
-                    android:longClickable="false"
-                    android:textSize="15sp" />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/linear_confirm_password"
-                android:padding="15dp"
-                android:id="@+id/linear_telco">
-
-                <TextView
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:text="Referral (Optional)"/>
-
-                <EditText
-                    android:id="@+id/edt_referral"
-                    android:layout_width="200dp"
-                    android:layout_height="30dp"
-                    android:longClickable="false"
-                    android:layout_gravity="center_horizontal"
-                    android:inputType="text"
-                    android:padding="5dp" />
-
-
-
-            </LinearLayout>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Create User"
-                android:padding="10dp"
-                android:textColor="@android:color/white"
-                android:background="@drawable/drawable_btn_square"
-                android:id="@+id/btn_sign_up"
-                android:layout_below="@id/linear_telco"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"/>
 
         </RelativeLayout>
 
@@ -277,6 +353,9 @@
                 android:hint="Enter OTP"
                 android:id="@+id/edt_otp"/>
 
+
+
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -287,7 +366,12 @@
                 android:text="Submit"
                 android:id="@+id/btn_submit"
                 android:textColor="@android:color/white"/>
+
+
+
         </RelativeLayout>
+
+
 
     </android.support.v7.widget.CardView>
 

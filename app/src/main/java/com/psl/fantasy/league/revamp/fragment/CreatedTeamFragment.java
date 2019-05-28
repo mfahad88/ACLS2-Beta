@@ -67,18 +67,13 @@ public class CreatedTeamFragment extends Fragment {
                                     PlayerAdapter adapter=new PlayerAdapter(mView.getContext(),R.layout.player_adapter,list);
                                     list_player.setAdapter(adapter);
                                 }
-                            }else{
-                                try {
-                                    Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
                             }
                         }
 
                         @Override
                         public void onFailure(Call<PlayerInfoResponse> call, Throwable t) {
-
+                            t.printStackTrace();
+                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
                         }
                     });
         }catch (JSONException e){

@@ -104,7 +104,7 @@ public class ContestDetailFragment extends Fragment {
                         @Override
                         public void onFailure(Call<ContestResponse> call, Throwable t) {
                             t.printStackTrace();
-                            Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
+                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
                             progressBar.setVisibility(View.GONE);
                         }
                     });

@@ -72,13 +72,7 @@ public class JoinedContestFragment extends Fragment {
                             list_matches.setAdapter(adapter);
                         }
                     }else {
-                        Toast.makeText(mView.getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }else{
-                    try {
-                        Toast.makeText(mView.getContext(), response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
                     }
                 }
             }
@@ -86,7 +80,8 @@ public class JoinedContestFragment extends Fragment {
             @Override
             public void onFailure(Call<JoinedContestResponse> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(mView.getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
+                Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
             }
         });
         return mView;

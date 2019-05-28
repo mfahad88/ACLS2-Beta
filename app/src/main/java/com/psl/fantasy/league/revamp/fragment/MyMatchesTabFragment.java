@@ -73,13 +73,7 @@ public class MyMatchesTabFragment extends Fragment {
                                         MyMatchesTabAdapter adapter = new MyMatchesTabAdapter(mView.getContext(),R.layout.my_matches_tab_adapter,list);
                                         list_my_teams.setAdapter(adapter);
                                     }else {
-                                        Helper.showAlertNetural(mView.getContext(),"Successs",response.body().getMessage());
-                                    }
-                                }else{
-                                    try {
-                                        Helper.showAlertNetural(mView.getContext(),"Successs",response.errorBody().string());
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
+                                        Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
                                     }
                                 }
                         }
@@ -88,7 +82,7 @@ public class MyMatchesTabFragment extends Fragment {
                         public void onFailure(Call<MyMatchesTabResponse> call, Throwable t) {
                             t.printStackTrace();
                             progressBar.setVisibility(View.GONE);
-                            Helper.showAlertNetural(mView.getContext(),"Successs",t.getMessage());
+                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
                         }
                     });
         }catch (JSONException e){

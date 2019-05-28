@@ -50,6 +50,8 @@ dependencies {
 //    implementation 'com.google.android.gms:play-services:12.0.1'
     implementation 'com.karumi:dexter:5.0.0'
     implementation 'com.google.firebase:firebase-messaging:17.0.0'
+    implementation 'com.google.firebase:firebase-auth:17.0.0'
+
 }
 apply plugin: 'com.google.gms.google-services'
 com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true

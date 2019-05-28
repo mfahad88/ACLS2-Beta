@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,23 +79,30 @@ public class MyDetailFragment extends Fragment {
                         @Override
                         public void onResponse(Call<SelectUserBean> call, Response<SelectUserBean> response) {
                             if(response.isSuccessful()){
-                                if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+                               try{
+                                   if(response.body().getResponseCode().equalsIgnoreCase("1001")){
 
-                                    String shareId=response.body().getData().getMyUser().getMobileNo().substring(4,7).trim()+""+user_id;
-                                    txt_coins.setText(response.body().getData().getMyUsermsc().getCoinsBalance().toString());
-                                    txt_points.setText(response.body().getData().getMyUsermsc().getPoint_balance().toString());
-                                    txt_mobile_no.setText(response.body().getData().getMyUser().getMobileNo());
-                                    txt_referral_code.setText(shareId);
-                                }else{
-                                    Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                                }
+                                       String shareId=response.body().getData().getMyUser().getMobileNo().substring(4,7).trim()+""+user_id;
+                                       if(!TextUtils.isEmpty(response.body().getData().getMyUsermsc().getCoinsBalance().toString())) {
+                                           txt_coins.setText(response.body().getData().getMyUsermsc().getCoinsBalance().toString());
+                                       }if(!TextUtils.isEmpty(response.body().getData().getMyUsermsc().getPoint_balance().toString())) {
+                                           txt_points.setText(response.body().getData().getMyUsermsc().getPoint_balance().toString());
+                                       }
+                                       txt_mobile_no.setText(response.body().getData().getMyUser().getMobileNo());
+                                       txt_referral_code.setText(shareId);
+                                   }else{
+                                       Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                   }
+                               }catch (Exception e){
+                                   e.printStackTrace();
+                               }
                             }
                         }
 
                         @Override
                         public void onFailure(Call<SelectUserBean> call, Throwable t) {
                             t.printStackTrace();
-                            Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
+                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
                         }
                     });
         }catch (Exception e){

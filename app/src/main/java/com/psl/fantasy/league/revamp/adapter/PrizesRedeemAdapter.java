@@ -87,7 +87,7 @@ public class PrizesRedeemAdapter extends ArrayAdapter {
                                 @Override
                                 public void onFailure(Call<TeamWiseRedeem> call, Throwable t) {
                                     t.printStackTrace();
-                                    Helper.showAlertNetural(context,"Error",t.getMessage());
+                                    Helper.showAlertNetural(context,"Error","Communication Error");
                                 }
                             });
                 }catch (Exception e){

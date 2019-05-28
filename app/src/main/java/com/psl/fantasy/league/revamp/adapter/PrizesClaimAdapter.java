@@ -71,19 +71,13 @@ public class PrizesClaimAdapter extends ArrayAdapter<PrizesBean> {
                                             }else {
                                                 Helper.showAlertNetural(context,"Error",response.body().getMessage());
                                             }
-                                        }else{
-                                            try {
-                                                Helper.showAlertNetural(context,"Error",response.errorBody().string());
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
                                         }
                                     }
 
                                     @Override
                                     public void onFailure(Call<PrizeClaimResponse> call, Throwable t) {
                                         t.printStackTrace();
-                                        Helper.showAlertNetural(context,"Error",t.getMessage());
+                                        Helper.showAlertNetural(context,"Error","Communication Error");
                                     }
                                 });
                     }catch (Exception e){

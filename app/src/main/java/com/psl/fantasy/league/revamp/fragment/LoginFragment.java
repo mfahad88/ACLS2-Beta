@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
@@ -14,21 +15,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.psl.fantasy.league.revamp.BuildConfig;
 import com.psl.fantasy.league.revamp.R;
 import com.psl.fantasy.league.revamp.Utils.Helper;
 import com.psl.fantasy.league.revamp.client.ApiClient;
+import com.psl.fantasy.league.revamp.dialog.TermsConditionDialog;
 import com.psl.fantasy.league.revamp.interfaces.FragmentToActivity;
 import com.psl.fantasy.league.revamp.model.response.Insert.InsertResponse;
 import com.psl.fantasy.league.revamp.model.response.Login.LoginResponse;
@@ -64,7 +72,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private CallbackManager callbackManager;
     private FragmentToActivity mCallback;
     private String screen;
+    private StringBuilder user_consent;
     ProgressBar progressBar;
+    TextView txt_terms_conditions;
+    private CheckBox checkbox_terms_condition,checkbox_contact,checkbox_partner;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -86,6 +97,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mView=inflater.inflate(R.layout.fragment_login, container, false);
+        user_consent=new StringBuilder();
         init();
         mCallback.communicate("disable");
         if(getArguments()!=null){
@@ -94,8 +106,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             screen=getArguments().getString("screen");
             contestAmt=getArguments().getInt("contestAmt");
         }
-        loginButton = mView.findViewById(R.id.login_button);
-        loginButton.setReadPermissions(Arrays.asList(EMAIL));
+//        loginButton = mView.findViewById(R.id.login_button);
+
+//        loginButton.setReadPermissions(Arrays.asList(EMAIL));
         btn_next.setOnClickListener(this);
         btn_sign_up.setOnClickListener(this);
         callbackManager = CallbackManager.Factory.create();
@@ -106,11 +119,20 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 card_view_sign_up.setVisibility(View.VISIBLE);
             }
         });
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        txt_terms_conditions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment dialogFragment=new TermsConditionDialog();
+                dialogFragment.show(getFragmentManager(),"Terms");
+            }
+        });
+     /*   loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                boolean loggedIn = AccessToken.getCurrentAccessToken() == null;
+               *//* boolean loggedIn = AccessToken.getCurrentAccessToken() == null;
                 Log.d("API123", loggedIn + " ??");
+                Log.e("Facebook",loginResult.toString());*//*
+                getUserProfile(loginResult.getAccessToken());
             }
 
             @Override
@@ -123,12 +145,43 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 error.printStackTrace();
                 Helper.showAlertNetural(mView.getContext(),"Error",error.getMessage());
             }
-        });
+        });*/
         return mView;
     }
 
-    private void init(){
 
+    private void getUserProfile(AccessToken currentAccessToken) {
+        GraphRequest request = GraphRequest.newMeRequest(
+                currentAccessToken, new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        Log.d("TAG", object.toString());
+                        try {
+                            String first_name = object.getString("first_name");
+                            String last_name = object.getString("last_name");
+                            String email = object.getString("email");
+                            String id = object.getString("id");
+                            String image_url = "https://graph.facebook.com/" + id + "/picture?type=normal";
+
+                            Log.e("Facebook","First Name: " + first_name + "\nLast Name: " + last_name);
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "first_name,last_name,email,id");
+        request.setParameters(parameters);
+        request.executeAsync();
+
+    }
+
+    private void init(){
+        LoginManager.getInstance().logOut();
         btn_next=mView.findViewById(R.id.btn_next);
         edt_mobile_no=mView.findViewById(R.id.edt_mobile_no);
         edt_password=mView.findViewById(R.id.edt_password);
@@ -144,6 +197,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         progressBar=mView.findViewById(R.id.progressBar);
         card_view_sign_up=mView.findViewById(R.id.card_view_sign_up);
         edt_confirm_password=mView.findViewById(R.id.edt_confirm_password);
+        checkbox_terms_condition=mView.findViewById(R.id.checkbox_terms_condition);
+        checkbox_partner=mView.findViewById(R.id.checkbox_partner);
+        checkbox_contact=mView.findViewById(R.id.checkbox_contact);
+        txt_terms_conditions=mView.findViewById(R.id.txt_terms_conditions);
     }
 
 
@@ -156,8 +213,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         }else{
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }*/
-        callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -170,6 +227,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                    JSONObject obj=new JSONObject();
                    obj.put("mobile_no",mobileNo);
                    obj.put("pws",password);
+                   obj.put("guid",FirebaseInstanceId.getInstance().getToken());
                    btn_next.setEnabled(false);
                    progressBar.setVisibility(View.VISIBLE);
                    login(obj);
@@ -183,8 +241,15 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 String password=edt_pass_word.getText().toString();
                 String confirmPassword=edt_confirm_password.getText().toString();
                 String referral=edt_referral.getText().toString();
-                if((!TextUtils.isEmpty(mobileNo)) && (!TextUtils.isEmpty(password)) && (!TextUtils.isEmpty(confirmPassword))){
+                if((!TextUtils.isEmpty(mobileNo)) && (!TextUtils.isEmpty(password)) && (!TextUtils.isEmpty(confirmPassword)) && checkbox_terms_condition.isChecked()){
                    if(password.equalsIgnoreCase(confirmPassword)){
+                       if(checkbox_terms_condition.isChecked()){
+                           user_consent.append(checkbox_terms_condition.getText());
+                       }if(checkbox_contact.isChecked()){
+                           user_consent.append(";"+checkbox_contact.getText());
+                       }if(checkbox_partner.isChecked()){
+                           user_consent.append(";"+checkbox_partner.getText());
+                       }
                        progressBar.setVisibility(View.VISIBLE);
                        JSONObject object=new JSONObject();
                        object.put("pws",password);
@@ -195,6 +260,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                        object.put("source",signupType);
                        object.put("sts",1);
                        object.put("is_updated","0");
+                       object.put("user_consent",user_consent);
                        object.put("method_Name",this.getClass().getSimpleName()+".btn_sign_up.onClick");
                        btn_sign_up.setEnabled(false);
                        ApiClient.getInstance().insertUser(Helper.encrypt(object.toString()))
@@ -238,8 +304,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                                    @Override
                                    public void onFailure(Call<InsertResponse> call, Throwable t) {
                                        t.printStackTrace();
-                                       Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
                                        btn_sign_up.setEnabled(true);
+                                       Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
                                    }
                                });
                    }else{
@@ -342,7 +408,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onFailure(Call<LoginResponse> call, Throwable t) {
                         t.printStackTrace();
-                        Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
+                        Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
                         btn_next.setEnabled(true);
                         progressBar.setVisibility(View.GONE);
                     }

@@ -210,9 +210,9 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                         @Override
                         public void onFailure(Call<SimPaisaOTPResponse> call, Throwable t) {
                             t.printStackTrace();
-                            Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
                             btn_submit.setEnabled(true);
                             progressBar.setVisibility(View.GONE);
+                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
                         }
                     });
         }catch (Exception e){
@@ -241,14 +241,6 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                                     Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
                                     btn_pay.setEnabled(true);
                                 }
-                            }else{
-                                try {
-                                    Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
-                                    progressBar.setVisibility(View.GONE);
-                                    btn_pay.setEnabled(true);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
                             }
                         }
 
@@ -256,7 +248,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                         public void onFailure(Call<SimPaisaResponse> call, Throwable t) {
                             t.printStackTrace();
                             btn_pay.setEnabled(true);
-                            Helper.showAlertNetural(mView.getContext(),"Error",t.getMessage());
+                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
                             progressBar.setVisibility(View.GONE);
                         }
                     });
@@ -328,6 +320,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                        public void onFailure(Call<JoinContenstResponse> call, Throwable t) {
                            t.printStackTrace();
                            progressBar.setVisibility(View.GONE);
+                           Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
 
                        }
                    });

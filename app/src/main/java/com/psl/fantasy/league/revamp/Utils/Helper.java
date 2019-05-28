@@ -15,6 +15,7 @@ import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -431,49 +432,51 @@ public class Helper {
                                 public void onResponse(Call<SelectUserBean> call, Response<SelectUserBean> response) {
                                     if(response.isSuccessful()){
                                         if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-                                            if(response.body().getData().getMyUser().getIsUpdated().equalsIgnoreCase("0")){
-                                                if(Float.parseFloat(dbHelper.getConfig())>Float.parseFloat(BuildConfig.VERSION_NAME)) {
-                                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
-                                                    browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                    activity.startActivity(browserIntent);
-                                                    activity.finish();
-                                                    System.exit(0);
-                                                }else if(Float.parseFloat(dbHelper.getConfig())<Float.parseFloat(BuildConfig.VERSION_NAME)){
-                                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
-                                                    browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                    activity.startActivity(browserIntent);
-                                                    activity.finish();
-                                                    System.exit(0);
-                                                }else{
-                                                    try {
-                                                        JSONObject jsonObject=new JSONObject();
-                                                        jsonObject.put("user_id",user_id);
-                                                        jsonObject.put("isUpdated",1);
+                                           if(!TextUtils.isEmpty(response.body().getData().getMyUser().getIsUpdated())){
+                                               if(response.body().getData().getMyUser().getIsUpdated().equalsIgnoreCase("0")){
+                                                   if(Float.parseFloat(dbHelper.getConfig())>Float.parseFloat(BuildConfig.VERSION_NAME)) {
+                                                       Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
+                                                       browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                       activity.startActivity(browserIntent);
+                                                       activity.finish();
+                                                       System.exit(0);
+                                                   }else if(Float.parseFloat(dbHelper.getConfig())<Float.parseFloat(BuildConfig.VERSION_NAME)){
+                                                       Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
+                                                       browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                       activity.startActivity(browserIntent);
+                                                       activity.finish();
+                                                       System.exit(0);
+                                                   }else{
+                                                       try {
+                                                           JSONObject jsonObject=new JSONObject();
+                                                           jsonObject.put("user_id",user_id);
+                                                           jsonObject.put("isUpdated",1);
 
-                                                        ApiClient.getInstance().updateAppVersion(Helper.encrypt(jsonObject.toString()))
-                                                                .enqueue(new Callback<AppVersionBean>() {
-                                                                    @Override
-                                                                    public void onResponse(Call<AppVersionBean> call, Response<AppVersionBean> response) {
-                                                                        if(response.isSuccessful()){
-                                                                            if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+                                                           ApiClient.getInstance().updateAppVersion(Helper.encrypt(jsonObject.toString()))
+                                                                   .enqueue(new Callback<AppVersionBean>() {
+                                                                       @Override
+                                                                       public void onResponse(Call<AppVersionBean> call, Response<AppVersionBean> response) {
+                                                                           if(response.isSuccessful()){
+                                                                               if(response.body().getResponseCode().equalsIgnoreCase("1001")){
 
-                                                                            }else{
-                                                                                Helper.showAlertNetural(activity.getApplicationContext(),"Error",response.body().getMessage());
-                                                                            }
-                                                                        }
-                                                                    }
+                                                                               }else{
+                                                                                   Helper.showAlertNetural(activity.getApplicationContext(),"Error",response.body().getMessage());
+                                                                               }
+                                                                           }
+                                                                       }
 
-                                                                    @Override
-                                                                    public void onFailure(Call<AppVersionBean> call, Throwable t) {
-                                                                        t.printStackTrace();
-                                                                        Helper.showAlertNetural(activity.getApplicationContext(),"Error",t.getMessage());
-                                                                    }
-                                                                });
-                                                    } catch (JSONException e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                }
-                                            }
+                                                                       @Override
+                                                                       public void onFailure(Call<AppVersionBean> call, Throwable t) {
+                                                                           t.printStackTrace();
+                                                                           Helper.showAlertNetural(activity.getApplicationContext(),"Error","Communication Error");
+                                                                       }
+                                                                   });
+                                                       } catch (JSONException e) {
+                                                           e.printStackTrace();
+                                                       }
+                                                   }
+                                               }
+                                           }
 
                                         }else{
                                             Helper.showAlertNetural(activity.getApplicationContext(),"Error",response.body().getMessage());
@@ -484,13 +487,13 @@ public class Helper {
                                 @Override
                                 public void onFailure(Call<SelectUserBean> call, Throwable t) {
                                     t.printStackTrace();
-                                    Helper.showAlertNetural(activity.getApplicationContext(),"Error",t.getMessage());
+                                    Helper.showAlertNetural(activity.getApplicationContext(),"Error","Communication Error");
                                 }
                             });
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 

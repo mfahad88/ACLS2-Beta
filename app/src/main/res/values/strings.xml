@@ -8,8 +8,8 @@
     <string name="title_my_matches">My matches</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <string name="facebook_app_id">732428703807316</string>
-    <string name="fb_login_protocol_scheme">fb732428703807316</string>
+    <string name="facebook_app_id">2212436592395338</string>
+    <string name="fb_login_protocol_scheme">fb2212436592395338</string>
     <string name="digits">0123456789</string>
     <string name="alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz</string>
     <string name="ga_trackingId" translatable="false">UA-138058830-1</string>

@@ -71,11 +71,12 @@
                 android:background="@drawable/bell_notification"
                 android:gravity="center"
                 android:orientation="horizontal">
-
             </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
+
+
 
 
     <LinearLayout
@@ -171,6 +172,22 @@
     </RelativeLayout>
 
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_below="@id/linear_pointer"
+        android:id="@+id/relative_notification"
+        android:visibility="gone"
+        android:background="@android:color/white"
+        android:layout_alignParentRight="true">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/list_notification"/>
+
+    </RelativeLayout>
 
     <FrameLayout
         android:id="@+id/main_content"
