@@ -204,35 +204,39 @@ public class CaptainFragment extends Fragment {
                     .enqueue(new Callback<JoinContenstResponse>() {
                         @Override
                         public void onResponse(Call<JoinContenstResponse> call, Response<JoinContenstResponse> response) {
-                            if(response.isSuccessful()){
-                                pd.dismiss();
-                                if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
-                                    dbHelper.deleteMyTeam();
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Helper.showAlertNetural(mView.getContext(), "Success", response.body().getMessage());
-                                        }
-                                    },1000);
-                                    Fragment fragment=new DashboardFragment();
-                                    FragmentTransaction ft=getFragmentManager().beginTransaction();
-                                    ft.replace(R.id.main_content,fragment);
-                                    ft.commit();
+                            try{
+                                if(response.isSuccessful()){
+                                    pd.dismiss();
+                                    if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
+                                        dbHelper.deleteMyTeam();
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Helper.showAlertNetural(mView.getContext(), "Success", response.body().getMessage());
+                                            }
+                                        },1000);
+                                        Fragment fragment=new DashboardFragment();
+                                        FragmentTransaction ft=getFragmentManager().beginTransaction();
+                                        ft.replace(R.id.main_content,fragment);
+                                        ft.commit();
+
+                                    }else{
+                                        Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                        Log.e("Pay",response.body().getMessage());
+                                    }
 
                                 }else{
-                                    Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                                    Log.e("Pay",response.body().getMessage());
-                                }
+                                    try {
+                                        pd.dismiss();
+                                        Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
+                                        Log.e("Error",response.errorBody().string());
 
-                            }else{
-                                try {
-                                    pd.dismiss();
-                                    Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
-                                    Log.e("Error",response.errorBody().string());
-
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
+                            }catch (Exception e){
+                                e.printStackTrace();
                             }
 
 

@@ -46,11 +46,12 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/txt_mobile"
                 android:maxLength="11"
+                android:padding="5dp"
                 android:longClickable="false"
                 android:background="@drawable/square_border"
                 android:inputType="number"
                 android:id="@+id/edt_mobile_no"
-                android:textSize="12sp"/>
+                android:textSize="14sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -68,11 +69,12 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/txt_amt"
                 android:inputType="number"
+                android:padding="5dp"
                 android:background="@drawable/square_border"
                 android:id="@+id/edt_amount"
                 android:focusable="false"
                 android:longClickable="false"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
 
 
@@ -90,6 +92,7 @@
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="5dp"
                 android:id="@+id/spinner_telco"
                 android:layout_below="@id/txt_telco"/>
 
