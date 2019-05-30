@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -43,6 +44,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.view.View.GONE;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -58,11 +61,12 @@ public class DashboardFragment extends Fragment {
     private SharedPreferences preferences;
     private int user_id;
     private DbHelper dbHelper;
+    private LinearLayout linear_progress_bar;
     public DashboardFragment() {
         // Required empty public constructor
     }
 
-    @Override
+    /*@Override
     public void onResume() {
         super.onResume();
         if(fixtureAdapter!=null) {
@@ -71,7 +75,7 @@ public class DashboardFragment extends Fragment {
             populateMatches();
             fixtureAdapter.notifyDataSetChanged();
         }
-    }
+    }*/
 
     @Override
     public void onAttach(Context context) {
@@ -140,17 +144,19 @@ public class DashboardFragment extends Fragment {
         dbHelper=new DbHelper(mView.getContext());
 //        checkAppVersion();
         Helper.checkAppVersion(getActivity(),preferences,dbHelper);
+        linear_progress_bar=mView.findViewById(R.id.linear_progress_bar);
     }
 
     public void populateMatches(){
         try{
+            showProgress(View.VISIBLE);
             JSONObject object=new JSONObject();
             object.put("method_Name",this.getClass().getSimpleName()+".onCreateView");
             ApiClient.getInstance().matches(Helper.encrypt(object.toString()))
                     .enqueue(new Callback<MatchesResponse>() {
                         @Override
                         public void onResponse(Call<MatchesResponse> call, Response<MatchesResponse> response) {
-                            progressBar.setVisibility(View.GONE);
+                            showProgress(GONE);
                             if(response.isSuccessful()){
                                 if(response.body().getResponseCode().equals("1001")){
                                     for(Datum bean:response.body().getData()){
@@ -179,6 +185,7 @@ public class DashboardFragment extends Fragment {
                         public void onFailure(Call<MatchesResponse> call, Throwable t) {
                             t.fillInStackTrace();
                             Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
+                            showProgress(GONE);
                         }
                     });
 
@@ -188,5 +195,61 @@ public class DashboardFragment extends Fragment {
         }
     }
 
+    private void showProgress(int visibility){
 
+
+            if(visibility==View.VISIBLE){
+                linear_progress_bar.setVisibility(View.VISIBLE);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int i=0;
+                        while (true){
+                            i++;
+                            if(i==1) {
+                                txt_status.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        txt_status.setText("Fetching match fixtures Please Wait.");
+                                    }
+                                });
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }if(i==2) {
+                                txt_status.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        txt_status.setText("Fetching match fixtures Please Wait..");
+                                    }
+                                });
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }if(i==3) {
+                                txt_status.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        txt_status.setText("Fetching match fixtures Please Wait...");
+                                    }
+                                });
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                i=0;
+                            }
+                        }
+                    }
+                }).start();
+            }else{
+                linear_progress_bar.setVisibility(GONE);
+            }
+
+    }
 }

@@ -209,7 +209,16 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="SignUp User"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/txt_sign_up"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Mobile No."
+                android:layout_below="@id/txt_sign_up"
                 android:id="@+id/txt_mobile_no"
                 android:textSize="10sp"/>
 
@@ -220,7 +229,6 @@
                 android:maxLength="11"
                 android:singleLine="true"
                 android:layout_below="@id/txt_mobile_no"
-                android:background="@android:color/white"
                 android:digits="@string/digits"
                 android:gravity="center_vertical"
                 android:inputType="number"
@@ -242,7 +250,6 @@
                 android:layout_gravity="center_horizontal"
                 android:maxLength="15"
                 android:layout_below="@id/txt_password"
-                android:background="@android:color/white"
                 android:inputType="textPassword"
                 android:paddingLeft="5dp" />
 
@@ -261,7 +268,6 @@
                 android:maxLength="15"
                 android:layout_gravity="center_horizontal"
                 android:layout_below="@id/txt_password_confirm"
-                android:background="@android:color/white"
                 android:inputType="textPassword"
                 android:paddingLeft="5dp" />
 
@@ -269,7 +275,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Referral Code"
+                android:text="Referral Code (Optional)"
                 android:layout_below="@id/edt_confirm_password"
                 android:id="@+id/txt_referral_code"
                 android:textSize="10sp"/>
@@ -280,7 +286,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_below="@id/txt_referral_code"
-                android:background="@android:color/white"
                 android:inputType="text"
                 android:paddingLeft="5dp" />
 

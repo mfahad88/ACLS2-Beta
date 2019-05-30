@@ -1,8 +1,9 @@
-package com.psl.fantasy.league.model.response.UserNotification;
+package com.psl.fantasy.league.revamp.model.response.UserNotification;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class GetUserNotificationBean {
 

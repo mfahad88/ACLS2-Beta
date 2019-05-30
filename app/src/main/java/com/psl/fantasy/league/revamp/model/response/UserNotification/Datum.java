@@ -1,4 +1,4 @@
-package com.psl.fantasy.league.model.response.UserNotification;
+package com.psl.fantasy.league.revamp.model.response.UserNotification;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

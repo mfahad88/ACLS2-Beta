@@ -149,7 +149,7 @@
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:layout_marginRight="20dp"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:text="Preview"/>
         <Button
             android:layout_width="100dp"

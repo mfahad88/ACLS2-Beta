@@ -62,7 +62,7 @@ public class CreateTeamFragment extends Fragment {
             dbHelper.deleteMyTeam();
         }
         if(Player_Type==3) {
-            txt_selection.setText("You can pick only 1 Wicket-keeper");
+            txt_selection.setText("Pick only 1 Wicket-keeper");
         }if(Player_Type==0) {
             txt_selection.setText("Pick 4 Batsmen");
         }if(Player_Type==2) {

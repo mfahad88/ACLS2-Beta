@@ -76,6 +76,7 @@
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:text="more"
+           android:visibility="gone"
            android:padding="10dp"
            android:layout_marginBottom="100dp"
            android:textAllCaps="true"
@@ -88,4 +89,13 @@
            android:layout_below="@id/list_winner"
            android:drawableLeft="@drawable/ic_arrow_downward_black_24dp" />
 
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_below="@id/list_winner"
+           android:id="@+id/txt_notes"
+           android:visibility="gone"
+           android:layout_margin="10dp"
+           android:text="Note: The actual prize money may be different than the prize money mentioned above if there is a tie for any of the winning positions. Check FAQs for the further details. As per government regulation, a tax of 31.2% will be deducted if an individual wins more than Rs. 10,000"
+           />
 </RelativeLayout>

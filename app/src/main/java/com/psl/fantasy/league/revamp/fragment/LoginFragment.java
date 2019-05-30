@@ -401,11 +401,21 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                                     ft.replace(R.id.frame_container,fragment);
                                     ft.commit();
                                 }if(screen.equalsIgnoreCase("captain")){
-                                    saveTeam(response.body().getData().getMyUser().getUserId().intValue());
-                                    Fragment fragment=new DashboardFragment();
-                                    Bundle bundle=new Bundle();
-                                    bundle.putInt("contestId",contestId);
-                                    fragment.setArguments(bundle);
+//                                    saveTeam(response.body().getData().getMyUser().getUserId().intValue());
+                                    Fragment fragment = null;
+                                    if(contestAmt>0) {
+
+                                        fragment = new PaymentFragment();
+                                        Bundle bundle = new Bundle();
+                                        bundle.putInt("contestAmt",contestAmt);
+                                        fragment.setArguments(bundle);
+                                    }else{
+                                        fragment = new DashboardFragment();
+                                        saveTeam(response.body().getData().getMyUser().getUserId().intValue());
+                                    }
+//                                    bundle.putInt("contestId",contestId);
+
+
                                     FragmentTransaction ft=getFragmentManager().beginTransaction();
                                     ft.replace(R.id.main_content,fragment);
                                     ft.commit();
@@ -470,13 +480,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                             try{
                                 if(response.isSuccessful()){
                                   //  pd.dismiss();
-                                    Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+//                                    Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
                                     if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
                                         dbHelper.deleteMyTeam();
                                         new Handler().postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
-                                                //Helper.showAlertNetural(mView.getContext(), "Success", response.body().getMessage());
+                                                Helper.showAlertNetural(mView.getContext(), "Success", response.body().getMessage());
                                             }
                                         },1000);
                                         Fragment fragment=new DashboardFragment();

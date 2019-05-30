@@ -63,6 +63,7 @@ public class WinnerBottomFragment extends BottomSheetDialogFragment {
         TextView txt_close = view.findViewById(R.id.txt_close);
         TextView txt_more= view.findViewById(R.id.txt_more);
         ListView list_winner = view.findViewById(R.id.list_winner);
+        TextView txt_notes=view.findViewById(R.id.txt_notes);
         /*List<WinnerBean> list = new ArrayList<>();
         list.add(new WinnerBean("Rank1", "10000"));
         list.add(new WinnerBean("Rank2", "10000"));
@@ -88,7 +89,9 @@ public class WinnerBottomFragment extends BottomSheetDialogFragment {
 
                                 WinnerBottomAdapter adapter = new WinnerBottomAdapter(view.getContext(), R.layout.winner_bottom_adapter, response.body().getData());
                                 list_winner.setAdapter(adapter);
-
+                                if(response.body().getData().size()>10){
+                                    txt_more.setVisibility(View.VISIBLE);
+                                }
 
                             }else{
                                 Helper.showAlertNetural(view.getContext(),"Error",response.body().getMessage());
@@ -166,7 +169,8 @@ public class WinnerBottomFragment extends BottomSheetDialogFragment {
                 getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
                 BottomSheetDialog d = (BottomSheetDialog) dialog;
-                d.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, (int) (metrics.heightPixels * 1));
+//                d.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, (int) (metrics.heightPixels * 1));
+                d.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
                 FrameLayout bottomSheet = (FrameLayout) d.findViewById(android.support.design.R.id.design_bottom_sheet);
 

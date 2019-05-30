@@ -21,8 +21,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.psl.fantasy.league.model.response.UserNotification.Datum;
-import com.psl.fantasy.league.model.response.UserNotification.GetUserNotificationBean;
 import com.psl.fantasy.league.revamp.Utils.DbHelper;
 import com.psl.fantasy.league.revamp.model.response.AppVersion.AppVersionBean;
 import com.psl.fantasy.league.revamp.BuildConfig;
@@ -36,6 +34,8 @@ import com.psl.fantasy.league.revamp.fragment.MoreFragment;
 import com.psl.fantasy.league.revamp.fragment.MyMatchesFragment;
 import com.psl.fantasy.league.revamp.interfaces.FragmentToActivity;
 import com.psl.fantasy.league.revamp.model.response.SelectUser.SelectUserBean;
+import com.psl.fantasy.league.revamp.model.response.UserNotification.Datum;
+import com.psl.fantasy.league.revamp.model.response.UserNotification.GetUserNotificationBean;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -226,9 +226,5 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
         }
     }
 
-    @Override
-    public void onBackPressed() {
 
-//        super.onBackPressed();
-    }
 }

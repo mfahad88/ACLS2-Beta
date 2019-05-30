@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.psl.fantasy.league.revamp.R;
 import com.psl.fantasy.league.revamp.Utils.Helper;
@@ -41,6 +42,7 @@ public class ContestDetailFragment extends Fragment {
     private String teamOne,teamTwo;
     private ProgressBar progressBar;
     private SwipeRefreshLayout pullToRefresh;
+    TextView txt_contest_name;
     public ContestDetailFragment() {
         // Required empty public constructor
     }
@@ -52,6 +54,8 @@ public class ContestDetailFragment extends Fragment {
         // Inflate the layout for this fragment
         View mView=inflater.inflate(R.layout.fragment_contest_detail, container, false);
         ListView list_contest=mView.findViewById(R.id.list_contest);
+
+        txt_contest_name = mView.findViewById(R.id.txt_contest_name);
         progressBar=mView.findViewById(R.id.progressBar);
         pullToRefresh=mView.findViewById(R.id.pullToRefresh);
         if(getArguments()!=null){
@@ -62,6 +66,7 @@ public class ContestDetailFragment extends Fragment {
             teamOne=getArguments().getString("TeamOne");
             teamTwo=getArguments().getString("TeamTwo");
         }
+
         list=new ArrayList<>();
         populateContest(mView,list_contest);
 
@@ -80,7 +85,18 @@ public class ContestDetailFragment extends Fragment {
                         @Override
                         public void onResponse(Call<ContestResponse> call, Response<ContestResponse> response) {
                             if(response.isSuccessful()) {
+                                if(contest_type==0){
+                                    txt_contest_name.setText("Mega Contest");
+                                }if(contest_type==1){
+                                    txt_contest_name.setText("Expert Contest");
+                                }if(contest_type==2){
+                                    txt_contest_name.setText("Practice Contest");
+                                }if(contest_type==3){
+                                    txt_contest_name.setText("Beginner Contest");
+                                }
+
                                 progressBar.setVisibility(View.GONE);
+                                txt_contest_name.setVisibility(View.VISIBLE);
                                 list_contest.setVisibility(View.VISIBLE);
                                 if (response.body().getResponseCode().equalsIgnoreCase("1001")){
                                     for (Datum datum : response.body().getData()) {

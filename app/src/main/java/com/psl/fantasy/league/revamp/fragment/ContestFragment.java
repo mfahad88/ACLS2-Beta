@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -52,8 +53,9 @@ public class ContestFragment extends Fragment {
     private ListView list_contest_1,list_contest_2,list_contest_3,list_contest_4;
     String match_id;
     int TeamId1,TeamId2;
-    private ProgressBar progressBar;
-    private TextView txt_status,txt_cat1,txt_cat2,txt_cat3,txt_cat4,txt_view_more_mega,txt_view_more_expert,txt_view_more_beginner,txt_view_more_practice;
+
+    private TextView txt_status,txt_cat1,txt_cat2,txt_cat3,txt_cat4,txt_view_more_mega,txt_view_more_expert,txt_view_more_beginner,txt_view_more_practice,txt_status_progress;
+    private LinearLayout linear_progress_bar;
     private FragmentToActivity mCallback;
     private SwipeRefreshLayout pullToRefresh;
     private String teamOne,teamTwo;
@@ -76,7 +78,7 @@ public class ContestFragment extends Fragment {
         }
     }
 
-    @Override
+    /*@Override
     public void onResume() {
         if(adapter!=null){
             new Handler().postDelayed(new Runnable() {
@@ -91,7 +93,7 @@ public class ContestFragment extends Fragment {
             },1000);
         }
         super.onResume();
-    }
+    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,7 +101,6 @@ public class ContestFragment extends Fragment {
         // Inflate the layout for this fragment
 
         mView=inflater.inflate(R.layout.fragment_contest, container, false);
-        progressBar=mView.findViewById(R.id.progressBar);
         txt_view_more_mega=mView.findViewById(R.id.txt_view_more_mega);
         txt_view_more_expert=mView.findViewById(R.id.txt_view_more_expert);
         txt_view_more_beginner=mView.findViewById(R.id.txt_view_more_beginner);
@@ -113,6 +114,8 @@ public class ContestFragment extends Fragment {
         list_contest_3=mView.findViewById(R.id.list_contest_3);
         list_contest_4=mView.findViewById(R.id.list_contest_4);
         txt_status=mView.findViewById(R.id.txt_status);
+        txt_status_progress=mView.findViewById(R.id.txt_status_progress);
+        linear_progress_bar=mView.findViewById(R.id.linear_progress_bar);
         pullToRefresh=mView.findViewById(R.id.pullToRefresh);
         scrollView=mView.findViewById(R.id.scrollView);
         mCallback.communicate("ContestFragment");
@@ -135,7 +138,7 @@ public class ContestFragment extends Fragment {
 //                    pullToRefresh.setRefreshing(true);
                     if(adapter!=null){
                         Helper.checkAppVersion(getActivity(),preferences,dbHelper);
-                        adapter.clear();
+
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -144,7 +147,6 @@ public class ContestFragment extends Fragment {
                                 adapter.notifyDataSetChanged();
 
                                 pullToRefresh.setRefreshing(false);
-                                progressBar.setVisibility(View.GONE);
                             }
                         },1000);
                     }
@@ -246,6 +248,7 @@ public class ContestFragment extends Fragment {
 
     public void populateContest(){
         try{
+            showProgress(View.VISIBLE);
             JSONObject object=new JSONObject();
             object.put("match_series_id",match_id);
             object.put("method_Name",this.getClass().getSimpleName()+".onCreateView");
@@ -254,9 +257,10 @@ public class ContestFragment extends Fragment {
                     .enqueue(new Callback<ContestResponse>() {
                         @Override
                         public void onResponse(Call<ContestResponse> call, Response<ContestResponse> response) {
-                            progressBar.setVisibility(View.GONE);
+
                             int counter_mega=0; int counter_expert=0; int counter_beginner=0; int counter_practice=0;
                             if(response.isSuccessful()){
+                                showProgress(View.GONE);
 //                                adapter.clear();
                                 if(response.body().getResponseCode().equals("1001")){
                                     if(response.body().getData().size()>0){
@@ -305,7 +309,7 @@ public class ContestFragment extends Fragment {
 
                                                 if(datum.getContestType().equalsIgnoreCase("1")){
 //                                                    if(datum.getPoolConsumed()>0){
-                                                        txt_view_more_expert.setVisibility(View.VISIBLE);
+
 
                                                         txt_cat2.setText("Expert Contest");
 
@@ -336,7 +340,7 @@ public class ContestFragment extends Fragment {
                                                 if(datum.getContestType().equalsIgnoreCase("3")){
                                                   //  if(datum.getPoolConsumed()>0){
 
-                                                        txt_view_more_beginner.setVisibility(View.VISIBLE);
+
                                                         txt_cat3.setText("Beginner Contest");
 
                                                         if(counter_beginner<3) {
@@ -366,7 +370,7 @@ public class ContestFragment extends Fragment {
                                                 if(datum.getContestType().equalsIgnoreCase("2")){
                                                     //  if(datum.getPoolConsumed()>0){
 
-                                                    txt_view_more_practice.setVisibility(View.VISIBLE);
+
                                                     txt_cat4.setText("Practice Contest");
 
                                                     if(counter_practice<3) {
@@ -384,10 +388,10 @@ public class ContestFragment extends Fragment {
                                                             txt_view_more_practice.setVisibility(View.VISIBLE);
                                                         }
 
-                                                        ViewGroup.LayoutParams params = list_contest_3.getLayoutParams();
+                                                        ViewGroup.LayoutParams params = list_contest_4.getLayoutParams();
                                                         params.height=Helper.dpToPx(144*counter_practice,mView.getContext());
-                                                        list_contest_3.setLayoutParams(params);
-                                                        list_contest_3.requestLayout();
+                                                        list_contest_4.setLayoutParams(params);
+                                                        list_contest_4.requestLayout();
                                                     }
 
                                                     //}
@@ -401,17 +405,19 @@ public class ContestFragment extends Fragment {
 
                                 }else{
                                     Helper.displayError(txt_status,response.body().getMessage());
+                                    showProgress(View.GONE);
                                 }
                             }else{
-                                Helper.showAlertNetural(mView.getContext(),"Error",response.raw().toString());
+                                showProgress(View.GONE);
                             }
                         }
 
                         @Override
                         public void onFailure(Call<ContestResponse> call, Throwable t) {
                             t.printStackTrace();
+                            showProgress(View.GONE);
                             Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
-                            progressBar.setVisibility(View.GONE);
+
 
                         }
                     });
@@ -420,4 +426,61 @@ public class ContestFragment extends Fragment {
         }
     }
 
+    private void showProgress(int visibility){
+
+
+        if(visibility==View.VISIBLE){
+            linear_progress_bar.setVisibility(View.VISIBLE);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    int i=0;
+                    while (true){
+                        i++;
+                        if(i==1) {
+                            txt_status_progress.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    txt_status_progress.setText("Fetching contest Please Wait.");
+                                }
+                            });
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }if(i==2) {
+                            txt_status_progress.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    txt_status_progress.setText("Fetching match fixtures Please Wait..");
+                                }
+                            });
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }if(i==3) {
+                            txt_status_progress.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    txt_status_progress.setText("Fetching match fixtures Please Wait...");
+                                }
+                            });
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            i=0;
+                        }
+                    }
+                }
+            }).start();
+        }else{
+            linear_progress_bar.setVisibility(View.GONE);
+        }
+
+    }
 }
