@@ -90,27 +90,7 @@ public class CaptainFragment extends Fragment {
             credit=getArguments().getDouble("credit");
         }
 
-        if(Helper.getUserSession(preferences,Helper.MY_USER)==null) {
 
-            Fragment fragment = new LoginFragment();
-            Bundle bundle = new Bundle();
-            bundle.putDouble("credit", credit);
-            bundle.putInt("contestId", contestId);
-            bundle.putInt("contestAmt",contestAmt);
-            bundle.putString("screen","captain");
-            fragment.setArguments(bundle);
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.main_content, fragment);
-            ft.commit();
-        }else{
-            try{
-                JSONObject object = new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
-                JSONObject nameValuePairs=object.getJSONObject("nameValuePairs");
-                user_id=nameValuePairs.getJSONObject("MyUser").getInt("user_id");
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
         captainInterface=new CaptainInterface() {
             @Override
             public void captain(boolean isCaptain) {
@@ -144,20 +124,46 @@ public class CaptainFragment extends Fragment {
 
                 Fragment fragment = null;
                 try {
-                    if(contestAmt>0) {
-                        fragment = new PaymentFragment();
+
+                    if(Helper.getUserSession(preferences,Helper.MY_USER)==null) {
+
+                        fragment = new LoginFragment();
                         Bundle bundle = new Bundle();
-                        bundle.putInt("contestAmt", contestAmt);
                         bundle.putDouble("credit", credit);
-                        bundle.putInt("conId", contestId);
+                        bundle.putInt("contestId", contestId);
+                        bundle.putInt("contestAmt",contestAmt);
+                        bundle.putString("screen","captain");
                         fragment.setArguments(bundle);
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
                         ft.replace(R.id.main_content, fragment);
                         ft.commit();
                     }else{
-                        pd.show();
-                        saveTeam();
+
+                            JSONObject object = new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
+                            JSONObject nameValuePairs=object.getJSONObject("nameValuePairs");
+                            user_id=nameValuePairs.getJSONObject("MyUser").getInt("user_id");
+
+
+                            if(contestAmt>0) {
+                                fragment = new PaymentFragment();
+                                Bundle bundle = new Bundle();
+                                bundle.putInt("contestAmt", contestAmt);
+                                bundle.putDouble("credit", credit);
+                                bundle.putInt("conId", contestId);
+                                fragment.setArguments(bundle);
+                                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                                ft.replace(R.id.main_content, fragment);
+                                ft.commit();
+                            }else if(contestAmt==0){
+                                pd.show();
+                                saveTeam();
+                            }
+
                     }
+
+
+
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -225,15 +231,6 @@ public class CaptainFragment extends Fragment {
                                         Log.e("Pay",response.body().getMessage());
                                     }
 
-                                }else{
-                                    try {
-                                        pd.dismiss();
-                                        Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
-                                        Log.e("Error",response.errorBody().string());
-
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
                                 }
                             }catch (Exception e){
                                 e.printStackTrace();
@@ -246,7 +243,7 @@ public class CaptainFragment extends Fragment {
                         public void onFailure(Call<JoinContenstResponse> call, Throwable t) {
                             t.printStackTrace();
                             pd.dismiss();
-                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
+                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error"+t.getMessage());
 
                         }
                     });

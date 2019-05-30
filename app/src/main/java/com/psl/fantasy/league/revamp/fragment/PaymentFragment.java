@@ -146,7 +146,15 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                 }else{
                     mobileNo =  edt_mobile_no.getText().toString();
                 }
-
+                if(spinner_telco.getSelectedItem().toString().equals("Mobilink")){
+                    operatorID=100001;
+                }if(spinner_telco.getSelectedItem().toString().equals("Telenor")){
+                    operatorID=100002;
+                }if(spinner_telco.getSelectedItem().toString().equals("Zong")){
+                    operatorID=100003;
+                }if(spinner_telco.getSelectedItem().toString().equals("Warid")){
+                    operatorID=100004;
+                }
                 paySimPaisa();
             }
         }if(v.getId()==R.id.btn_submit){
@@ -168,7 +176,11 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
         try{
             btn_submit.setEnabled(false);
             JSONObject object=new JSONObject();
-            object.put("productID",1193);
+            if(operatorID==100002) {
+                object.put("productID", 1193);
+            }else{
+                object.put("productID", 1195);
+            }
             object.put("mobileNo",mobileNo);
             object.put("operatorID",operatorID);
             object.put("codeOTP",Integer.parseInt(edt_otp.getText().toString()));
@@ -223,9 +235,9 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
         try {
             btn_pay.setEnabled(false);
             JSONObject object=new JSONObject();
-            object.put("productID",1193);
+            object.put("productID",1195);
             object.put("mobileNo",mobileNo);
-            object.put("operatorID",100002);
+            object.put("operatorID",operatorID);
             ApiClient.getInstance().makePaymentSimPaisa(Helper.encrypt(object.toString()))
                     .enqueue(new Callback<SimPaisaResponse>() {
                         @Override

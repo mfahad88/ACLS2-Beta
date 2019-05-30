@@ -75,7 +75,7 @@ public class SplashActivity extends AppCompatActivity {
             requestMultiplePermissions();
             //FirebaseApp.getInstance().getToken(true);
 
-            Log.e("Firebase",FirebaseInstanceId.getInstance().getToken());
+//            Log.e("Firebase",FirebaseInstanceId.getInstance().getToken());
 
         }catch (Exception e){
             e.printStackTrace();
@@ -119,7 +119,7 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-    private void getConfig(){
+  /*  private void getConfig(){
         try{
             JSONObject obj=new JSONObject();
             obj.put("param_type","version_update");
@@ -170,7 +170,7 @@ public class SplashActivity extends AppCompatActivity {
         }catch (Exception e){
             e.printStackTrace();
         }
-    }
+    }*/
 
     private void requestMultiplePermissions(){
 
@@ -188,8 +188,18 @@ public class SplashActivity extends AppCompatActivity {
                         if (report.areAllPermissionsGranted()) {
 
                             getMatches();
-                            getConfig();
+                            //getConfig();
                             Helper.checkAppVersion(SplashActivity.this,preferences,dbHelper);
+
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent intent=new Intent(SplashActivity.this,StartActivity.class);
+
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            },500);
                         }
                         if(!report.areAllPermissionsGranted()){
                             Toast toast=Toast.makeText(getApplicationContext(),"To continue allow permission",Toast.LENGTH_SHORT);

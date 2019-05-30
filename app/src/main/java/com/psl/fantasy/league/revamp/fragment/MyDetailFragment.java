@@ -81,15 +81,16 @@ public class MyDetailFragment extends Fragment {
                             if(response.isSuccessful()){
                                try{
                                    if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-
+                                       txt_mobile_no.setText(response.body().getData().getMyUser().getMobileNo());
                                        String shareId=response.body().getData().getMyUser().getMobileNo().substring(4,7).trim()+""+user_id;
+                                       txt_referral_code.setText(shareId);
                                        if(!TextUtils.isEmpty(response.body().getData().getMyUsermsc().getCoinsBalance().toString())) {
                                            txt_coins.setText(response.body().getData().getMyUsermsc().getCoinsBalance().toString());
                                        }if(!TextUtils.isEmpty(response.body().getData().getMyUsermsc().getPoint_balance().toString())) {
                                            txt_points.setText(response.body().getData().getMyUsermsc().getPoint_balance().toString());
                                        }
-                                       txt_mobile_no.setText(response.body().getData().getMyUser().getMobileNo());
-                                       txt_referral_code.setText(shareId);
+
+
                                    }else{
                                        Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
                                    }

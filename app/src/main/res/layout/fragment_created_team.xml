@@ -6,20 +6,18 @@
     tools:context=".fragment.MyLeaderboardTabFragment">
 
     <LinearLayout
-        android:layout_marginTop="50dp"
+        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/linear_header"
         android:orientation="horizontal"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:weightSum="4">
+        android:weightSum="3">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Team Name"
+            android:text="Player Name"
             android:textStyle="bold"
             android:padding="10dp" />
 
@@ -27,7 +25,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Point"
+            android:text="Orignial Points"
             android:textStyle="bold"
             android:padding="10dp" />
 
@@ -36,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Captain"
+            android:visibility="gone"
             android:textStyle="bold"
             android:padding="10dp" />
 
@@ -44,8 +43,18 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Vice Captain"
+            android:visibility="gone"
             android:textStyle="bold"
             android:padding="10dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Earned Points"
+            android:textStyle="bold"
+            android:padding="10dp" />
+
     </LinearLayout>
     <ProgressBar
         android:layout_width="wrap_content"

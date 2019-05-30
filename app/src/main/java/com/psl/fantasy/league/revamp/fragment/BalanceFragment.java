@@ -2,6 +2,7 @@ package com.psl.fantasy.league.revamp.fragment;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.psl.fantasy.league.revamp.R;
+import com.psl.fantasy.league.revamp.Utils.DbHelper;
+import com.psl.fantasy.league.revamp.Utils.Helper;
 import com.psl.fantasy.league.revamp.interfaces.FragmentToActivity;
 
 /**
@@ -23,6 +26,8 @@ public class BalanceFragment extends Fragment {
     private TabLayout allTabs;
     private Fragment fragment;
     private FragmentToActivity mCallback;
+    private SharedPreferences preferences;
+    private DbHelper dbHelper;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -45,7 +50,9 @@ public class BalanceFragment extends Fragment {
         mView = inflater.inflate(R.layout.fragment_leaderboard, container, false);
         allTabs = mView.findViewById(R.id.tabs);
         mCallback.communicate("disable");
-
+        preferences=getActivity().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
+        dbHelper=new DbHelper(getContext());
+        Helper.checkAppVersion(getActivity(),preferences,dbHelper);
         bindWidgetsWithAnEvent();
         setupTabLayout();
         return mView;

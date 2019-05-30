@@ -3,6 +3,7 @@ package com.psl.fantasy.league.revamp.fragment;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 
@@ -21,6 +22,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.psl.fantasy.league.revamp.R;
+import com.psl.fantasy.league.revamp.Utils.DbHelper;
 import com.psl.fantasy.league.revamp.Utils.Helper;
 import com.psl.fantasy.league.revamp.adapter.ContestAdapter;
 import com.psl.fantasy.league.revamp.client.ApiClient;
@@ -47,17 +49,20 @@ public class ContestFragment extends Fragment {
     private View mView;
     private int match_Id;
 
-    private ListView list_contest_1,list_contest_2,list_contest_3;
+    private ListView list_contest_1,list_contest_2,list_contest_3,list_contest_4;
     String match_id;
     int TeamId1,TeamId2;
     private ProgressBar progressBar;
-    private TextView txt_status,txt_cat1,txt_cat2,txt_cat3,txt_view_more_mega,txt_view_more_expert,txt_view_more_beginner;
+    private TextView txt_status,txt_cat1,txt_cat2,txt_cat3,txt_cat4,txt_view_more_mega,txt_view_more_expert,txt_view_more_beginner,txt_view_more_practice;
     private FragmentToActivity mCallback;
     private SwipeRefreshLayout pullToRefresh;
     private String teamOne,teamTwo;
     private ContestAdapter adapter;
     private ScrollView scrollView;
+    SharedPreferences preferences;
+    DbHelper dbHelper;
     public ContestFragment() {
+
         // Required empty public constructor
     }
     @Override
@@ -78,6 +83,7 @@ public class ContestFragment extends Fragment {
                 @Override
                 public void run() {
                     progressBar.setVisibility(View.VISIBLE);
+
                     adapter.clear();
                     populateContest();
                     adapter.notifyDataSetChanged();
@@ -97,16 +103,22 @@ public class ContestFragment extends Fragment {
         txt_view_more_mega=mView.findViewById(R.id.txt_view_more_mega);
         txt_view_more_expert=mView.findViewById(R.id.txt_view_more_expert);
         txt_view_more_beginner=mView.findViewById(R.id.txt_view_more_beginner);
+        txt_view_more_practice=mView.findViewById(R.id.txt_view_more_practice);
         txt_cat1 =mView.findViewById(R.id.txt_cat1);
         txt_cat2 =mView.findViewById(R.id.txt_cat2);
         txt_cat3=mView.findViewById(R.id.txt_cat3);
+        txt_cat4=mView.findViewById(R.id.txt_cat4);
         list_contest_1=mView.findViewById(R.id.list_contest_1);
         list_contest_2=mView.findViewById(R.id.list_contest_2);
         list_contest_3=mView.findViewById(R.id.list_contest_3);
+        list_contest_4=mView.findViewById(R.id.list_contest_4);
         txt_status=mView.findViewById(R.id.txt_status);
         pullToRefresh=mView.findViewById(R.id.pullToRefresh);
         scrollView=mView.findViewById(R.id.scrollView);
         mCallback.communicate("ContestFragment");
+        dbHelper=new DbHelper(getContext());
+        preferences=getActivity().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
+        Helper.checkAppVersion(getActivity(),preferences,dbHelper);
         try {
             if(getArguments()!=null) {
 
@@ -122,6 +134,7 @@ public class ContestFragment extends Fragment {
                 public void onRefresh() {
 //                    pullToRefresh.setRefreshing(true);
                     if(adapter!=null){
+                        Helper.checkAppVersion(getActivity(),preferences,dbHelper);
                         adapter.clear();
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -189,6 +202,26 @@ public class ContestFragment extends Fragment {
                     bundle.putString("match_id",match_id);
                     bundle.putInt("TeamId1",TeamId1);
                     bundle.putInt("TeamId2",TeamId2);
+                    bundle.putInt("contest_type",3);
+                    bundle.putString("TeamOne",teamOne);
+                    bundle.putString("TeamTwo",teamTwo);
+                    fragment.setArguments(bundle);
+                    FragmentTransaction ft=getFragmentManager().beginTransaction();
+
+                    ft.replace(R.id.main_content,fragment);
+                    ft.commit();
+                }
+            });
+
+            txt_view_more_practice.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Fragment fragment=new ContestDetailFragment();
+                    Bundle bundle=new Bundle();
+                    bundle.putString("match_id",match_id);
+                    bundle.putInt("TeamId1",TeamId1);
+                    bundle.putInt("TeamId2",TeamId2);
                     bundle.putInt("contest_type",2);
                     bundle.putString("TeamOne",teamOne);
                     bundle.putString("TeamTwo",teamTwo);
@@ -222,7 +255,7 @@ public class ContestFragment extends Fragment {
                         @Override
                         public void onResponse(Call<ContestResponse> call, Response<ContestResponse> response) {
                             progressBar.setVisibility(View.GONE);
-                            int counter_mega=0; int counter_expert=0; int counter_beginner=0;
+                            int counter_mega=0; int counter_expert=0; int counter_beginner=0; int counter_practice=0;
                             if(response.isSuccessful()){
 //                                adapter.clear();
                                 if(response.body().getResponseCode().equals("1001")){
@@ -300,7 +333,7 @@ public class ContestFragment extends Fragment {
 
 //                                                    }
                                                 }
-                                                if(datum.getContestType().equalsIgnoreCase("2")){
+                                                if(datum.getContestType().equalsIgnoreCase("3")){
                                                   //  if(datum.getPoolConsumed()>0){
 
                                                         txt_view_more_beginner.setVisibility(View.VISIBLE);
@@ -326,6 +359,36 @@ public class ContestFragment extends Fragment {
                                                             list_contest_3.setLayoutParams(params);
                                                             list_contest_3.requestLayout();
                                                         }
+
+                                                    //}
+                                                }
+
+                                                if(datum.getContestType().equalsIgnoreCase("2")){
+                                                    //  if(datum.getPoolConsumed()>0){
+
+                                                    txt_view_more_practice.setVisibility(View.VISIBLE);
+                                                    txt_cat4.setText("Practice Contest");
+
+                                                    if(counter_practice<3) {
+                                                        float perc= ((datum.getPoolConsumed().floatValue() / datum.getPool().floatValue()) * 100);
+                                                        int percent = Math.round(perc);
+                                                        txt_cat4.setVisibility(View.VISIBLE);
+                                                        list_beginner.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
+                                                                ,String.valueOf(datum.getPool()), datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
+                                                        list_contest_4.setVisibility(View.VISIBLE);
+                                                        adapter=new ContestAdapter(mView.getContext(),R.layout.list_contest,list_beginner,TeamId1,TeamId2,teamOne,teamTwo);
+                                                        list_contest_4.setAdapter(adapter);
+                                                        counter_practice++;
+                                                        Log.e("Practice--->",datum.toString());
+                                                        if(counter_practice==3){
+                                                            txt_view_more_practice.setVisibility(View.VISIBLE);
+                                                        }
+
+                                                        ViewGroup.LayoutParams params = list_contest_3.getLayoutParams();
+                                                        params.height=Helper.dpToPx(144*counter_practice,mView.getContext());
+                                                        list_contest_3.setLayoutParams(params);
+                                                        list_contest_3.requestLayout();
+                                                    }
 
                                                     //}
                                                 }

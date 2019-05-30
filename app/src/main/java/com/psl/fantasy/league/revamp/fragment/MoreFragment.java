@@ -15,14 +15,18 @@ import com.psl.fantasy.league.revamp.Utils.Helper;
 import com.psl.fantasy.league.revamp.adapter.MoreAdapter;
 import com.psl.fantasy.league.revamp.interfaces.FragmentToActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class MoreFragment extends Fragment {
     public static final String[] items={"Terms & Conditions","FAQs","Prizes","About","Rules","Logout"};
+    public static final String[] items1={"Terms & Conditions","FAQs","Prizes","About","Rules"};
     private FragmentToActivity mCallback;
     private SharedPreferences preferences;
-
+    MoreAdapter adapter;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -45,10 +49,23 @@ public class MoreFragment extends Fragment {
         View mView = inflater.inflate(R.layout.fragment_more, container, false);
 
         ListView list_view_items=mView.findViewById(R.id.list_view_items);
-        preferences=mView.getContext().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
-        MoreAdapter adapter=new MoreAdapter(mView.getContext(),R.layout.more_adapter,items,preferences);
-        mCallback.communicate("disable");
-        list_view_items.setAdapter(adapter);
+        try{
+            preferences=mView.getContext().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
+            if(Helper.getUserSession(preferences,Helper.MY_USER)!=null) {
+
+
+                adapter = new MoreAdapter(mView.getContext(),R.layout.more_adapter,items,preferences);
+
+            }else{
+                adapter = new MoreAdapter(mView.getContext(),R.layout.more_adapter,items1,preferences);
+            }
+
+
+            mCallback.communicate("disable");
+            list_view_items.setAdapter(adapter);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return mView;
     }
 

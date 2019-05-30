@@ -8,9 +8,11 @@ public class JoinContenstResponse {
 @SerializedName("ResponseCode")
 @Expose
 private String responseCode;
+/*
 @SerializedName("data")
 @Expose
 private Integer data;
+*/
 @SerializedName("Message")
 @Expose
 private String message;
@@ -23,13 +25,13 @@ public void setResponseCode(String responseCode) {
 this.responseCode = responseCode;
 }
 
-public Integer getData() {
+/*public Integer getData() {
 return data;
 }
 
 public void setData(Integer data) {
 this.data = data;
-}
+}*/
 
 public String getMessage() {
 return message;

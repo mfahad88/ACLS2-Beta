@@ -105,6 +105,7 @@ public class TeamFragment extends Fragment {
         image_team_two=mView.findViewById(R.id.image_team_two);
         txt_credit_count.setText(String.valueOf(credit));
         preferences=mView.getContext().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
+        Helper.checkAppVersion(getActivity(),preferences,dbHelper);
         fragmentInterface=new FragmentInterface() {
             @Override
             public void playerCount(int type, int count) {

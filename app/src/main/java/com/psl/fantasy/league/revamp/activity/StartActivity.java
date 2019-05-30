@@ -228,8 +228,7 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
 
     @Override
     public void onBackPressed() {
-        finish();
-        System.exit(0);
-        super.onBackPressed();
+
+//        super.onBackPressed();
     }
 }

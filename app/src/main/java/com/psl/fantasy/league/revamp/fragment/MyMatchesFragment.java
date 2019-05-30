@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.psl.fantasy.league.revamp.BuildConfig;
 import com.psl.fantasy.league.revamp.R;
@@ -82,6 +83,7 @@ public class MyMatchesFragment extends Fragment {
         list=new ArrayList<>();
         Helper.checkAppVersion(getActivity(),preferences,dbHelper);
         mCallback.communicate("disable");
+     //   Helper.checkAppVersion(getActivity(),preferences,dbHelper);
         if(Helper.getUserSession(preferences,Helper.MY_USER)!=null) {
             try {
                 JSONObject object = new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
@@ -95,11 +97,12 @@ public class MyMatchesFragment extends Fragment {
                         public void onResponse(Call<MyMatchesResponse> call, Response<MyMatchesResponse> response) {
                             if(response.isSuccessful()){
                                 if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
+                                    progressBar.setVisibility(View.GONE);
                                     if(response.body().getData()!=null) {
                                         for (Datum datum : response.body().getData())
                                             list.add(new MyMatchesBean(user_id, datum.getMatchId(), datum.getTeamId1().intValue(), datum.getTeamId2().intValue()
                                                     , datum.getTeamName1(), datum.getTeamName2(), datum.getMatchSts(), "",datum.getTeam_name1_short(),datum.getTeam_name2_short(),datum.getSeries_name()));
-                                        progressBar.setVisibility(View.GONE);
+
 
                                         list_matches.setVisibility(View.VISIBLE);
 
@@ -116,13 +119,7 @@ public class MyMatchesFragment extends Fragment {
                                     txt_error.setText(response.message());
                                 }
                             }else{
-                                try {
-                                    progressBar.setVisibility(View.GONE);
-                                    txt_error.setVisibility(View.VISIBLE);
-                                    txt_error.setText(response.errorBody().string());
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                                progressBar.setVisibility(View.GONE);
                             }
                         }
 

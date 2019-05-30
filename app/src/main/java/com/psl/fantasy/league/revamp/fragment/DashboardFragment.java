@@ -92,7 +92,7 @@ public class DashboardFragment extends Fragment {
         // Inflate the layout for this fragment
         mView=inflater.inflate(R.layout.fragment_dashboard, container, false);
         init();
-
+        Helper.checkAppVersion(getActivity(),preferences,dbHelper);
         try{
 
             list_matches.setSmoothScrollbarEnabled(true);
@@ -107,7 +107,8 @@ public class DashboardFragment extends Fragment {
                 public void onRefresh() {
 
                     try {
-                        fixtureAdapter.clear();
+                        Helper.checkAppVersion(getActivity(),preferences,dbHelper);
+                        //fixtureAdapter.clear();
                         fixtureAdapter.notifyDataSetChanged();
 
                         populateMatches();

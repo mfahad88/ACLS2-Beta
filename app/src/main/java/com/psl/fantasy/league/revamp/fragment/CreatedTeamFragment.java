@@ -61,10 +61,10 @@ public class CreatedTeamFragment extends Fragment {
                             if(response.isSuccessful()){
                                 list_player.setVisibility(View.VISIBLE);
                                 if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-                                    for(Datum datum:response.body().getData()){
+                                    /*for(Datum datum:response.body().getData()){
                                         list.add(new PlayerInfoBean(datum.getPlayerId().intValue(),datum.getPlayer_name(),String.valueOf(datum.getPlayerPoint()),Integer.parseInt(datum.getIsCaptan()),Integer.parseInt(datum.getIsViceCaptan())));
-                                    }
-                                    PlayerAdapter adapter=new PlayerAdapter(mView.getContext(),R.layout.player_adapter,list);
+                                    }*/
+                                    PlayerAdapter adapter=new PlayerAdapter(mView.getContext(),R.layout.player_adapter,response.body().getData());
                                     list_player.setAdapter(adapter);
                                 }
                             }

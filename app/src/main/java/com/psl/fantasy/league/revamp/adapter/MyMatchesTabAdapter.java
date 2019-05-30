@@ -54,14 +54,14 @@ public class MyMatchesTabAdapter extends ArrayAdapter<MyMatchesTabBean> {
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView=LayoutInflater.from(context).inflate(resource,null);
         TextView txt_team_name = convertView.findViewById(R.id.txt_team_name);
-        TextView txt_credit = convertView.findViewById(R.id.txt_credit);
+//        TextView txt_credit = convertView.findViewById(R.id.txt_credit);
         TextView txt_point = convertView.findViewById(R.id.txt_point);
         MyMatchesTabBean bean=list.get(position);
 
 //            Log.e("MyMatchesTabBean",bean.toString());
 
             txt_team_name.setText(bean.getTeamName());
-            txt_credit.setText(String.valueOf(100000-Integer.parseInt(bean.getCredit())));
+//            txt_credit.setText(String.valueOf(100000-Integer.parseInt(bean.getCredit())));
             txt_point.setText(bean.getPoint());
 
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -34,18 +35,25 @@ import com.facebook.login.widget.LoginButton;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.psl.fantasy.league.revamp.BuildConfig;
 import com.psl.fantasy.league.revamp.R;
+import com.psl.fantasy.league.revamp.Utils.DbHelper;
 import com.psl.fantasy.league.revamp.Utils.Helper;
 import com.psl.fantasy.league.revamp.client.ApiClient;
 import com.psl.fantasy.league.revamp.dialog.TermsConditionDialog;
 import com.psl.fantasy.league.revamp.interfaces.FragmentToActivity;
 import com.psl.fantasy.league.revamp.model.response.Insert.InsertResponse;
+import com.psl.fantasy.league.revamp.model.response.JoinContest.JoinContenstResponse;
 import com.psl.fantasy.league.revamp.model.response.Login.LoginResponse;
+import com.psl.fantasy.league.revamp.model.ui.PlayerBean;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -76,6 +84,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     ProgressBar progressBar;
     TextView txt_terms_conditions;
     private CheckBox checkbox_terms_condition,checkbox_contact,checkbox_partner;
+    private DbHelper dbHelper;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -201,6 +210,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         checkbox_partner=mView.findViewById(R.id.checkbox_partner);
         checkbox_contact=mView.findViewById(R.id.checkbox_contact);
         txt_terms_conditions=mView.findViewById(R.id.txt_terms_conditions);
+        dbHelper=new DbHelper(getContext());
     }
 
 
@@ -241,6 +251,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 String password=edt_pass_word.getText().toString();
                 String confirmPassword=edt_confirm_password.getText().toString();
                 String referral=edt_referral.getText().toString();
+                if(!checkbox_terms_condition.isChecked()){
+                    Helper.showAlertNetural(mView.getContext(),"Info","Please agree T&C's to proceed");
+                }
                 if((!TextUtils.isEmpty(mobileNo)) && (!TextUtils.isEmpty(password)) && (!TextUtils.isEmpty(confirmPassword)) && checkbox_terms_condition.isChecked()){
                    if(password.equalsIgnoreCase(confirmPassword)){
                        if(checkbox_terms_condition.isChecked()){
@@ -388,7 +401,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                                     ft.replace(R.id.frame_container,fragment);
                                     ft.commit();
                                 }if(screen.equalsIgnoreCase("captain")){
-                                    Fragment fragment=new CaptainFragment();
+                                    saveTeam(response.body().getData().getMyUser().getUserId().intValue());
+                                    Fragment fragment=new DashboardFragment();
                                     Bundle bundle=new Bundle();
                                     bundle.putInt("contestId",contestId);
                                     fragment.setArguments(bundle);
@@ -414,4 +428,86 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     }
                 });
     }
+
+
+    public void saveTeam(int user_id){
+        try{
+            SimpleDateFormat sdf=new SimpleDateFormat("yyssddmm");
+            List<PlayerBean> list= dbHelper.getMyTeam();
+            JSONArray jsonArray = new JSONArray();
+            for(PlayerBean bean:list) {
+
+                JSONArray array = new JSONArray();
+                array.put(bean.getId());
+                if(bean.isCaptain()) {
+                    array.put(1);
+                }else{
+                    array.put(0);
+                }
+                if(bean.isViceCaptain()) {
+                    array.put(1);
+                }else {
+                    array.put(0);
+                }
+                jsonArray.put(array);
+            }
+            Log.e("beanList",jsonArray.toString());
+
+            JSONObject object=new JSONObject();
+
+            object.put("user_id",user_id);
+            object.put("contest_id",contestId);
+            object.put("name",user_id+"-"+sdf.format(new Date()));
+            object.put("method_Name",this.getClass().getSimpleName()+".btn_done.onClick");
+            object.put("playersInfo",jsonArray);
+            object.put("coins",0);
+            object.put("rem_budget",credit);
+
+            ApiClient.getInstance().JoinContest(Helper.encrypt(object.toString()))
+                    .enqueue(new Callback<JoinContenstResponse>() {
+                        @Override
+                        public void onResponse(Call<JoinContenstResponse> call, Response<JoinContenstResponse> response) {
+                            try{
+                                if(response.isSuccessful()){
+                                  //  pd.dismiss();
+                                    Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                    if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
+                                        dbHelper.deleteMyTeam();
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                //Helper.showAlertNetural(mView.getContext(), "Success", response.body().getMessage());
+                                            }
+                                        },1000);
+                                        Fragment fragment=new DashboardFragment();
+                                        FragmentTransaction ft=getFragmentManager().beginTransaction();
+                                        ft.replace(R.id.main_content,fragment);
+                                        ft.commit();
+
+                                    }else{
+                                        Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                        Log.e("Pay",response.body().getMessage());
+                                    }
+
+                                }
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<JoinContenstResponse> call, Throwable t) {
+                            t.printStackTrace();
+                           // pd.dismiss();
+                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error"+t.getMessage());
+
+                        }
+                    });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 }

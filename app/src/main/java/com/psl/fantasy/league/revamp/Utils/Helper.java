@@ -14,6 +14,8 @@ import android.content.pm.Signature;
 import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.StrictMode;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -22,12 +24,16 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.psl.fantasy.league.revamp.BuildConfig;
+import com.psl.fantasy.league.revamp.activity.SplashActivity;
+import com.psl.fantasy.league.revamp.activity.StartActivity;
 import com.psl.fantasy.league.revamp.client.ApiClient;
 import com.psl.fantasy.league.revamp.model.request.TestBeanRequest;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.psl.fantasy.league.revamp.model.response.AppVersion.AppVersionBean;
+import com.psl.fantasy.league.revamp.model.response.Config.ConfigBeanResponse;
+import com.psl.fantasy.league.revamp.model.response.Config.Datum;
 import com.psl.fantasy.league.revamp.model.response.SelectUser.SelectUserBean;
 
 import org.json.JSONException;
@@ -416,88 +422,111 @@ public class Helper {
     }
 
     public static void checkAppVersion(Activity activity, SharedPreferences preferences, DbHelper dbHelper){
-        int user_id;
-        if(Helper.getUserSession(preferences,Helper.MY_USER)!=null){
-            JSONObject object= null;
-            try {
-                object = new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
-                JSONObject nameValuePairs=object.getJSONObject("nameValuePairs");
-                user_id=nameValuePairs.getJSONObject("MyUser").getInt("user_id");
-                try {
-                    JSONObject jsonObject=new JSONObject();
-                    jsonObject.put("user_id",user_id);
-                    ApiClient.getInstance().SelectUser(Helper.encrypt(jsonObject.toString()))
-                            .enqueue(new Callback<SelectUserBean>() {
-                                @Override
-                                public void onResponse(Call<SelectUserBean> call, Response<SelectUserBean> response) {
-                                    if(response.isSuccessful()){
-                                        if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-                                           if(!TextUtils.isEmpty(response.body().getData().getMyUser().getIsUpdated())){
-                                               if(response.body().getData().getMyUser().getIsUpdated().equalsIgnoreCase("0")){
-                                                   if(Float.parseFloat(dbHelper.getConfig())>Float.parseFloat(BuildConfig.VERSION_NAME)) {
-                                                       Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
-                                                       browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                       activity.startActivity(browserIntent);
-                                                       activity.finish();
-                                                       System.exit(0);
-                                                   }else if(Float.parseFloat(dbHelper.getConfig())<Float.parseFloat(BuildConfig.VERSION_NAME)){
-                                                       Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
-                                                       browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                       activity.startActivity(browserIntent);
-                                                       activity.finish();
-                                                       System.exit(0);
-                                                   }else{
-                                                       try {
-                                                           JSONObject jsonObject=new JSONObject();
-                                                           jsonObject.put("user_id",user_id);
-                                                           jsonObject.put("isUpdated",1);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
-                                                           ApiClient.getInstance().updateAppVersion(Helper.encrypt(jsonObject.toString()))
-                                                                   .enqueue(new Callback<AppVersionBean>() {
-                                                                       @Override
-                                                                       public void onResponse(Call<AppVersionBean> call, Response<AppVersionBean> response) {
-                                                                           if(response.isSuccessful()){
-                                                                               if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+        StrictMode.setThreadPolicy(policy);
 
-                                                                               }else{
-                                                                                   Helper.showAlertNetural(activity.getApplicationContext(),"Error",response.body().getMessage());
-                                                                               }
-                                                                           }
-                                                                       }
 
-                                                                       @Override
-                                                                       public void onFailure(Call<AppVersionBean> call, Throwable t) {
-                                                                           t.printStackTrace();
-                                                                           Helper.showAlertNetural(activity.getApplicationContext(),"Error","Communication Error");
-                                                                       }
-                                                                   });
-                                                       } catch (JSONException e) {
-                                                           e.printStackTrace();
-                                                       }
-                                                   }
-                                               }
-                                           }
+        try{
+            JSONObject obj=new JSONObject();
+            obj.put("param_type","version_update");
+            obj.put("method_Name","Helper");
 
-                                        }else{
-                                            Helper.showAlertNetural(activity.getApplicationContext(),"Error",response.body().getMessage());
+            ApiClient.getInstance().getConfig(Helper.encrypt(obj.toString()))
+                    .enqueue(new Callback<ConfigBeanResponse>() {
+                        @Override
+                        public void onResponse(Call<ConfigBeanResponse> call, Response<ConfigBeanResponse> response) {
+                            if(response.isSuccessful()){
+                                if(response.body().getResponseCode().equals("1001")){
+                                    for(Datum datum:response.body().getData()) {
+                                        float config = Float.parseFloat(datum.getConfigVal());
+
+
+                                        if(Helper.getUserSession(preferences,Helper.MY_USER)!=null){
+                                            JSONObject object= null;
+                                            try {
+                                                object = new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
+                                                JSONObject nameValuePairs=object.getJSONObject("nameValuePairs");
+                                                int user_id=nameValuePairs.getJSONObject("MyUser").getInt("user_id");
+                                                try {
+                                                    JSONObject jsonObject=new JSONObject();
+                                                    jsonObject.put("user_id",user_id);
+                                                    Response<SelectUserBean>response_user=ApiClient.getInstance().SelectUser(Helper.encrypt(jsonObject.toString())).execute();
+
+                                                            if(response_user.isSuccessful()){
+                                                                if(response_user.body().getResponseCode().equalsIgnoreCase("1001")){
+                                                                    if(!TextUtils.isEmpty(response_user.body().getData().getMyUser().getIsUpdated())){
+                                                                        if(response_user.body().getData().getMyUser().getIsUpdated().equalsIgnoreCase("0")){
+                                                                            if(config>Float.parseFloat(BuildConfig.VERSION_NAME)) {
+                                                                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
+                                                                                browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                                                activity.startActivity(browserIntent);
+                                                                                activity.finish();
+                                                                                System.exit(0);
+                                                                            }else if(config<Float.parseFloat(BuildConfig.VERSION_NAME)){
+                                                                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
+                                                                                browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                                                activity.startActivity(browserIntent);
+                                                                                activity.finish();
+                                                                                System.exit(0);
+                                                                            }else{
+                                                                                try {
+                                                                                    JSONObject jsonObject2=new JSONObject();
+                                                                                    jsonObject2.put("user_id",user_id);
+                                                                                    jsonObject2.put("isUpdated",1);
+
+                                                                                    Response<AppVersionBean> response3=ApiClient.getInstance().updateAppVersion(Helper.encrypt(jsonObject2.toString())).execute();
+                                                                                        if(response3.isSuccessful()){
+                                                                                            if(response3.body().getResponseCode().equalsIgnoreCase("1001")){
+
+                                                                                            }
+                                                                                        }
+                                                                                } catch (JSONException e) {
+                                                                                    e.printStackTrace();
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+
+
+                                                }catch (Exception e){
+                                                    e.printStackTrace();
+                                                }
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+
                                         }
                                     }
                                 }
+                            }else{
+                                try {
+                                    Helper.showAlertNetural(activity.getApplicationContext(),"Error",response.errorBody().string());
 
-                                @Override
-                                public void onFailure(Call<SelectUserBean> call, Throwable t) {
-                                    t.printStackTrace();
-                                    Helper.showAlertNetural(activity.getApplicationContext(),"Error","Communication Error");
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
-                            });
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                            }
+                        }
 
+                        @Override
+                        public void onFailure(Call<ConfigBeanResponse> call, Throwable t) {
+                            t.printStackTrace();
+                            Helper.showAlertNetural(activity.getApplicationContext(),"Error","Communication Error");
+
+                        }
+                    });
+
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
+
+
+
 
     }
 
