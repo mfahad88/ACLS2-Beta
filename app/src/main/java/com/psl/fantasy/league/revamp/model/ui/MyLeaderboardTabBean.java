@@ -5,12 +5,14 @@ public class MyLeaderboardTabBean {
     private int userId;
     private String teamName;
     private String credit;
+    private int Num;
 
-    public MyLeaderboardTabBean(int userTeamId, int userId, String teamName, String credit) {
+    public MyLeaderboardTabBean(int userTeamId, int userId, String teamName, String credit, int num) {
         this.userTeamId = userTeamId;
         this.userId = userId;
         this.teamName = teamName;
         this.credit = credit;
+        Num = num;
     }
 
     public int getUserTeamId() {
@@ -43,5 +45,13 @@ public class MyLeaderboardTabBean {
 
     public void setCredit(String credit) {
         this.credit = credit;
+    }
+
+    public int getNum() {
+        return Num;
+    }
+
+    public void setNum(int num) {
+        Num = num;
     }
 }

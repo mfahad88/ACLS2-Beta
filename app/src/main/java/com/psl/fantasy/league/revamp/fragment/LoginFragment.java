@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -32,6 +34,19 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.psl.fantasy.league.revamp.BuildConfig;
 import com.psl.fantasy.league.revamp.R;
@@ -63,13 +78,14 @@ import retrofit2.Response;
  * A simple {@link Fragment} subclass.
  */
 public class LoginFragment extends Fragment implements View.OnClickListener {
-    // private static final int RC_SIGN_IN =100 ;
+     private static final int RC_SIGN_IN =100 ;
     private View mView;
     private static final String EMAIL = "email";
     private EditText edt_mobile_no,edt_password,edt_mobile_number,edt_pass_word,edt_referral,edt_confirm_password;
     private TextView txt_register;
     private Button btn_next,btn_sign_up;
     private SharedPreferences sharedpreferences;
+    private FirebaseAuth mAuth;
     private int contestId,contestAmt;
     private double credit;
     private CardView card_view_sign_up;
@@ -85,6 +101,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     TextView txt_terms_conditions;
     private CheckBox checkbox_terms_condition,checkbox_contact,checkbox_partner;
     private DbHelper dbHelper;
+    private GoogleSignInClient mGoogleSignInClient;
+    private SignInButton sign_in_button;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -115,10 +133,15 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             screen=getArguments().getString("screen");
             contestAmt=getArguments().getInt("contestAmt");
         }
-//        loginButton = mView.findViewById(R.id.login_button);
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
 
-//        loginButton.setReadPermissions(Arrays.asList(EMAIL));
+        mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
+        mAuth = FirebaseAuth.getInstance();
         btn_next.setOnClickListener(this);
+        sign_in_button.setOnClickListener(this);
         btn_sign_up.setOnClickListener(this);
         callbackManager = CallbackManager.Factory.create();
         txt_register.setOnClickListener(new View.OnClickListener() {
@@ -135,62 +158,15 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 dialogFragment.show(getFragmentManager(),"Terms");
             }
         });
-     /*   loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-               *//* boolean loggedIn = AccessToken.getCurrentAccessToken() == null;
-                Log.d("API123", loggedIn + " ??");
-                Log.e("Facebook",loginResult.toString());*//*
-                getUserProfile(loginResult.getAccessToken());
-            }
 
-            @Override
-            public void onCancel() {
-
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                error.printStackTrace();
-                Helper.showAlertNetural(mView.getContext(),"Error",error.getMessage());
-            }
-        });*/
         return mView;
     }
 
 
-    private void getUserProfile(AccessToken currentAccessToken) {
-        GraphRequest request = GraphRequest.newMeRequest(
-                currentAccessToken, new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject object, GraphResponse response) {
-                        Log.d("TAG", object.toString());
-                        try {
-                            String first_name = object.getString("first_name");
-                            String last_name = object.getString("last_name");
-                            String email = object.getString("email");
-                            String id = object.getString("id");
-                            String image_url = "https://graph.facebook.com/" + id + "/picture?type=normal";
-
-                            Log.e("Facebook","First Name: " + first_name + "\nLast Name: " + last_name);
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                });
-
-        Bundle parameters = new Bundle();
-        parameters.putString("fields", "first_name,last_name,email,id");
-        request.setParameters(parameters);
-        request.executeAsync();
-
-    }
 
     private void init(){
         LoginManager.getInstance().logOut();
+
         btn_next=mView.findViewById(R.id.btn_next);
         edt_mobile_no=mView.findViewById(R.id.edt_mobile_no);
         edt_password=mView.findViewById(R.id.edt_password);
@@ -211,20 +187,63 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         checkbox_contact=mView.findViewById(R.id.checkbox_contact);
         txt_terms_conditions=mView.findViewById(R.id.txt_terms_conditions);
         dbHelper=new DbHelper(getContext());
+        sign_in_button=mView.findViewById(R.id.sign_in_button);
     }
 
 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        /*if(RC_SIGN_IN==100) {
-         *//*Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);*//*
+        if(RC_SIGN_IN==100) {
+         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            GoogleSignInAccount account = null;
+            try {
+                account = task.getResult(ApiException.class);
+                firebaseAuthWithGoogle(account);
+            } catch (ApiException e) {
+                e.printStackTrace();
+            }
+
         }else{
             callbackManager.onActivityResult(requestCode, resultCode, data);
-        }*/
+        }
         super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+        Log.d(this.getClass().getName(), "firebaseAuthWithGoogle:" + acct.getId());
+        // [START_EXCLUDE silent]
+        // [END_EXCLUDE]
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(this.getClass().getName(), "signInWithCredential:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            Toast.makeText(getContext(), ""+user.getDisplayName(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private void signIn() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+    // [END signin]
+
+    private void signOut() {
+        // Firebase sign out
+        mAuth.signOut();
+
+        // Google sign out
+        mGoogleSignInClient.signOut();
     }
 
     @Override
@@ -245,7 +264,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
            }catch (Exception e){
                e.printStackTrace();
            }
-       }else{
+       }else if(v.getId()==R.id.sign_in_button){
+           signIn();
+       }
+
+       else{
             try{
                 String mobileNo=edt_mobile_number.getText().toString();
                 String password=edt_pass_word.getText().toString();

@@ -1,42 +1,42 @@
 {
   "project_info": {
-    "project_number": "1057229910860",
-    "firebase_url": "https://apni-cricket-league-6d5b9.firebaseio.com",
-    "project_id": "apni-cricket-league-6d5b9",
-    "storage_bucket": "apni-cricket-league-6d5b9.appspot.com"
+    "project_number": "346349229302",
+    "firebase_url": "https://acl-revamp.firebaseio.com",
+    "project_id": "acl-revamp",
+    "storage_bucket": "acl-revamp.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1057229910860:android:a738ee74a17442af",
+        "mobilesdk_app_id": "1:346349229302:android:8de1fb53c3184491",
         "android_client_info": {
           "package_name": "com.psl.fantasy.league.revamp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1057229910860-4i3qm0jekvjt07gevr17bs51m8faeg65.apps.googleusercontent.com",
+          "client_id": "346349229302-f072d7msqo2hghk732gnt1rinfgs5e7h.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.psl.fantasy.league.revamp",
-            "certificate_hash": "44cb917965174ba48d218e36255348575e64070f"
+            "certificate_hash": "bfbcdb4419a293946c7a0401c61524731b2a2364"
           }
         },
         {
-          "client_id": "1057229910860-c1i4rvr8o55am9aq4se1cbs0l6ucm8ga.apps.googleusercontent.com",
+          "client_id": "346349229302-sqedk18984e5i6ntm0muf8ic61kp3qfv.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBOaOSuWxYbZlXUWt20EWJBfUF2cYteL6M"
+          "current_key": "AIzaSyCX2x7V_JV_1DTregBJJM8MSb0UrabVHX4"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1057229910860-c1i4rvr8o55am9aq4se1cbs0l6ucm8ga.apps.googleusercontent.com",
+              "client_id": "346349229302-sqedk18984e5i6ntm0muf8ic61kp3qfv.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

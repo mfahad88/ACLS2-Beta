@@ -55,6 +55,7 @@ public class MyLeaderboardTabAdapter extends ArrayAdapter<MyLeaderboardTabBean> 
         convertView=LayoutInflater.from(context).inflate(resource,null);
         TextView txt_team_name=convertView.findViewById(R.id.txt_team_name);
         TextView txt_credit=convertView.findViewById(R.id.txt_credit);
+        TextView txt_rank=convertView.findViewById(R.id.txt_rank);
         CardView card_view=convertView.findViewById(R.id.card_view);
         MyLeaderboardTabBean bean=list.get(position);
         if(bean.getUserId()==userId){
@@ -62,6 +63,7 @@ public class MyLeaderboardTabAdapter extends ArrayAdapter<MyLeaderboardTabBean> 
         }
         txt_team_name.setText(bean.getTeamName());
         txt_credit.setText(bean.getCredit());
+        txt_rank.setText(String.valueOf(bean.getNum()));
         return convertView;
     }
 }

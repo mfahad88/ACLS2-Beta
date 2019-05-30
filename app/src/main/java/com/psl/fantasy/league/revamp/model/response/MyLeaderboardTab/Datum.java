@@ -30,6 +30,9 @@ public class Datum {
     @SerializedName("total_point")
     @Expose
     private String totalPoint;
+    @SerializedName("position")
+    @Expose
+    private Integer position;
 
     public Integer getMyUserTeamId() {
         return myUserTeamId;
@@ -95,4 +98,11 @@ public class Datum {
         this.totalPoint = totalPoint;
     }
 
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
 }

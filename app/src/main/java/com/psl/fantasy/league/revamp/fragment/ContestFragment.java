@@ -274,7 +274,7 @@ public class ContestFragment extends Fragment {
                                                 if(datum.getContestType().equalsIgnoreCase("0")){
                                                     //if(datum.getPoolConsumed()>0){
 
-                                                        txt_cat1.setText("Mega Contest");
+                                                        txt_cat1.setText(datum.getContestName());
 
                                                         if(counter_mega<3) {
                                                             float perc= ((datum.getPoolConsumed().floatValue() / datum.getPool().floatValue()) * 100);
@@ -311,7 +311,7 @@ public class ContestFragment extends Fragment {
 //                                                    if(datum.getPoolConsumed()>0){
 
 
-                                                        txt_cat2.setText("Expert Contest");
+                                                        txt_cat2.setText(datum.getContestName());
 
                                                         if(counter_expert<3) {
                                                             float perc= ((datum.getPoolConsumed().floatValue() / datum.getPool().floatValue()) * 100);
@@ -341,7 +341,7 @@ public class ContestFragment extends Fragment {
                                                   //  if(datum.getPoolConsumed()>0){
 
 
-                                                        txt_cat3.setText("Beginner Contest");
+                                                        txt_cat3.setText(datum.getContestName());
 
                                                         if(counter_beginner<3) {
                                                             float perc= ((datum.getPoolConsumed().floatValue() / datum.getPool().floatValue()) * 100);
@@ -371,7 +371,7 @@ public class ContestFragment extends Fragment {
                                                     //  if(datum.getPoolConsumed()>0){
 
 
-                                                    txt_cat4.setText("Practice Contest");
+                                                    txt_cat4.setText(datum.getContestName());
 
                                                     if(counter_practice<3) {
                                                         float perc= ((datum.getPoolConsumed().floatValue() / datum.getPool().floatValue()) * 100);
