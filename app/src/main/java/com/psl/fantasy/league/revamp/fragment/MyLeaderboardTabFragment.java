@@ -64,7 +64,7 @@ public class MyLeaderboardTabFragment extends Fragment {
                             if(response.isSuccessful()) {
                                 if (response.body().getResponseCode().equalsIgnoreCase("1001")) {
                                     for (Datum datum : response.body().getData()) {
-                                        list.add(new MyLeaderboardTabBean(datum.getMyUserTeamId(),datum.getUserId(), datum.getTeamName(), String.valueOf(datum.getRemBudget()),datum.getPosition().intValue()));
+                                        list.add(new MyLeaderboardTabBean(datum.getMyUserTeamId(),datum.getUserId(), datum.getTeamName(), String.valueOf(datum.getTotalPoint()),datum.getPosition().intValue()));
                                     }
                                     if (list.size() > 0) {
                                         list_my_leaderboard.setVisibility(View.VISIBLE);

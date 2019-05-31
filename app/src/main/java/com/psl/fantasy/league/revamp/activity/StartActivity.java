@@ -226,5 +226,11 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
         }
     }
 
-
+    @Override
+    protected void onDestroy() {
+        dbHelper.deleteConfig();
+        dbHelper.deleteMyTeam();
+        dbHelper.deletePlayer();
+        super.onDestroy();
+    }
 }

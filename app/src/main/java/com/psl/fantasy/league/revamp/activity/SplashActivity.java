@@ -94,7 +94,7 @@ public class SplashActivity extends AppCompatActivity {
                 public void onResponse(Call<PlayerResponse> call, Response<PlayerResponse> response) {
                     if(response.isSuccessful()){
                         if(response.body().getResponseCode().equals("1001")){
-
+                            dbHelper.deletePlayer();
                             dbHelper.savePlayers(response.body().getData());
                         }
                     }else{

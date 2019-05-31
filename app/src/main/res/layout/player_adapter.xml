@@ -24,23 +24,29 @@
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="viewStart"
                 android:layout_weight="1"
-                android:id="@+id/txt_team_name"/>
+                android:id="@+id/txt_team_name"
+                android:layout_gravity="start|center_vertical" />
 
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textAlignment="center"
+                android:layout_gravity="center"
                 android:id="@+id/txt_credit"/>
 
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:id="@+id/txt_earned_points"/>
+                android:textAlignment="viewEnd"
+                android:id="@+id/txt_earned_points"
+                android:layout_gravity="end|center" />
            <!-- <TextView
                 android:layout_width="0dp"
                 android:layout_height="30dp"
