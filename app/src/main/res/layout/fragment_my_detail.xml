@@ -38,7 +38,7 @@
                    android:layout_weight="0.5"/>
 
                <TextView
-                   android:layout_width="100dp"
+                   android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:textSize="14sp"
                    android:padding="5dp"
@@ -56,45 +56,52 @@
                android:weightSum="1">
 
                <TextView
-                   android:layout_width="100dp"
+                   android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:gravity="center_horizontal"
+                   android:textAlignment="textStart"
                    android:textSize="14sp"
                    android:padding="5dp"
                    android:textStyle="bold"
-                   android:text="Coins"/>
+                   android:text="Coins"
+                   android:layout_gravity="start" />
 
 
                <TextView
-                   android:layout_width="100dp"
+                   android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:gravity="center_horizontal"
+                   android:textAlignment="textEnd"
                    android:padding="5dp"
                    android:textSize="14sp"
                    android:textStyle="bold"
-                   android:text="Points"/>
+                   android:text="Points"
+                   android:layout_gravity="end" />
            </LinearLayout>
 
            <LinearLayout
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:orientation="horizontal"
+               android:weightSum="1"
                android:layout_centerHorizontal="true"
                android:layout_below="@id/linear_title">
 
                <TextView
-                   android:layout_width="100dp"
+                   android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:padding="5dp"
-                   android:gravity="center_horizontal"
-                   android:id="@+id/txt_coins"/>
+                   android:layout_marginRight="10dp"
+                   android:textAlignment="textStart"
+                   android:id="@+id/txt_coins"
+                   android:layout_gravity="start" />
 
                <TextView
-                   android:layout_width="100dp"
+                   android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:padding="5dp"
-                   android:gravity="center_horizontal"
-                   android:id="@+id/txt_points"/>
+                   android:textAlignment="textEnd"
+                    android:layout_marginLeft="10dp"
+                   android:id="@+id/txt_points"
+                   android:layout_gravity="end" />
            </LinearLayout>
 
        </RelativeLayout>

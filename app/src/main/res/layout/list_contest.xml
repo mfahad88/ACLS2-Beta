@@ -18,7 +18,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_gravity="top"
@@ -122,7 +122,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:gravity="center_vertical"
             android:id="@+id/relative_footer"
@@ -132,7 +132,7 @@
                 android:drawableStart="@drawable/drawable_cup"
                 android:drawableEnd="@drawable/ic_arrow_downward_black_24dp"
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
+                android:layout_height="30dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
@@ -143,47 +143,31 @@
                 android:id="@+id/txt_winners"
                 android:textColor="#31B1FE" />
 
-            <TextView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:text="A"
-                android:id="@+id/txt_contest_type_one"
-                android:textSize="12sp"
-                android:background="@drawable/drawable_txt_square"
-                android:textAlignment="center"
-                android:gravity="center_vertical"
-                android:layout_marginRight="10dp"
-                android:visibility="invisible"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"/>
+
 
             <TextView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="C"
-                android:background="@drawable/drawable_txt_square"
-                android:layout_centerVertical="true"
                 android:id="@+id/txt_confirm_winning"
-                android:textSize="12sp"
-                android:textAlignment="center"
-                android:gravity="center_vertical"
+                android:textSize="10sp"
+                android:textAlignment="textEnd"
                 android:layout_marginRight="10dp"
                 android:visibility="invisible"
-                android:layout_toLeftOf="@+id/txt_contest_type_one"/>
+                android:layout_alignParentRight="true"/>
 
             <TextView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="S"
-                android:background="@drawable/drawable_txt_square"
-                android:layout_centerVertical="true"
                 android:id="@+id/txt_multi"
-                android:textSize="12sp"
-                android:textAlignment="center"
-                android:gravity="center_vertical"
+                android:textSize="10sp"
+                android:textAlignment="textEnd"
                 android:layout_marginRight="10dp"
-                android:layout_toLeftOf="@id/txt_confirm_winning"
-                android:visibility="visible"
+                android:layout_marginTop="5dp"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/txt_confirm_winning"
+                android:visibility="invisible"
                 />
 
         </RelativeLayout>

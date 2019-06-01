@@ -75,7 +75,7 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
         linear_pointer= findViewById(R.id.linear_pointer);
         Helper.checkAppVersion(StartActivity.this,preferences,dbHelper);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        setBottomNavigationLabelsTextSize(navigation,0.9f);
+        setBottomNavigationLabelsTextSize(navigation,0.7f);
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {

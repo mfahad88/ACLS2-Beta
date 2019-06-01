@@ -64,7 +64,7 @@ public class ContestAdapter extends ArrayAdapter<ContestBean> {
         TextView txt_discount=convertView.findViewById(R.id.txt_discount);
         TextView btn_pay=convertView.findViewById(R.id.btn_pay);
         TextView txt_winners=convertView.findViewById(R.id.txt_winners);
-        TextView txt_contest_type_one=convertView.findViewById(R.id.txt_contest_type_one);
+//        TextView txt_contest_type_one=convertView.findViewById(R.id.txt_contest_type_one);
         TextView txt_confirm_winning=convertView.findViewById(R.id.txt_confirm_winning);
         TextView txt_multi=convertView.findViewById(R.id.txt_multi);
         TextView txt_pool=convertView.findViewById(R.id.txt_pool);
@@ -85,32 +85,43 @@ public class ContestAdapter extends ArrayAdapter<ContestBean> {
             txt_discount.setText(bean.getActual_price(),TextView.BufferType.SPANNABLE);
             Spannable spannable = (Spannable) txt_discount.getText();
             spannable.setSpan(strikethroughSpan, 0, txt_discount.getText().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            btn_pay.setText(bean.getDiscount());
+            btn_pay.setText("Rs. "+bean.getDiscount());
         }else{
-            btn_pay.setText(bean.getActual_price());
+            if(bean.getActual_price().equalsIgnoreCase("0")){
+                btn_pay.setText("join");
+            }else {
+                btn_pay.setText("Rs. " + bean.getActual_price());
+            }
         }
+
         txt_pool.setText(bean.getSpots()+" Spots");
         Log.e("Bean---->", String.valueOf(bean.getProgress()));
         progressBar.setProgress(bean.getProgress());
         txt_spots_left.setText(bean.getSpots_left()+" spots left");
         txt_price.setText(bean.getPrice());
         txt_winners.setText(bean.getWinners()+" Winners");
-        txt_contest_type_one.setText(bean.getContest_type());
+//        txt_contest_type_one.setText(bean.getContest_type());
         if(bean.getMultiple().equalsIgnoreCase("y")) {
-            txt_multi.setText("M");
+            txt_multi.setText("Multiple Entry");
+            txt_multi.setVisibility(View.VISIBLE);
         }else{
-            txt_multi.setText("S");
+            txt_multi.setText("Single Entry");
+            txt_multi.setVisibility(View.VISIBLE);
         }
         if(bean.getConfirm_winning().equalsIgnoreCase("y")){
+            txt_confirm_winning.setText("Confirm Winning");
             txt_confirm_winning.setVisibility(View.VISIBLE);
-            txt_confirm_winning.setText("C");
         }
         btn_pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Fragment fragment=new TeamFragment();
                 Bundle bundle=new Bundle();
-                bundle.putInt("contestAmt", Integer.parseInt(btn_pay.getText().toString()));
+                if(Integer.parseInt(bean.getDiscount())>0) {
+                    bundle.putInt("contestAmt", Integer.parseInt(bean.getDiscount()));
+                }else{
+                    bundle.putInt("contestAmt", Integer.parseInt(bean.getActual_price()));
+                }
                 bundle.putInt("contestId",bean.getContestId());
                 bundle.putInt("teamId1",teamId1);
                 bundle.putInt("teamId2",teamId2);

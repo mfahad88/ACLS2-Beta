@@ -152,7 +152,16 @@ public class MyMatchesAdapter extends ArrayAdapter<MyMatchesBean> {
         txt_short_team_one.setText(bean.getShortName1());
         txt_short_team_two.setText(bean.getShortName2());
         txt_series.setText(bean.getSeriesName());
-        txt_contest_joined.setText(bean.getMatchStatus());
+        if(bean.getMatchStatus().equalsIgnoreCase("1")) {
+            txt_contest_joined.setText("Match to be played");
+        }if(bean.getMatchStatus().equalsIgnoreCase("2")) {
+            txt_contest_joined.setText("Match Inprocess");
+        }if(bean.getMatchStatus().equalsIgnoreCase("3")) {
+            txt_contest_joined.setText("Generating match results");
+        }if(bean.getMatchStatus().equalsIgnoreCase("4")) {
+            txt_contest_joined.setText("Match completed");
+        }
+
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

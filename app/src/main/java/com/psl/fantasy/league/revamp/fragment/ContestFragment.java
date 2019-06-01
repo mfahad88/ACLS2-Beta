@@ -267,19 +267,21 @@ public class ContestFragment extends Fragment {
                                         List<ContestBean> list=new ArrayList<>();
                                         List<ContestBean> list_expert=new ArrayList<>();
                                         List<ContestBean> list_beginner=new ArrayList<>();
+                                        List<ContestBean> list_pratice=new ArrayList<>();
                                         for(Datum datum:response.body().getData()){
                                             if(datum.getIsVisible().equals("1")){
 
 
-                                                if(datum.getContestType().equalsIgnoreCase("0")){
+                                                if(datum.getContestType().equalsIgnoreCase("0")){ //0=mega,1=expert,2=practice,3=beginner
                                                     //if(datum.getPoolConsumed()>0){
 
                                                         txt_cat1.setText(datum.getContestName());
+                                                        txt_cat1.setVisibility(View.VISIBLE);
 
                                                         if(counter_mega<3) {
                                                             float perc= ((datum.getPoolConsumed().floatValue() / datum.getPool().floatValue()) * 100);
                                                             int percent = Math.round(perc);
-                                                            txt_cat1.setVisibility(View.VISIBLE);
+
                                                             Log.e("Float-------->",datum.getPoolConsumed().floatValue()+"/"+datum.getPool().floatValue());
 
                                                             list.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
@@ -293,15 +295,16 @@ public class ContestFragment extends Fragment {
 
                                                             counter_mega++;
                                                             Log.e("Mega--->",datum.toString());
-                                                            if(counter_mega==3) {
-                                                                txt_view_more_mega.setVisibility(View.VISIBLE);
-                                                            }
-                                                            ViewGroup.LayoutParams params = list_contest_1.getLayoutParams();
-                                                            params.height=Helper.dpToPx(144*counter_mega,mView.getContext());
-                                                            list_contest_1.setLayoutParams(params);
-                                                            list_contest_1.requestLayout();
-                                                        }
 
+                                                        }
+                                                    ViewGroup.LayoutParams params = list_contest_1.getLayoutParams();
+                                                    params.height=Helper.dpToPx(144*counter_mega,mView.getContext());
+                                                    list_contest_1.setLayoutParams(params);
+                                                    list_contest_1.requestLayout();
+
+                                                    if(counter_mega>=3) {
+                                                        txt_view_more_mega.setVisibility(View.VISIBLE);
+                                                    }
 
                                                     //}
                                                 }
@@ -312,11 +315,11 @@ public class ContestFragment extends Fragment {
 
 
                                                         txt_cat2.setText(datum.getContestName());
-
+                                                        txt_cat2.setVisibility(View.VISIBLE);
                                                         if(counter_expert<3) {
                                                             float perc= ((datum.getPoolConsumed().floatValue() / datum.getPool().floatValue()) * 100);
                                                             int percent = Math.round(perc);
-                                                            txt_cat2.setVisibility(View.VISIBLE);
+
                                                             list_expert.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
                                                                    ,String.valueOf(datum.getPool()) , datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
                                                             list_contest_2.setVisibility(View.VISIBLE);
@@ -325,15 +328,17 @@ public class ContestFragment extends Fragment {
                                                             list_contest_2.setAdapter(adapter);
                                                             counter_expert++;
                                                             Log.e("Expert--->",datum.toString());
-                                                            if(counter_expert==3){
-                                                                txt_view_more_expert.setVisibility(View.VISIBLE);
-                                                            }
-                                                            ViewGroup.LayoutParams params = list_contest_2.getLayoutParams();
-                                                            params.height=Helper.dpToPx(144*counter_expert,mView.getContext());
-                                                            list_contest_2.setLayoutParams(params);
-                                                            list_contest_2.requestLayout();
+
+
                                                         }
 
+                                                    ViewGroup.LayoutParams params = list_contest_2.getLayoutParams();
+                                                    params.height=Helper.dpToPx(144*counter_expert,mView.getContext());
+                                                    list_contest_2.setLayoutParams(params);
+                                                    list_contest_2.requestLayout();
+                                                    if(counter_expert>=3){
+                                                        txt_view_more_expert.setVisibility(View.VISIBLE);
+                                                    }
 
 //                                                    }
                                                 }
@@ -342,11 +347,11 @@ public class ContestFragment extends Fragment {
 
 
                                                         txt_cat3.setText(datum.getContestName());
-
+                                                        txt_cat3.setVisibility(View.VISIBLE);
                                                         if(counter_beginner<3) {
                                                             float perc= ((datum.getPoolConsumed().floatValue() / datum.getPool().floatValue()) * 100);
                                                             int percent = Math.round(perc);
-                                                            txt_cat3.setVisibility(View.VISIBLE);
+
                                                             list_beginner.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
                                                                     ,String.valueOf(datum.getPool()), datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
                                                             list_contest_3.setVisibility(View.VISIBLE);
@@ -354,16 +359,14 @@ public class ContestFragment extends Fragment {
                                                             list_contest_3.setAdapter(adapter);
                                                             counter_beginner++;
                                                             Log.e("Beginner--->",datum.toString());
-                                                            if(counter_beginner==3){
-                                                                txt_view_more_beginner.setVisibility(View.VISIBLE);
-                                                            }
-
-                                                            ViewGroup.LayoutParams params = list_contest_3.getLayoutParams();
-                                                            params.height=Helper.dpToPx(144*counter_beginner,mView.getContext());
-                                                            list_contest_3.setLayoutParams(params);
-                                                            list_contest_3.requestLayout();
                                                         }
-
+                                                    ViewGroup.LayoutParams params = list_contest_3.getLayoutParams();
+                                                    params.height=Helper.dpToPx(144*counter_beginner,mView.getContext());
+                                                    list_contest_3.setLayoutParams(params);
+                                                    list_contest_3.requestLayout();
+                                                    if(counter_beginner>=3){
+                                                        txt_view_more_beginner.setVisibility(View.VISIBLE);
+                                                    }
                                                     //}
                                                 }
 
@@ -372,28 +375,29 @@ public class ContestFragment extends Fragment {
 
 
                                                     txt_cat4.setText(datum.getContestName());
+                                                    txt_cat4.setVisibility(View.VISIBLE);
 
                                                     if(counter_practice<3) {
                                                         float perc= ((datum.getPoolConsumed().floatValue() / datum.getPool().floatValue()) * 100);
                                                         int percent = Math.round(perc);
-                                                        txt_cat4.setVisibility(View.VISIBLE);
-                                                        list_beginner.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
+
+                                                        list_pratice.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
                                                                 ,String.valueOf(datum.getPool()), datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
                                                         list_contest_4.setVisibility(View.VISIBLE);
-                                                        adapter=new ContestAdapter(mView.getContext(),R.layout.list_contest,list_beginner,TeamId1,TeamId2,teamOne,teamTwo);
+                                                        adapter=new ContestAdapter(mView.getContext(),R.layout.list_contest,list_pratice,TeamId1,TeamId2,teamOne,teamTwo);
                                                         list_contest_4.setAdapter(adapter);
                                                         counter_practice++;
                                                         Log.e("Practice--->",datum.toString());
-                                                        if(counter_practice==3){
-                                                            txt_view_more_practice.setVisibility(View.VISIBLE);
-                                                        }
 
-                                                        ViewGroup.LayoutParams params = list_contest_4.getLayoutParams();
-                                                        params.height=Helper.dpToPx(144*counter_practice,mView.getContext());
-                                                        list_contest_4.setLayoutParams(params);
-                                                        list_contest_4.requestLayout();
                                                     }
 
+                                                    ViewGroup.LayoutParams params = list_contest_4.getLayoutParams();
+                                                    params.height=Helper.dpToPx(144*counter_practice,mView.getContext());
+                                                    list_contest_4.setLayoutParams(params);
+                                                    list_contest_4.requestLayout();
+                                                    if(counter_practice>=3){
+                                                        txt_view_more_practice.setVisibility(View.VISIBLE);
+                                                    }
                                                     //}
                                                 }
                                             }

@@ -29,13 +29,13 @@
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:layout_width="100dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/radio_js_wallet"
                     android:text="JS Wallet"/>
 
                 <RadioButton
-                    android:layout_width="100dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/radio_other"
                     android:text="Other"/>
@@ -59,13 +59,13 @@
                     android:layout_centerHorizontal="true">
 
                     <TextView
-                        android:layout_width="70dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Mobile No"
                         android:gravity="right"/>
 
                     <EditText
-                        android:layout_width="190dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:hint="03XXXXXXXXX"
                         android:inputType="number"
@@ -89,7 +89,7 @@
                         android:gravity="right" />
 
                     <EditText
-                        android:layout_width="190dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:hint="42XXXXXXXXXXX"
                         android:maxLength="13"

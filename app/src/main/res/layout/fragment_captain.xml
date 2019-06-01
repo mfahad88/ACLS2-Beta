@@ -18,19 +18,20 @@
             android:layout_height="wrap_content"
             android:text="Choose your Captain and Vice Captain"
             android:layout_alignParentLeft="true"
-            android:textSize="12sp"
+            android:textSize="11sp"
             android:textStyle="bold"
             android:layout_centerVertical="true"
             />
 
         <Button
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_save_team"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="15dp"
             android:text="Save Team"
-            android:textSize="14sp"
+            android:textSize="13sp"
+            android:padding="5dp"
             android:textAllCaps="true"
             android:enabled="false"
             android:layout_centerVertical="true"

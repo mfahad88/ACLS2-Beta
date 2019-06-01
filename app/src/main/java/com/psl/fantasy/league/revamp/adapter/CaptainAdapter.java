@@ -58,6 +58,7 @@ public class CaptainAdapter extends ArrayAdapter<PlayerBean> {
                         bean.setCheckedCaptain(false);
                         captainInterface.captain(false);
                         txt_captain.setTextColor(Color.parseColor("#9b9b9b"));
+                        txt_captain.setText("C");
                         dbHelper.updateCaptainMyTeam(bean.getId(), true, 0);
                     }
                 } else {
@@ -66,6 +67,7 @@ public class CaptainAdapter extends ArrayAdapter<PlayerBean> {
                             txt_captain.setSelected(true);
                             txt_captain.setTextColor(Color.parseColor("#ffffff"));
                             bean.setCheckedCaptain(true);
+                            txt_captain.setText("3x");
                             captainInterface.captain(true);
                             dbHelper.updateCaptainMyTeam(bean.getId(), true, 1);
                         }
@@ -84,6 +86,7 @@ public class CaptainAdapter extends ArrayAdapter<PlayerBean> {
                         bean.setCheckedViceCaptain(false);
                         captainInterface.vice_captain(false);
                         txt_vice_captain.setTextColor(Color.parseColor("#9b9b9b"));
+                        txt_vice_captain.setText("VC");
                         dbHelper.updateCaptainMyTeam(bean.getId(), false, 0);
                     }
                 } else {
@@ -93,6 +96,8 @@ public class CaptainAdapter extends ArrayAdapter<PlayerBean> {
                         bean.setCheckedViceCaptain(true);
                         captainInterface.vice_captain(true);
                         txt_vice_captain.setTextColor(Color.parseColor("#ffffff"));
+                        txt_vice_captain.setText("2x");
+
                         dbHelper.updateCaptainMyTeam(bean.getId(), false, 1);
                     }
                 }
@@ -100,10 +105,14 @@ public class CaptainAdapter extends ArrayAdapter<PlayerBean> {
         });
         if(list.get(position).isCheckedCaptain()){
             txt_captain.setSelected(true);
-            txt_captain.setTextColor(Color.parseColor("#9b9b9b"));
+//            txt_captain.setTextColor(Color.parseColor("#9b9b9b"));
+            txt_captain.setTextColor(Color.parseColor("#ffffff"));
+            txt_captain.setText("3x");
         }if(list.get(position).isCheckedViceCaptain()){
             txt_vice_captain.setSelected(true);
-            txt_vice_captain.setTextColor(Color.parseColor("#9b9b9b"));
+//            txt_vice_captain.setTextColor(Color.parseColor("#9b9b9b"));
+            txt_vice_captain.setTextColor(Color.parseColor("#ffffff"));
+            txt_vice_captain.setText("2x");
         }
         return convertView;
     }
