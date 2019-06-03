@@ -182,61 +182,63 @@ public class AccountLinkFragment extends Fragment implements View.OnClickListene
                 progressBar.setVisibility(View.GONE);
             }else{
                 if(edt_cnic.getText().length()==13 && edt_mobile_no.getText().length()==11){
-                    try {
-                        JSONObject object=new JSONObject();
-                        object.put("cnic",edt_cnic.getText().toString());
-                        object.put("mobileNumber",edt_mobile_no.getText().toString());
-                        object.put("method_name",this.getClass().getSimpleName()+"btn_ok.onClick");
-                        ApiClient.getInstance().verifyAccount(Helper.encrypt(object.toString()))
-                                .enqueue(new Callback<LinkingBean>() {
-                                    @Override
-                                    public void onResponse(Call<LinkingBean> call, Response<LinkingBean> response) {
-                                        btn_ok.setEnabled(true);
-                                        progressBar.setVisibility(View.GONE);
-                                        if(response.isSuccessful()){
-                                            if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-                                                relative_linking.setVisibility(View.GONE);
-                                                relative_OTP.setVisibility(View.VISIBLE);
-                                                new CountDownTimer(60000,1000){
+                   if(Helper.isConnectedToNetwork(getActivity())){
+                       try {
+                           JSONObject object=new JSONObject();
+                           object.put("cnic",edt_cnic.getText().toString());
+                           object.put("mobileNumber",edt_mobile_no.getText().toString());
+                           object.put("method_name",this.getClass().getSimpleName()+"btn_ok.onClick");
+                           ApiClient.getInstance().verifyAccount(Helper.encrypt(object.toString()))
+                                   .enqueue(new Callback<LinkingBean>() {
+                                       @Override
+                                       public void onResponse(Call<LinkingBean> call, Response<LinkingBean> response) {
+                                           btn_ok.setEnabled(true);
+                                           progressBar.setVisibility(View.GONE);
+                                           if(response.isSuccessful()){
+                                               if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+                                                   relative_linking.setVisibility(View.GONE);
+                                                   relative_OTP.setVisibility(View.VISIBLE);
+                                                   new CountDownTimer(60000,1000){
 
-                                                    @Override
-                                                    public void onTick(long millisUntilFinished) {
-                                                        txt_expires.setText(""+String.format("%d min, %d sec",
-                                                                TimeUnit.MILLISECONDS.toMinutes( millisUntilFinished),
-                                                                TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
-                                                                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
-                                                        Log.e("Counter---->",""+String.format("%d min, %d sec",
-                                                                TimeUnit.MILLISECONDS.toMinutes( millisUntilFinished),
-                                                                TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
-                                                                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
-                                                    }
+                                                       @Override
+                                                       public void onTick(long millisUntilFinished) {
+                                                           txt_expires.setText(""+String.format("%d min, %d sec",
+                                                                   TimeUnit.MILLISECONDS.toMinutes( millisUntilFinished),
+                                                                   TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                                                                           TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+                                                           Log.e("Counter---->",""+String.format("%d min, %d sec",
+                                                                   TimeUnit.MILLISECONDS.toMinutes( millisUntilFinished),
+                                                                   TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                                                                           TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+                                                       }
 
-                                                    @Override
-                                                    public void onFinish() {
-                                                        Fragment fragment=new AccountLinkFragment();
-                                                        FragmentTransaction ft=getFragmentManager().beginTransaction();
-                                                        ft.replace(R.id.frame_container,fragment);
-                                                        ft.commit();
-                                                    }
-                                                }.start();
-                                                //Helper.showAlertNetural(mView.getContext(),"Success",response.body().getMessage());
-                                            }else{
-                                                Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                                            }
-                                        }
-                                    }
+                                                       @Override
+                                                       public void onFinish() {
+                                                           Fragment fragment=new AccountLinkFragment();
+                                                           FragmentTransaction ft=getFragmentManager().beginTransaction();
+                                                           ft.replace(R.id.frame_container,fragment);
+                                                           ft.commit();
+                                                       }
+                                                   }.start();
+                                                   //Helper.showAlertNetural(mView.getContext(),"Success",response.body().getMessage());
+                                               }else{
+                                                   Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                               }
+                                           }
+                                       }
 
-                                    @Override
-                                    public void onFailure(Call<LinkingBean> call, Throwable t) {
-                                        t.printStackTrace();
-                                        btn_ok.setEnabled(true);
-                                        progressBar.setVisibility(View.GONE);
-                                        Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
-                                    }
-                                });
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
+                                       @Override
+                                       public void onFailure(Call<LinkingBean> call, Throwable t) {
+                                           t.printStackTrace();
+                                           btn_ok.setEnabled(true);
+                                           progressBar.setVisibility(View.GONE);
+                                           Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
+                                       }
+                                   });
+                       }catch (Exception e){
+                           e.printStackTrace();
+                       }
+                   }
                 }else{
                     Helper.showAlertNetural(mView.getContext(),"Error","Please check cnic and mobile number");
                     btn_ok.setEnabled(true);
@@ -253,57 +255,59 @@ public class AccountLinkFragment extends Fragment implements View.OnClickListene
                     progressBar.setVisibility(View.GONE);
                 }else{
                     if(edt_otp.getText().length()==5){
-                        try {
-                            JSONObject object=new JSONObject();
-                            object.put("cnic",edt_cnic.getText());
-                            object.put("mobileNumber",edt_mobile_no.getText());
-                            object.put("otp",edt_otp.getText());
-                            ApiClient.getInstance().verifyOtp(Helper.encrypt(object.toString()))
-                                    .enqueue(new Callback<OTPBean>() {
-                                        @Override
-                                        public void onResponse(Call<OTPBean> call, Response<OTPBean> response) {
-                                            progressBar.setVisibility(View.GONE);
-                                            if(response.isSuccessful()){
-                                                btn_submit.setEnabled(true);
-                                                if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+                       if(Helper.isConnectedToNetwork(getActivity())){
+                           try {
+                               JSONObject object=new JSONObject();
+                               object.put("cnic",edt_cnic.getText());
+                               object.put("mobileNumber",edt_mobile_no.getText());
+                               object.put("otp",edt_otp.getText());
+                               ApiClient.getInstance().verifyOtp(Helper.encrypt(object.toString()))
+                                       .enqueue(new Callback<OTPBean>() {
+                                           @Override
+                                           public void onResponse(Call<OTPBean> call, Response<OTPBean> response) {
+                                               progressBar.setVisibility(View.GONE);
+                                               if(response.isSuccessful()){
+                                                   btn_submit.setEnabled(true);
+                                                   if(response.body().getResponseCode().equalsIgnoreCase("1001")){
 
-                                                    try {
-                                                        JSONObject object=new JSONObject();
-                                                        object.put(Helper.CNIC,edt_cnic.getText().toString());
-                                                        Helper.putUserSession(preferences,Helper.CNIC,object);
-                                                    } catch (JSONException e) {
-                                                        e.printStackTrace();
-                                                    }
+                                                       try {
+                                                           JSONObject object=new JSONObject();
+                                                           object.put(Helper.CNIC,edt_cnic.getText().toString());
+                                                           Helper.putUserSession(preferences,Helper.CNIC,object);
+                                                       } catch (JSONException e) {
+                                                           e.printStackTrace();
+                                                       }
 
 
-                                                    new Handler().postDelayed(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            Helper.showAlertNetural(mView.getContext(),"Success",response.body().getMessage());
-                                                        }
-                                                    },1000);
-                                                    AppCompatActivity activity=(AppCompatActivity)getActivity();
-                                                    Fragment fragment=new DashboardFragment();
-                                                    FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
-                                                    ft.replace(R.id.main_content,fragment);
-                                                    ft.commit();
-                                                }else {
-                                                    Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                                                }
-                                            }
-                                        }
+                                                       new Handler().postDelayed(new Runnable() {
+                                                           @Override
+                                                           public void run() {
+                                                               Helper.showAlertNetural(mView.getContext(),"Success",response.body().getMessage());
+                                                           }
+                                                       },1000);
+                                                       AppCompatActivity activity=(AppCompatActivity)getActivity();
+                                                       Fragment fragment=new DashboardFragment();
+                                                       FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
+                                                       ft.replace(R.id.main_content,fragment);
+                                                       ft.commit();
+                                                   }else {
+                                                       Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                                   }
+                                               }
+                                           }
 
-                                        @Override
-                                        public void onFailure(Call<OTPBean> call, Throwable t) {
-                                            t.printStackTrace();
-                                            btn_submit.setEnabled(true);
-                                            progressBar.setVisibility(View.GONE);
-                                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
-                                        }
-                                    });
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
+                                           @Override
+                                           public void onFailure(Call<OTPBean> call, Throwable t) {
+                                               t.printStackTrace();
+                                               btn_submit.setEnabled(true);
+                                               progressBar.setVisibility(View.GONE);
+                                               Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
+                                           }
+                                       });
+                           }catch (Exception e){
+                               e.printStackTrace();
+                           }
+                       }
                     }else{
                         Helper.showAlertNetural(mView.getContext(),"Error","Invalid OTP length");
                         btn_submit.setEnabled(true);
@@ -315,50 +319,52 @@ public class AccountLinkFragment extends Fragment implements View.OnClickListene
             }
         }if(v.getId()==R.id.btn_other){
             if(!TextUtils.isEmpty(edt_acc.getText().toString())){
-                try{
-                    btn_other.setEnabled(false);
-                    JSONObject object=new JSONObject();
-                    object.put("user_id",user_id);
-                    object.put("bank_IMD",036);
-                    object.put("bank_Name",spinner_bank.getSelectedItem().toString());
-                    object.put("core_account",edt_acc.getText());
-                    object.put("title_of_account",edt_toa.getText());
-                    ApiClient.getInstance().updateBankTitle(Helper.encrypt(object.toString()))
-                            .enqueue(new Callback<BankInfo>() {
-                                @Override
-                                public void onResponse(Call<BankInfo> call, Response<BankInfo> response) {
+                if(Helper.isConnectedToNetwork(getActivity())){
+                    try{
+                        btn_other.setEnabled(false);
+                        JSONObject object=new JSONObject();
+                        object.put("user_id",user_id);
+                        object.put("bank_IMD",036);
+                        object.put("bank_Name",spinner_bank.getSelectedItem().toString());
+                        object.put("core_account",edt_acc.getText());
+                        object.put("title_of_account",edt_toa.getText());
+                        ApiClient.getInstance().updateBankTitle(Helper.encrypt(object.toString()))
+                                .enqueue(new Callback<BankInfo>() {
+                                    @Override
+                                    public void onResponse(Call<BankInfo> call, Response<BankInfo> response) {
 
-                                    if(response.isSuccessful()){
-                                        if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+                                        if(response.isSuccessful()){
+                                            if(response.body().getResponseCode().equalsIgnoreCase("1001")){
 
-                                            new Handler().postDelayed(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    Helper.showAlertNetural(mView.getContext(),"Success",response.body().getMessage());
-                                                }
-                                            },1000);
-                                            btn_other.setEnabled(true);
+                                                new Handler().postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        Helper.showAlertNetural(mView.getContext(),"Success",response.body().getMessage());
+                                                    }
+                                                },1000);
+                                                btn_other.setEnabled(true);
                                             /*AppCompatActivity revamp.activity=(AppCompatActivity)mView.getContext();
                                             FragmentTransaction ft=revamp.activity.getSupportFragmentManager().beginTransaction();
                                             ft.replace(R.id.frame_container,new BalanceFragment());
                                             ft.commit();*/
 
-                                        }else{
-                                            Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                                            btn_other.setEnabled(true);
+                                            }else{
+                                                Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                                btn_other.setEnabled(true);
+                                            }
                                         }
                                     }
-                                }
 
-                                @Override
-                                public void onFailure(Call<BankInfo> call, Throwable t) {
-                                    t.printStackTrace();
-                                    Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
-                                }
-                            });
-                    //edt_toa.setText("Rizwan Nasir");
-                }catch (Exception e){
-                    e.printStackTrace();
+                                    @Override
+                                    public void onFailure(Call<BankInfo> call, Throwable t) {
+                                        t.printStackTrace();
+                                        Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
+                                    }
+                                });
+                        //edt_toa.setText("Rizwan Nasir");
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             }
         }

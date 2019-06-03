@@ -54,40 +54,43 @@ public class MyMatchesTabFragment extends Fragment {
             userId=getArguments().getInt("userId");
             contestId=getArguments().getInt("contestId");
         }
-        JSONObject object=new JSONObject();
-        try {
-            object.put("user_id",userId);
-            object.put("contest_id",contestId);
-            ListView list_my_teams=mView.findViewById(R.id.list_my_teams);
-            ApiClient.getInstance().getAllTeamsByUserId(Helper.encrypt(object.toString()))
-                    .enqueue(new Callback<MyMatchesTabResponse>() {
-                        @Override
-                        public void onResponse(Call<MyMatchesTabResponse> call, Response<MyMatchesTabResponse> response) {
-                                progressBar.setVisibility(View.GONE);
-                                if(response.isSuccessful()){
-                                    if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-                                        for(Datum datum:response.body().getData()) {
-                                            list.add(new MyMatchesTabBean(datum.getMyUserTeamId(),datum.getTeamName(),String.valueOf(datum.getRemBudget()),String.valueOf(datum.getTotalPoint())));
-                                        }
-                                        list_my_teams.setVisibility(View.VISIBLE);
-                                        MyMatchesTabAdapter adapter = new MyMatchesTabAdapter(mView.getContext(),R.layout.my_matches_tab_adapter,list);
-                                        list_my_teams.setAdapter(adapter);
-                                    }else {
-                                        Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                                    }
-                                }
-                        }
 
-                        @Override
-                        public void onFailure(Call<MyMatchesTabResponse> call, Throwable t) {
-                            t.printStackTrace();
-                            progressBar.setVisibility(View.GONE);
-                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
-                        }
-                    });
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
+       if(Helper.isConnectedToNetwork(getActivity())){
+           try {
+               JSONObject object=new JSONObject();
+               object.put("user_id",userId);
+               object.put("contest_id",contestId);
+               ListView list_my_teams=mView.findViewById(R.id.list_my_teams);
+               ApiClient.getInstance().getAllTeamsByUserId(Helper.encrypt(object.toString()))
+                       .enqueue(new Callback<MyMatchesTabResponse>() {
+                           @Override
+                           public void onResponse(Call<MyMatchesTabResponse> call, Response<MyMatchesTabResponse> response) {
+                               progressBar.setVisibility(View.GONE);
+                               if(response.isSuccessful()){
+                                   if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+                                       for(Datum datum:response.body().getData()) {
+                                           list.add(new MyMatchesTabBean(datum.getMyUserTeamId(),datum.getTeamName(),String.valueOf(datum.getRemBudget()),String.valueOf(datum.getTotalPoint())));
+                                       }
+                                       list_my_teams.setVisibility(View.VISIBLE);
+                                       MyMatchesTabAdapter adapter = new MyMatchesTabAdapter(mView.getContext(),R.layout.my_matches_tab_adapter,list);
+                                       list_my_teams.setAdapter(adapter);
+                                   }else {
+                                       Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                   }
+                               }
+                           }
+
+                           @Override
+                           public void onFailure(Call<MyMatchesTabResponse> call, Throwable t) {
+                               t.printStackTrace();
+                               progressBar.setVisibility(View.GONE);
+                               Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
+                           }
+                       });
+           }catch (JSONException e){
+               e.printStackTrace();
+           }
+       }
 
         return mView;
     }

@@ -57,31 +57,33 @@ public class PrizesRedeemFragment extends Fragment {
                 user_id=nameValuePairs.getJSONObject("MyUser").getInt("user_id");
 
                 /////Request//////////
-                JSONObject jsonObject=new JSONObject();
-                jsonObject.put("user_id",user_id);
-                ApiClient.getInstance().getAllRedeemTeams(Helper.encrypt(jsonObject.toString()))
-                        .enqueue(new Callback<GetRedeem>() {
-                            @Override
-                            public void onResponse(Call<GetRedeem> call, Response<GetRedeem> response) {
-                                if(response.isSuccessful()){
-                                    if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-                                        for(Datum datum:response.body().getData()){
-                                            list.add(new RedeemBean(datum.getContestId(),datum.getTeamName(),datum.getContestName(),datum.getTotal_point(),datum.getMyUserTeamId()));
-                                            PrizesRedeemAdapter adapter=new PrizesRedeemAdapter(view.getContext(),R.layout.adapter_redeem_prizes,list,user_id);
-                                            list_redeem_prizes.setAdapter(adapter);
+                if(Helper.isConnectedToNetwork(getActivity())){
+                    JSONObject jsonObject=new JSONObject();
+                    jsonObject.put("user_id",user_id);
+                    ApiClient.getInstance().getAllRedeemTeams(Helper.encrypt(jsonObject.toString()))
+                            .enqueue(new Callback<GetRedeem>() {
+                                @Override
+                                public void onResponse(Call<GetRedeem> call, Response<GetRedeem> response) {
+                                    if(response.isSuccessful()){
+                                        if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+                                            for(Datum datum:response.body().getData()){
+                                                list.add(new RedeemBean(datum.getContestId(),datum.getTeamName(),datum.getContestName(),datum.getTotal_point(),datum.getMyUserTeamId()));
+                                                PrizesRedeemAdapter adapter=new PrizesRedeemAdapter(view.getContext(),R.layout.adapter_redeem_prizes,list,user_id);
+                                                list_redeem_prizes.setAdapter(adapter);
+                                            }
+                                        }else{
+                                            Helper.showAlertNetural(view.getContext(),"Error",response.body().getMessage());
                                         }
-                                    }else{
-                                        Helper.showAlertNetural(view.getContext(),"Error",response.body().getMessage());
                                     }
                                 }
-                            }
 
-                            @Override
-                            public void onFailure(Call<GetRedeem> call, Throwable t) {
-                                t.printStackTrace();
-                                Helper.showAlertNetural(view.getContext(),"Error","Communication Error");
-                            }
-                        });
+                                @Override
+                                public void onFailure(Call<GetRedeem> call, Throwable t) {
+                                    t.printStackTrace();
+                                    Helper.showAlertNetural(view.getContext(),"Error","Communication Error");
+                                }
+                            });
+                }
 
             }catch (Exception e){
                 e.printStackTrace();

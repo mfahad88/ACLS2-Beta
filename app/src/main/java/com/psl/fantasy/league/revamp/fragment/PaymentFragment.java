@@ -191,154 +191,160 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                 object.put("user_id", nameValuePairs.getJSONObject("MyUser").getInt("user_id"));
             }
 
-            ApiClient.getInstance().verifyPaymentSimPaisa(Helper.encrypt(object.toString()))
-                    .enqueue(new Callback<SimPaisaOTPResponse>() {
-                        @Override
-                        public void onResponse(Call<SimPaisaOTPResponse> call, Response<SimPaisaOTPResponse> response) {
-                            if(response.isSuccessful()){
-                                progressBar.setVisibility(View.GONE);
-                                btn_submit.setEnabled(true);
-                                if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-                                    saveTeam();
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Helper.showAlertNetural(mView.getContext(),"Success",response.body().getMessage());
-                                        }
-                                    },1000);
-                                    AppCompatActivity activity=(AppCompatActivity)getActivity();
-                                    Fragment fragment=new DashboardFragment();
-                                    FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
-                                    ft.replace(R.id.main_content,fragment);
-                                    ft.commit();
+            if(Helper.isConnectedToNetwork(getActivity())){
+                ApiClient.getInstance().verifyPaymentSimPaisa(Helper.encrypt(object.toString()))
+                        .enqueue(new Callback<SimPaisaOTPResponse>() {
+                            @Override
+                            public void onResponse(Call<SimPaisaOTPResponse> call, Response<SimPaisaOTPResponse> response) {
+                                if(response.isSuccessful()){
+                                    progressBar.setVisibility(View.GONE);
+                                    btn_submit.setEnabled(true);
+                                    if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+                                        saveTeam();
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Helper.showAlertNetural(mView.getContext(),"Success",response.body().getMessage());
+                                            }
+                                        },1000);
+                                        AppCompatActivity activity=(AppCompatActivity)getActivity();
+                                        Fragment fragment=new DashboardFragment();
+                                        FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
+                                        ft.replace(R.id.main_content,fragment);
+                                        ft.commit();
+                                    }else{
+                                        Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                    }
                                 }else{
-                                    Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                    progressBar.setVisibility(View.GONE);
                                 }
-                            }else{
-                                progressBar.setVisibility(View.GONE);
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<SimPaisaOTPResponse> call, Throwable t) {
-                            t.printStackTrace();
-                            btn_submit.setEnabled(true);
-                            progressBar.setVisibility(View.GONE);
-                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
-                        }
-                    });
+                            @Override
+                            public void onFailure(Call<SimPaisaOTPResponse> call, Throwable t) {
+                                t.printStackTrace();
+                                btn_submit.setEnabled(true);
+                                progressBar.setVisibility(View.GONE);
+                                Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
+                            }
+                        });
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
     public void paySimPaisa(){
-        try {
-            btn_pay.setEnabled(false);
-            JSONObject object=new JSONObject();
-            object.put("productID",1195);
-            object.put("mobileNo",mobileNo);
-            object.put("operatorID",operatorID);
-            ApiClient.getInstance().makePaymentSimPaisa(Helper.encrypt(object.toString()))
-                    .enqueue(new Callback<SimPaisaResponse>() {
-                        @Override
-                        public void onResponse(Call<SimPaisaResponse> call, Response<SimPaisaResponse> response) {
-                            if(response.isSuccessful()){
-                                progressBar.setVisibility(View.GONE);
-                                btn_pay.setEnabled(true);
-                                if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-                                    relativePay.setVisibility(View.GONE);
-                                    relativeOTP.setVisibility(View.VISIBLE);
-                                }
-                                else{
-                                    Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                                    btn_pay.setEnabled(true);
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<SimPaisaResponse> call, Throwable t) {
-                            t.printStackTrace();
-                            btn_pay.setEnabled(true);
-                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public void saveTeam(){
-       try{
-           List<PlayerBean> list= dbHelper.getMyTeam();
-           JSONArray jsonArray = new JSONArray();
-           for(PlayerBean bean:list) {
-
-               JSONArray array = new JSONArray();
-               array.put(bean.getId());
-               if(bean.isCaptain()) {
-                   array.put(1);
-               }else{
-                   array.put(0);
-               }
-               if(bean.isViceCaptain()) {
-                   array.put(1);
-               }else {
-                   array.put(0);
-               }
-               jsonArray.put(array);
-           }
-           Log.e("beanList",jsonArray.toString());
-
-           JSONObject object=new JSONObject();
-
-           object.put("user_id",userId);
-           object.put("contest_id",ContestId);
-           object.put("name","Android");
-           object.put("method_Name",this.getClass().getSimpleName()+".btn_done.onClick");
-           object.put("playersInfo",jsonArray);
-           object.put("coins",0);
-           object.put("rem_budget",credit);
-
-           ApiClient.getInstance().JoinContest(Helper.encrypt(object.toString()))
-                   .enqueue(new Callback<JoinContenstResponse>() {
-                       @Override
-                       public void onResponse(Call<JoinContenstResponse> call, Response<JoinContenstResponse> response) {
-                           if(response.isSuccessful()){
-                               progressBar.setVisibility(View.GONE);
-                               if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
-                                   dbHelper.deleteMyTeam();
-//                                Helper.showAlertNetural(mView.getContext(), "Success", response.body().getMessage());
-                               }else{
-                                   Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                                   Log.e("Pay",response.body().getMessage());
-                               }
-
-                           }else{
-                               try {
-                                   Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
-                                   Log.e("Error",response.errorBody().string());
+       if(Helper.isConnectedToNetwork(getActivity())){
+           try {
+               btn_pay.setEnabled(false);
+               JSONObject object=new JSONObject();
+               object.put("productID",1195);
+               object.put("mobileNo",mobileNo);
+               object.put("operatorID",operatorID);
+               ApiClient.getInstance().makePaymentSimPaisa(Helper.encrypt(object.toString()))
+                       .enqueue(new Callback<SimPaisaResponse>() {
+                           @Override
+                           public void onResponse(Call<SimPaisaResponse> call, Response<SimPaisaResponse> response) {
+                               if(response.isSuccessful()){
                                    progressBar.setVisibility(View.GONE);
-                               } catch (IOException e) {
-                                   e.printStackTrace();
+                                   btn_pay.setEnabled(true);
+                                   if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+                                       relativePay.setVisibility(View.GONE);
+                                       relativeOTP.setVisibility(View.VISIBLE);
+                                   }
+                                   else{
+                                       Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                       btn_pay.setEnabled(true);
+                                   }
                                }
                            }
 
-
-                       }
-
-                       @Override
-                       public void onFailure(Call<JoinContenstResponse> call, Throwable t) {
-                           t.printStackTrace();
-                           progressBar.setVisibility(View.GONE);
-                           Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
-
-                       }
-                   });
-       }catch (Exception e){
-           e.printStackTrace();
+                           @Override
+                           public void onFailure(Call<SimPaisaResponse> call, Throwable t) {
+                               t.printStackTrace();
+                               btn_pay.setEnabled(true);
+                               Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
+                               progressBar.setVisibility(View.GONE);
+                           }
+                       });
+           }catch (Exception e){
+               e.printStackTrace();
+           }
        }
+    }
+
+    public void saveTeam(){
+      if(Helper.isConnectedToNetwork(getActivity())){
+          try{
+              List<PlayerBean> list= dbHelper.getMyTeam();
+              JSONArray jsonArray = new JSONArray();
+              for(PlayerBean bean:list) {
+
+                  JSONArray array = new JSONArray();
+                  array.put(bean.getId());
+                  if(bean.isCaptain()) {
+                      array.put(1);
+                  }else{
+                      array.put(0);
+                  }
+                  if(bean.isViceCaptain()) {
+                      array.put(1);
+                  }else {
+                      array.put(0);
+                  }
+                  jsonArray.put(array);
+              }
+              Log.e("beanList",jsonArray.toString());
+
+              JSONObject object=new JSONObject();
+
+              object.put("user_id",userId);
+              object.put("contest_id",ContestId);
+              object.put("name","Android");
+              object.put("method_Name",this.getClass().getSimpleName()+".btn_done.onClick");
+              object.put("playersInfo",jsonArray);
+              object.put("coins",0);
+              object.put("rem_budget",credit);
+
+              ApiClient.getInstance().JoinContest(Helper.encrypt(object.toString()))
+                      .enqueue(new Callback<JoinContenstResponse>() {
+                          @Override
+                          public void onResponse(Call<JoinContenstResponse> call, Response<JoinContenstResponse> response) {
+                              if(response.isSuccessful()){
+                                  progressBar.setVisibility(View.GONE);
+                                  if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
+                                      dbHelper.deleteMyTeam();
+//                                Helper.showAlertNetural(mView.getContext(), "Success", response.body().getMessage());
+                                  }else{
+                                      Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                      Log.e("Pay",response.body().getMessage());
+                                  }
+
+                              }else{
+                                  try {
+                                      Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
+                                      Log.e("Error",response.errorBody().string());
+                                      progressBar.setVisibility(View.GONE);
+                                  } catch (IOException e) {
+                                      e.printStackTrace();
+                                  }
+                              }
+
+
+                          }
+
+                          @Override
+                          public void onFailure(Call<JoinContenstResponse> call, Throwable t) {
+                              t.printStackTrace();
+                              progressBar.setVisibility(View.GONE);
+                              Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
+
+                          }
+                      });
+          }catch (Exception e){
+              e.printStackTrace();
+          }
+      }
     }
 
     private void requestMultiplePermissions(){

@@ -87,34 +87,36 @@ public class FragmentClaimPrizes extends Fragment {
         }
 
 
-        try{
-            ApiClient.getInstance().AllPrizes()
-                    .enqueue(new Callback<PrizesResponse>() {
-                        @Override
-                        public void onResponse(Call<PrizesResponse> call, Response<PrizesResponse> response) {
-                            if(response.isSuccessful()){
-                                if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-                                    for(Datum datum:response.body().getData()) {
-                                        list.add(new PrizesBean(datum.getPrizeId(),userId,datum.getPrizeCatId(),datum.getName(),datum.getDescription(),datum.getPoints(),datum.getQuantity(),datum.getConsume(),datum.getAmt()));
+        if(Helper.isConnectedToNetwork(getActivity())){
+            try{
+                ApiClient.getInstance().AllPrizes()
+                        .enqueue(new Callback<PrizesResponse>() {
+                            @Override
+                            public void onResponse(Call<PrizesResponse> call, Response<PrizesResponse> response) {
+                                if(response.isSuccessful()){
+                                    if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+                                        for(Datum datum:response.body().getData()) {
+                                            list.add(new PrizesBean(datum.getPrizeId(),userId,datum.getPrizeCatId(),datum.getName(),datum.getDescription(),datum.getPoints(),datum.getQuantity(),datum.getConsume(),datum.getAmt()));
+                                        }
+                                        if(list.size()>0){
+                                            PrizesClaimAdapter adapter=new PrizesClaimAdapter(mView.getContext(),R.layout.prizes_claim_adapter,list);
+                                            list_prizes.setAdapter(adapter);
+                                        }
+                                    }else{
+                                        Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
                                     }
-                                    if(list.size()>0){
-                                        PrizesClaimAdapter adapter=new PrizesClaimAdapter(mView.getContext(),R.layout.prizes_claim_adapter,list);
-                                        list_prizes.setAdapter(adapter);
-                                    }
-                                }else{
-                                    Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
                                 }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<PrizesResponse> call, Throwable t) {
-                            t.printStackTrace();
-                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
-                        }
-                    });
-        }catch (Exception e){
-            e.printStackTrace();
+                            @Override
+                            public void onFailure(Call<PrizesResponse> call, Throwable t) {
+                                t.printStackTrace();
+                                Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
+                            }
+                        });
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
         return mView;
     }

@@ -43,6 +43,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.view.View.GONE;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -89,25 +91,32 @@ public class MyMatchesFragment extends Fragment {
                 JSONObject object = new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
                 JSONObject nameValuePairs=object.getJSONObject("nameValuePairs");
                 user_id=nameValuePairs.getJSONObject("MyUser").getInt("user_id");
-                JSONObject obj=new JSONObject();
-                try {
-                    obj.put("user_id",user_id);
-                    ApiClient.getInstance().getAllMatchByUserId(Helper.encrypt(obj.toString())).enqueue(new Callback<MyMatchesResponse>() {
-                        @Override
-                        public void onResponse(Call<MyMatchesResponse> call, Response<MyMatchesResponse> response) {
-                            if(response.isSuccessful()){
-                                if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
-                                    progressBar.setVisibility(View.GONE);
-                                    if(response.body().getData()!=null) {
-                                        for (Datum datum : response.body().getData())
-                                            list.add(new MyMatchesBean(user_id, datum.getMatchId(), datum.getTeamId1().intValue(), datum.getTeamId2().intValue()
-                                                    , datum.getTeamName1(), datum.getTeamName2(), datum.getMatchSts(), "",datum.getTeam_name1_short(),datum.getTeam_name2_short(),datum.getSeries_name()));
+
+                if(Helper.isConnectedToNetwork(getActivity())){
+                    try {
+                        JSONObject obj=new JSONObject();
+                        obj.put("user_id",user_id);
+                        ApiClient.getInstance().getAllMatchByUserId(Helper.encrypt(obj.toString())).enqueue(new Callback<MyMatchesResponse>() {
+                            @Override
+                            public void onResponse(Call<MyMatchesResponse> call, Response<MyMatchesResponse> response) {
+                                if(response.isSuccessful()){
+                                    if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
+                                        progressBar.setVisibility(View.GONE);
+                                        if(response.body().getData()!=null) {
+                                            for (Datum datum : response.body().getData())
+                                                list.add(new MyMatchesBean(user_id, datum.getMatchId(), datum.getTeamId1().intValue(), datum.getTeamId2().intValue()
+                                                        , datum.getTeamName1(), datum.getTeamName2(), datum.getMatchSts(), "",datum.getTeam_name1_short(),datum.getTeam_name2_short(),datum.getSeries_name()));
 
 
-                                        list_matches.setVisibility(View.VISIBLE);
+                                            list_matches.setVisibility(View.VISIBLE);
 
-                                        MyMatchesAdapter adapter = new MyMatchesAdapter(mView.getContext(), R.layout.my_matches_adapter, list);
-                                        list_matches.setAdapter(adapter);
+                                            MyMatchesAdapter adapter = new MyMatchesAdapter(mView.getContext(), R.layout.my_matches_adapter, list);
+                                            list_matches.setAdapter(adapter);
+                                        }else{
+                                            progressBar.setVisibility(View.GONE);
+                                            txt_error.setVisibility(View.VISIBLE);
+                                            txt_error.setText(response.message());
+                                        }
                                     }else{
                                         progressBar.setVisibility(View.GONE);
                                         txt_error.setVisibility(View.VISIBLE);
@@ -115,24 +124,20 @@ public class MyMatchesFragment extends Fragment {
                                     }
                                 }else{
                                     progressBar.setVisibility(View.GONE);
-                                    txt_error.setVisibility(View.VISIBLE);
-                                    txt_error.setText(response.message());
                                 }
-                            }else{
-                                progressBar.setVisibility(View.GONE);
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<MyMatchesResponse> call, Throwable t) {
-                            t.printStackTrace();
-                            progressBar.setVisibility(View.GONE);
-                            txt_error.setVisibility(View.VISIBLE);
-                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
-                        }
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                            @Override
+                            public void onFailure(Call<MyMatchesResponse> call, Throwable t) {
+                                t.printStackTrace();
+                                progressBar.setVisibility(View.GONE);
+                                txt_error.setVisibility(View.VISIBLE);
+                                Helper.showAlertNetural(mView.getContext(),"Error","Internet connection not available");
+                            }
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

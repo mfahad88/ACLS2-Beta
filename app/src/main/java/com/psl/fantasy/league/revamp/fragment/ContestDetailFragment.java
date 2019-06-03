@@ -75,57 +75,59 @@ public class ContestDetailFragment extends Fragment {
     }
 
     void populateContest(View mView,ListView list_contest){
-        try {
-            progressBar.setVisibility(View.VISIBLE);
-            JSONObject object=new JSONObject();
-            object.put("match_series_id",match_id);
-            object.put("method_Name",this.getClass().getSimpleName()+".onCreateView");
-            ApiClient.getInstance().getAllContest(Helper.encrypt(object.toString()))
-                    .enqueue(new Callback<ContestResponse>() {
-                        @Override
-                        public void onResponse(Call<ContestResponse> call, Response<ContestResponse> response) {
-                            if(response.isSuccessful()) {
-                                if(contest_type==0){
-                                    txt_contest_name.setText("Mega Contest");
-                                }if(contest_type==1){
-                                    txt_contest_name.setText("Expert Contest");
-                                }if(contest_type==2){
-                                    txt_contest_name.setText("Practice Contest");
-                                }if(contest_type==3){
-                                    txt_contest_name.setText("Beginner Contest");
-                                }
-
-                                progressBar.setVisibility(View.GONE);
-                                txt_contest_name.setVisibility(View.VISIBLE);
-                                list_contest.setVisibility(View.VISIBLE);
-                                if (response.body().getResponseCode().equalsIgnoreCase("1001")){
-                                    for (Datum datum : response.body().getData()) {
-//                                if(datum.getPoolConsumed()>0){
-                                        if (datum.getContestType().equalsIgnoreCase(String.valueOf(contest_type))) {
-                                            float perc= ((datum.getPoolConsumed().floatValue() / datum.getPool().floatValue()) * 100);
-                                            int percent = Math.round(perc);
-                                            list.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
-                                                    , String.valueOf(datum.getPool()), datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
-                                            ContestAdapter adapter = new ContestAdapter(mView.getContext(), R.layout.list_contest, list, TeamId1, TeamId2, teamOne, teamTwo);
-                                            list_contest.setAdapter(adapter);
-                                        }
-//                                }
+        if(Helper.isConnectedToNetwork(getActivity())){
+            try {
+                progressBar.setVisibility(View.VISIBLE);
+                JSONObject object=new JSONObject();
+                object.put("match_series_id",match_id);
+                object.put("method_Name",this.getClass().getSimpleName()+".onCreateView");
+                ApiClient.getInstance().getAllContest(Helper.encrypt(object.toString()))
+                        .enqueue(new Callback<ContestResponse>() {
+                            @Override
+                            public void onResponse(Call<ContestResponse> call, Response<ContestResponse> response) {
+                                if(response.isSuccessful()) {
+                                    if(contest_type==0){
+                                        txt_contest_name.setText("Mega Contest");
+                                    }if(contest_type==1){
+                                        txt_contest_name.setText("Expert Contest");
+                                    }if(contest_type==2){
+                                        txt_contest_name.setText("Practice Contest");
+                                    }if(contest_type==3){
+                                        txt_contest_name.setText("Beginner Contest");
                                     }
-                                }else{
-                                    Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+
+                                    progressBar.setVisibility(View.GONE);
+                                    txt_contest_name.setVisibility(View.VISIBLE);
+                                    list_contest.setVisibility(View.VISIBLE);
+                                    if (response.body().getResponseCode().equalsIgnoreCase("1001")){
+                                        for (Datum datum : response.body().getData()) {
+//                                if(datum.getPoolConsumed()>0){
+                                            if (datum.getContestType().equalsIgnoreCase(String.valueOf(contest_type))) {
+                                                float perc= ((datum.getPoolConsumed().floatValue() / datum.getPool().floatValue()) * 100);
+                                                int percent = Math.round(perc);
+                                                list.add(new ContestBean(datum.getContestId(), datum.getWinningPoints(), percent, String.valueOf(datum.getPool() - datum.getPoolConsumed())
+                                                        , String.valueOf(datum.getPool()), datum.getWinners(), datum.getDiscount().toString(), datum.getEnteryFee(), datum.getMultipleAllowed(), datum.getConfirmedWinning(), datum.getContestType()));
+                                                ContestAdapter adapter = new ContestAdapter(mView.getContext(), R.layout.list_contest, list, TeamId1, TeamId2, teamOne, teamTwo);
+                                                list_contest.setAdapter(adapter);
+                                            }
+//                                }
+                                        }
+                                    }else{
+                                        Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                    }
                                 }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<ContestResponse> call, Throwable t) {
-                            t.printStackTrace();
-                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
-        } catch (Exception e) {
-            e.printStackTrace();
+                            @Override
+                            public void onFailure(Call<ContestResponse> call, Throwable t) {
+                                t.printStackTrace();
+                                Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

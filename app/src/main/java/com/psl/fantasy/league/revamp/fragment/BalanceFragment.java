@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.psl.fantasy.league.revamp.R;
 import com.psl.fantasy.league.revamp.Utils.DbHelper;
 import com.psl.fantasy.league.revamp.Utils.Helper;
+
 import com.psl.fantasy.league.revamp.interfaces.FragmentToActivity;
 
 /**
@@ -28,6 +29,7 @@ public class BalanceFragment extends Fragment {
     private FragmentToActivity mCallback;
     private SharedPreferences preferences;
     private DbHelper dbHelper;
+    private boolean isConnected;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -38,6 +40,9 @@ public class BalanceFragment extends Fragment {
                     + " must implement FragmentToActivity");
         }
     }
+
+
+
     public BalanceFragment() {
         // Required empty public constructor
     }
@@ -52,7 +57,9 @@ public class BalanceFragment extends Fragment {
         mCallback.communicate("disable");
         preferences=getActivity().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
         dbHelper=new DbHelper(getContext());
-        Helper.checkAppVersion(getActivity(),preferences,dbHelper);
+        if(isConnected) {
+            Helper.checkAppVersion(getActivity(), preferences, dbHelper);
+        }
         bindWidgetsWithAnEvent();
         setupTabLayout();
         return mView;
@@ -106,4 +113,5 @@ public class BalanceFragment extends Fragment {
         //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.commit();
     }
+
 }

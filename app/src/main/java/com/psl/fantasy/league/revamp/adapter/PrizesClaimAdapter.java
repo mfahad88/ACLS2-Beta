@@ -57,31 +57,34 @@ public class PrizesClaimAdapter extends ArrayAdapter<PrizesBean> {
             @Override
             public void onClick(View v) {
                 if(v.getId()==R.id.btn_claim){
-                    JSONObject object=new JSONObject();
-                    try{
-                        object.put("user_id",bean.getUserId());
-                        object.put("prize_id",bean.getPrizeId());
-                        ApiClient.getInstance().insertPrizeClaim(Helper.encrypt(object.toString()))
-                                .enqueue(new Callback<PrizeClaimResponse>() {
-                                    @Override
-                                    public void onResponse(Call<PrizeClaimResponse> call, Response<PrizeClaimResponse> response) {
-                                        if(response.isSuccessful()){
-                                            if(response.body().getResponseCode().equals("1001")){
-                                                Helper.showAlertNetural(context,"Success",response.body().getMessage());
-                                            }else {
-                                                Helper.showAlertNetural(context,"Error",response.body().getMessage());
+
+                    if(Helper.isConnectedToNetwork(getContext())){
+                        try{
+                            JSONObject object=new JSONObject();
+                            object.put("user_id",bean.getUserId());
+                            object.put("prize_id",bean.getPrizeId());
+                            ApiClient.getInstance().insertPrizeClaim(Helper.encrypt(object.toString()))
+                                    .enqueue(new Callback<PrizeClaimResponse>() {
+                                        @Override
+                                        public void onResponse(Call<PrizeClaimResponse> call, Response<PrizeClaimResponse> response) {
+                                            if(response.isSuccessful()){
+                                                if(response.body().getResponseCode().equals("1001")){
+                                                    Helper.showAlertNetural(context,"Success",response.body().getMessage());
+                                                }else {
+                                                    Helper.showAlertNetural(context,"Error",response.body().getMessage());
+                                                }
                                             }
                                         }
-                                    }
 
-                                    @Override
-                                    public void onFailure(Call<PrizeClaimResponse> call, Throwable t) {
-                                        t.printStackTrace();
-                                        Helper.showAlertNetural(context,"Error","Communication Error");
-                                    }
-                                });
-                    }catch (Exception e){
-                        e.printStackTrace();
+                                        @Override
+                                        public void onFailure(Call<PrizeClaimResponse> call, Throwable t) {
+                                            t.printStackTrace();
+                                            Helper.showAlertNetural(context,"Error","Communication Error");
+                                        }
+                                    });
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                     }
 
                 }

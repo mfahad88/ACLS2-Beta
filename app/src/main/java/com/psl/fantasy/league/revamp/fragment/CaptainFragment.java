@@ -175,81 +175,82 @@ public class CaptainFragment extends Fragment {
     }
 
     public void saveTeam(){
-        try{
-            List<PlayerBean> list= dbHelper.getMyTeam();
-            JSONArray jsonArray = new JSONArray();
-            for(PlayerBean bean:list) {
+        if(Helper.isConnectedToNetwork(getActivity())){
+            try{
+                List<PlayerBean> list= dbHelper.getMyTeam();
+                JSONArray jsonArray = new JSONArray();
+                for(PlayerBean bean:list) {
 
-                JSONArray array = new JSONArray();
-                array.put(bean.getId());
-                if(bean.isCaptain()) {
-                    array.put(1);
-                }else{
-                    array.put(0);
+                    JSONArray array = new JSONArray();
+                    array.put(bean.getId());
+                    if(bean.isCaptain()) {
+                        array.put(1);
+                    }else{
+                        array.put(0);
+                    }
+                    if(bean.isViceCaptain()) {
+                        array.put(1);
+                    }else {
+                        array.put(0);
+                    }
+                    jsonArray.put(array);
                 }
-                if(bean.isViceCaptain()) {
-                    array.put(1);
-                }else {
-                    array.put(0);
-                }
-                jsonArray.put(array);
-            }
-            Log.e("beanList",jsonArray.toString());
+                Log.e("beanList",jsonArray.toString());
 
-            JSONObject object=new JSONObject();
+                JSONObject object=new JSONObject();
 
-            object.put("user_id",user_id);
-            object.put("contest_id",contestId);
-            object.put("name",user_id+"-"+sdf.format(date));
-            object.put("method_Name",this.getClass().getSimpleName()+".btn_done.onClick");
-            object.put("playersInfo",jsonArray);
-            object.put("coins",0);
-            object.put("rem_budget",credit);
+                object.put("user_id",user_id);
+                object.put("contest_id",contestId);
+                object.put("name",user_id+"-"+sdf.format(date));
+                object.put("method_Name",this.getClass().getSimpleName()+".btn_done.onClick");
+                object.put("playersInfo",jsonArray);
+                object.put("coins",0);
+                object.put("rem_budget",credit);
 
-            ApiClient.getInstance().JoinContest(Helper.encrypt(object.toString()))
-                    .enqueue(new Callback<JoinContenstResponse>() {
-                        @Override
-                        public void onResponse(Call<JoinContenstResponse> call, Response<JoinContenstResponse> response) {
-                            try{
-                                if(response.isSuccessful()){
-                                    pd.dismiss();
-                                    if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
-                                        dbHelper.deleteMyTeam();
-                                        new Handler().postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Helper.showAlertNetural(mView.getContext(), "Success", response.body().getMessage());
-                                            }
-                                        },1000);
-                                        Fragment fragment=new DashboardFragment();
-                                        FragmentTransaction ft=getFragmentManager().beginTransaction();
-                                        ft.replace(R.id.main_content,fragment);
-                                        ft.commit();
+                ApiClient.getInstance().JoinContest(Helper.encrypt(object.toString()))
+                        .enqueue(new Callback<JoinContenstResponse>() {
+                            @Override
+                            public void onResponse(Call<JoinContenstResponse> call, Response<JoinContenstResponse> response) {
+                                try{
+                                    if(response.isSuccessful()){
+                                        pd.dismiss();
+                                        if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
+                                            dbHelper.deleteMyTeam();
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Helper.showAlertNetural(mView.getContext(), "Success", response.body().getMessage());
+                                                }
+                                            },1000);
+                                            Fragment fragment=new DashboardFragment();
+                                            FragmentTransaction ft=getFragmentManager().beginTransaction();
+                                            ft.replace(R.id.main_content,fragment);
+                                            ft.commit();
 
-                                    }else{
-                                        Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                                        Log.e("Pay",response.body().getMessage());
+                                        }else{
+                                            Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                            Log.e("Pay",response.body().getMessage());
+                                        }
+
                                     }
-
+                                }catch (Exception e){
+                                    e.printStackTrace();
                                 }
-                            }catch (Exception e){
-                                e.printStackTrace();
+
+
                             }
 
+                            @Override
+                            public void onFailure(Call<JoinContenstResponse> call, Throwable t) {
+                                t.printStackTrace();
+                                pd.dismiss();
+                                Helper.showAlertNetural(mView.getContext(),"Error","Communication Error"+t.getMessage());
 
-                        }
-
-                        @Override
-                        public void onFailure(Call<JoinContenstResponse> call, Throwable t) {
-                            t.printStackTrace();
-                            pd.dismiss();
-                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error"+t.getMessage());
-
-                        }
-                    });
-        }catch (Exception e){
-            e.printStackTrace();
+                            }
+                        });
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
-
 }

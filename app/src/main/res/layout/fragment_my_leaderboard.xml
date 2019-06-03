@@ -51,7 +51,7 @@
         android:layout_centerInParent="true"/>
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/linear_header"
         android:id="@+id/list_my_leaderboard"
         android:visibility="gone"

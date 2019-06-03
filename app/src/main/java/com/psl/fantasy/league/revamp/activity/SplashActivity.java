@@ -65,7 +65,6 @@ public class SplashActivity extends AppCompatActivity {
         try{
             preferences=getSharedPreferences(Helper.SHARED_PREF,MODE_PRIVATE);
             dbHelper=new DbHelper(this);
-            JSONObject obj=new JSONObject();
             Helper.printHashKey(this);
             FacebookSdk.setApplicationId(getString(R.string.facebook_app_id));
             FacebookSdk.sdkInitialize(this.getApplicationContext());
@@ -85,38 +84,42 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void getMatches(){
+           if(Helper.isConnectedToNetwork(this)){
+               try{
+                   JSONObject object=new JSONObject();
+                   object.put("match_id",0);
+                   if(Helper.isConnectedToNetwork(this)){
+                       ApiClient.getInstance().getPlayersMatches(Helper.encrypt(object.toString())).enqueue(new Callback<PlayerResponse>() {
+                           @Override
+                           public void onResponse(Call<PlayerResponse> call, Response<PlayerResponse> response) {
+                               if(response.isSuccessful()){
+                                   if(response.body().getResponseCode().equals("1001")){
+                                       dbHelper.deletePlayer();
+                                       dbHelper.savePlayers(response.body().getData());
+                                   }
+                               }else{
+                                   try {
+                                       Helper.showAlertNetural(SplashActivity.this,"Error",response.errorBody().string());
 
-        try{
-            JSONObject object=new JSONObject();
-            object.put("match_id",0);
-            ApiClient.getInstance().getPlayersMatches(Helper.encrypt(object.toString())).enqueue(new Callback<PlayerResponse>() {
-                @Override
-                public void onResponse(Call<PlayerResponse> call, Response<PlayerResponse> response) {
-                    if(response.isSuccessful()){
-                        if(response.body().getResponseCode().equals("1001")){
-                            dbHelper.deletePlayer();
-                            dbHelper.savePlayers(response.body().getData());
-                        }
-                    }else{
-                        try {
-                            Helper.showAlertNetural(SplashActivity.this,"Error",response.errorBody().string());
+                                   } catch (IOException e) {
+                                       e.printStackTrace();
+                                   }
 
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                               }
+                           }
 
-                    }
-                }
+                           @Override
+                           public void onFailure(Call<PlayerResponse> call, Throwable t) {
+                               t.fillInStackTrace();
+                               Helper.showAlertNetural(SplashActivity.this,"Error","Communication Error");
+                           }
+                       });
+                   }
+               }catch (JSONException e){
+                   e.printStackTrace();
+               }
 
-                @Override
-                public void onFailure(Call<PlayerResponse> call, Throwable t) {
-                    t.fillInStackTrace();
-                    Helper.showAlertNetural(SplashActivity.this,"Error","Communication Error");
-                }
-            });
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
+           }
     }
 
   /*  private void getConfig(){
@@ -179,7 +182,10 @@ public class SplashActivity extends AppCompatActivity {
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_NETWORK_STATE,
+                        Manifest.permission.INTERNET
+                        )
 //                        Manifest.permission.READ_PHONE_STATE)
                 .withListener(new MultiplePermissionsListener() {
                     @Override
@@ -187,19 +193,23 @@ public class SplashActivity extends AppCompatActivity {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
 
-                            getMatches();
+
                             //getConfig();
-                            Helper.checkAppVersion(SplashActivity.this,preferences,dbHelper);
+                            if(Helper.isConnectedToNetwork(SplashActivity.this)) {
+                                getMatches();
+                                Helper.checkAppVersion(SplashActivity.this, preferences, dbHelper);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent intent=new Intent(SplashActivity.this,StartActivity.class);
 
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Intent intent=new Intent(SplashActivity.this,StartActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                },500);
+                            }
 
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            },500);
+
                         }
                         if(!report.areAllPermissionsGranted()){
                             Toast toast=Toast.makeText(getApplicationContext(),"To continue allow permission",Toast.LENGTH_SHORT);

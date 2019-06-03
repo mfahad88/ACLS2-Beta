@@ -80,31 +80,33 @@ public class WinnerBottomFragment extends BottomSheetDialogFragment {
         list.add(new WinnerBean("Rank12", "10000"));*/
 
 
-        ApiClient.getInstance().getAllContestWinningDist()
-                .enqueue(new Callback<PrizeDistributionBean>() {
-                    @Override
-                    public void onResponse(Call<PrizeDistributionBean> call, Response<PrizeDistributionBean> response) {
-                        if(response.isSuccessful()){
-                            if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+        if(Helper.isConnectedToNetwork(getActivity())){
+            ApiClient.getInstance().getAllContestWinningDist()
+                    .enqueue(new Callback<PrizeDistributionBean>() {
+                        @Override
+                        public void onResponse(Call<PrizeDistributionBean> call, Response<PrizeDistributionBean> response) {
+                            if(response.isSuccessful()){
+                                if(response.body().getResponseCode().equalsIgnoreCase("1001")){
 
-                                WinnerBottomAdapter adapter = new WinnerBottomAdapter(view.getContext(), R.layout.winner_bottom_adapter, response.body().getData());
-                                list_winner.setAdapter(adapter);
-                                if(response.body().getData().size()>10){
-                                    txt_more.setVisibility(View.VISIBLE);
+                                    WinnerBottomAdapter adapter = new WinnerBottomAdapter(view.getContext(), R.layout.winner_bottom_adapter, response.body().getData());
+                                    list_winner.setAdapter(adapter);
+                                    if(response.body().getData().size()>10){
+                                        txt_more.setVisibility(View.VISIBLE);
+                                    }
+
+                                }else{
+                                    Helper.showAlertNetural(view.getContext(),"Error",response.body().getMessage());
                                 }
-
-                            }else{
-                                Helper.showAlertNetural(view.getContext(),"Error",response.body().getMessage());
                             }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<PrizeDistributionBean> call, Throwable t) {
-                        t.printStackTrace();
-                        Helper.showAlertNetural(view.getContext(),"Error","Communication Error");
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<PrizeDistributionBean> call, Throwable t) {
+                            t.printStackTrace();
+                            Helper.showAlertNetural(view.getContext(),"Error","Communication Error");
+                        }
+                    });
+        }
 
 
         dialog.setContentView(view);

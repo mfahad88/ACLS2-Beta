@@ -2,14 +2,11 @@ package com.psl.fantasy.league.revamp.fragment;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,20 +15,16 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.psl.fantasy.league.revamp.BuildConfig;
 import com.psl.fantasy.league.revamp.R;
 import com.psl.fantasy.league.revamp.Utils.DbHelper;
 import com.psl.fantasy.league.revamp.Utils.Helper;
-import com.psl.fantasy.league.revamp.activity.StartActivity;
 import com.psl.fantasy.league.revamp.adapter.FixtureAdapter;
 import com.psl.fantasy.league.revamp.adapter.ImageAdapter;
 import com.psl.fantasy.league.revamp.client.ApiClient;
 import com.psl.fantasy.league.revamp.interfaces.FragmentToActivity;
-import com.psl.fantasy.league.revamp.model.response.AppVersion.AppVersionBean;
 import com.psl.fantasy.league.revamp.model.response.Matches.Datum;
 import com.psl.fantasy.league.revamp.model.response.Matches.MatchesResponse;
 
-import com.psl.fantasy.league.revamp.model.response.SelectUser.SelectUserBean;
 import com.psl.fantasy.league.revamp.model.ui.MatchesBean;
 
 import org.json.JSONException;
@@ -62,6 +55,7 @@ public class DashboardFragment extends Fragment {
     private int user_id;
     private DbHelper dbHelper;
     private LinearLayout linear_progress_bar;
+    boolean isConnected;
     public DashboardFragment() {
         // Required empty public constructor
     }
@@ -89,14 +83,13 @@ public class DashboardFragment extends Fragment {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mView=inflater.inflate(R.layout.fragment_dashboard, container, false);
         init();
-        Helper.checkAppVersion(getActivity(),preferences,dbHelper);
+        Helper.checkAppVersion(getActivity(), preferences, dbHelper);
         try{
 
             list_matches.setSmoothScrollbarEnabled(true);
@@ -111,7 +104,7 @@ public class DashboardFragment extends Fragment {
                 public void onRefresh() {
 
                     try {
-                        Helper.checkAppVersion(getActivity(),preferences,dbHelper);
+                        Helper.checkAppVersion(getActivity(), preferences, dbHelper);
                         //fixtureAdapter.clear();
                         fixtureAdapter.notifyDataSetChanged();
 
@@ -143,55 +136,59 @@ public class DashboardFragment extends Fragment {
         preferences=mView.getContext().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
         dbHelper=new DbHelper(mView.getContext());
 //        checkAppVersion();
-        Helper.checkAppVersion(getActivity(),preferences,dbHelper);
+        if(isConnected) {
+            Helper.checkAppVersion(getActivity(), preferences, dbHelper);
+        }
         linear_progress_bar=mView.findViewById(R.id.linear_progress_bar);
     }
 
     public void populateMatches(){
-        try{
-            showProgress(View.VISIBLE);
-            JSONObject object=new JSONObject();
-            object.put("method_Name",this.getClass().getSimpleName()+".onCreateView");
-            ApiClient.getInstance().matches(Helper.encrypt(object.toString()))
-                    .enqueue(new Callback<MatchesResponse>() {
-                        @Override
-                        public void onResponse(Call<MatchesResponse> call, Response<MatchesResponse> response) {
-                            showProgress(GONE);
-                            if(response.isSuccessful()){
-                                if(response.body().getResponseCode().equals("1001")){
-                                    for(Datum bean:response.body().getData()){
-                                        if(response.body().getData().size()>0) {
-                                            if(bean.getMatchSts().equalsIgnoreCase("1")){
-                                                list.add(new MatchesBean(bean.getMatch_series_id(),bean.getTeamId1Name(),bean.getTeamId2Name(),bean.getTeam_id1_shortName(),bean.getTeam_id2_shortName(),bean.getStartDate(),bean.getTeamId1().intValue(),bean.getTeamId2().intValue(),bean.getSeries_name()));
-                                                list_matches.setVisibility(View.VISIBLE);
+        if(Helper.isConnectedToNetwork(getActivity())){
+            try{
+                showProgress(View.VISIBLE);
+                JSONObject object=new JSONObject();
+                object.put("method_Name",this.getClass().getSimpleName()+".onCreateView");
+                ApiClient.getInstance().matches(Helper.encrypt(object.toString()))
+                        .enqueue(new Callback<MatchesResponse>() {
+                            @Override
+                            public void onResponse(Call<MatchesResponse> call, Response<MatchesResponse> response) {
+                                showProgress(GONE);
+                                if(response.isSuccessful()){
+                                    if(response.body().getResponseCode().equals("1001")){
+                                        for(Datum bean:response.body().getData()){
+                                            if(response.body().getData().size()>0) {
+                                                if(bean.getMatchSts().equalsIgnoreCase("1")){
+                                                    list.add(new MatchesBean(bean.getMatch_series_id(),bean.getTeamId1Name(),bean.getTeamId2Name(),bean.getTeam_id1_shortName(),bean.getTeam_id2_shortName(),bean.getStartDate(),bean.getTeamId1().intValue(),bean.getTeamId2().intValue(),bean.getSeries_name()));
+                                                    list_matches.setVisibility(View.VISIBLE);
 
-                                                fixtureAdapter = new FixtureAdapter(mView.getContext(), R.layout.list_fixture, list);
+                                                    fixtureAdapter = new FixtureAdapter(mView.getContext(), R.layout.list_fixture, list);
 
-                                                list_matches.setAdapter(fixtureAdapter);
+                                                    list_matches.setAdapter(fixtureAdapter);
 
+                                                }
+                                            }else{
+                                                Helper.displayError(txt_status,"No record found...");
                                             }
-                                        }else{
-                                            Helper.displayError(txt_status,"No record found...");
                                         }
-                                    }
 
-                                }else{
-                                    Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                    }else{
+                                        Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                    }
                                 }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<MatchesResponse> call, Throwable t) {
-                            t.fillInStackTrace();
-                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
-                            showProgress(GONE);
-                        }
-                    });
+                            @Override
+                            public void onFailure(Call<MatchesResponse> call, Throwable t) {
+                                t.fillInStackTrace();
+                                Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
+                                showProgress(GONE);
+                            }
+                        });
 
 
-        }catch (JSONException e){
-            e.printStackTrace();
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -252,4 +249,5 @@ public class DashboardFragment extends Fragment {
             }
 
     }
+
 }

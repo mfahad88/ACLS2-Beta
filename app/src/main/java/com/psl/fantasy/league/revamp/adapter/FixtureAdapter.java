@@ -45,6 +45,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 public class FixtureAdapter extends ArrayAdapter<MatchesBean> implements LocationListener {
     Context context;
@@ -255,16 +257,18 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> implements Locatio
 
         String dateStop = date1;
         String dateFinal = "";
-
+        //TimeZone pstTime = TimeZone.getTimeZone("GMT");
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
         String dateStart = format.format(new Date(mlocation.getTime()));
+
         Date d1 = null;
         Date d2 = null;
 
         try {
             d1 = format.parse(dateStart);
             d2 = format.parse(dateStop);
-
+            Log.e("d2",d2.toLocaleString()+"("+d1+")");
 
             long diff = d2.getTime() - d1.getTime();
 
@@ -277,6 +281,8 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> implements Locatio
             System.out.print(diffHours + " hours, ");
             System.out.print(diffMinutes + " minutes, ");
             System.out.print(diffSeconds + " seconds.");
+
+            Log.e("Time",diffDays + " days, "+diffHours + " hours, "+diffMinutes + " minutes, "+diffSeconds + " seconds.");
 
             //New Format By FT
             long hrs=diffDays*24;
@@ -301,6 +307,8 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> implements Locatio
         }
         return dateFinal;
     }
+
+
 
 
     @Override

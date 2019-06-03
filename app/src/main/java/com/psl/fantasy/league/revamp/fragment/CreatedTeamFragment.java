@@ -50,35 +50,38 @@ public class CreatedTeamFragment extends Fragment {
         if(getArguments()!=null){
             teamId=getArguments().getInt("teamId");
         }
-        JSONObject object=new JSONObject();
-        try {
-            object.put("team_id",teamId);
-            ApiClient.getInstance().getTeamPlayerInfoByTeamId(Helper.encrypt(object.toString()))
-                    .enqueue(new Callback<PlayerInfoResponse>() {
-                        @Override
-                        public void onResponse(Call<PlayerInfoResponse> call, Response<PlayerInfoResponse> response) {
-                            progressBar.setVisibility(View.GONE);
-                            if(response.isSuccessful()){
-                                list_player.setVisibility(View.VISIBLE);
-                                if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+
+       if(Helper.isConnectedToNetwork(getActivity())){
+           try {
+               JSONObject object=new JSONObject();
+               object.put("team_id",teamId);
+               ApiClient.getInstance().getTeamPlayerInfoByTeamId(Helper.encrypt(object.toString()))
+                       .enqueue(new Callback<PlayerInfoResponse>() {
+                           @Override
+                           public void onResponse(Call<PlayerInfoResponse> call, Response<PlayerInfoResponse> response) {
+                               progressBar.setVisibility(View.GONE);
+                               if(response.isSuccessful()){
+                                   list_player.setVisibility(View.VISIBLE);
+                                   if(response.body().getResponseCode().equalsIgnoreCase("1001")){
                                     /*for(Datum datum:response.body().getData()){
                                         list.add(new PlayerInfoBean(datum.getPlayerId().intValue(),datum.getPlayer_name(),String.valueOf(datum.getPlayerPoint()),Integer.parseInt(datum.getIsCaptan()),Integer.parseInt(datum.getIsViceCaptan())));
                                     }*/
-                                    PlayerAdapter adapter=new PlayerAdapter(mView.getContext(),R.layout.player_adapter,response.body().getData());
-                                    list_player.setAdapter(adapter);
-                                }
-                            }
-                        }
+                                       PlayerAdapter adapter=new PlayerAdapter(mView.getContext(),R.layout.player_adapter,response.body().getData());
+                                       list_player.setAdapter(adapter);
+                                   }
+                               }
+                           }
 
-                        @Override
-                        public void onFailure(Call<PlayerInfoResponse> call, Throwable t) {
-                            t.printStackTrace();
-                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
-                        }
-                    });
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
+                           @Override
+                           public void onFailure(Call<PlayerInfoResponse> call, Throwable t) {
+                               t.printStackTrace();
+                               Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
+                           }
+                       });
+           }catch (JSONException e){
+               e.printStackTrace();
+           }
+       }
         return mView;
     }
 

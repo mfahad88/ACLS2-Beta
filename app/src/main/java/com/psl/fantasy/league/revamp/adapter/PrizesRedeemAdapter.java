@@ -58,40 +58,42 @@ public class PrizesRedeemAdapter extends ArrayAdapter {
         btn_redeem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
-                    JSONObject object=new JSONObject();
-                    object.put("team_id",bean.getTeamId());
-                    object.put("user_id",user_id);
+                if(Helper.isConnectedToNetwork(getContext())){
+                    try{
+                        JSONObject object=new JSONObject();
+                        object.put("team_id",bean.getTeamId());
+                        object.put("user_id",user_id);
 
-                    ApiClient.getInstance().RedeemPointTeamWise(Helper.encrypt(object.toString()))
-                            .enqueue(new Callback<TeamWiseRedeem>() {
-                                @Override
-                                public void onResponse(Call<TeamWiseRedeem> call, Response<TeamWiseRedeem> response) {
-                                    if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-                                        new Handler().postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Helper.showAlertNetural(context,"Success",response.body().getMessage());
+                        ApiClient.getInstance().RedeemPointTeamWise(Helper.encrypt(object.toString()))
+                                .enqueue(new Callback<TeamWiseRedeem>() {
+                                    @Override
+                                    public void onResponse(Call<TeamWiseRedeem> call, Response<TeamWiseRedeem> response) {
+                                        if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Helper.showAlertNetural(context,"Success",response.body().getMessage());
 
-                                            }
-                                        },1000);
-                                        AppCompatActivity activity=(AppCompatActivity)context;
-                                        FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
-                                        ft.replace(R.id.main_content,new PrizesRedeemFragment());
-                                        ft.commit();
-                                    }else{
-                                        Helper.showAlertNetural(context,"Error",response.body().getMessage());
+                                                }
+                                            },1000);
+                                            AppCompatActivity activity=(AppCompatActivity)context;
+                                            FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
+                                            ft.replace(R.id.main_content,new PrizesRedeemFragment());
+                                            ft.commit();
+                                        }else{
+                                            Helper.showAlertNetural(context,"Error",response.body().getMessage());
+                                        }
                                     }
-                                }
 
-                                @Override
-                                public void onFailure(Call<TeamWiseRedeem> call, Throwable t) {
-                                    t.printStackTrace();
-                                    Helper.showAlertNetural(context,"Error","Communication Error");
-                                }
-                            });
-                }catch (Exception e){
-                    e.printStackTrace();
+                                    @Override
+                                    public void onFailure(Call<TeamWiseRedeem> call, Throwable t) {
+                                        t.printStackTrace();
+                                        Helper.showAlertNetural(context,"Error","Communication Error");
+                                    }
+                                });
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             }
         });

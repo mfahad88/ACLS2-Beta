@@ -12,7 +12,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.AssetManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
@@ -22,10 +25,10 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.psl.fantasy.league.revamp.BuildConfig;
-import com.psl.fantasy.league.revamp.activity.SplashActivity;
-import com.psl.fantasy.league.revamp.activity.StartActivity;
+
 import com.psl.fantasy.league.revamp.client.ApiClient;
 import com.psl.fantasy.league.revamp.model.request.TestBeanRequest;
 import com.google.android.gms.analytics.HitBuilders;
@@ -138,7 +141,7 @@ public class Helper {
             byte[] a= alpha(Base64.encodeToString(secretKey.getEncoded(),Base64.DEFAULT));
 
 
-          //  System.out.println("Alpha:: "+a);
+            //  System.out.println("Alpha:: "+a);
             // 6. encrypt secret key using public key
             Cipher cipher2 = Cipher.getInstance("RSA/ECB/OAEPWithSHA1AndMGF1Padding");
             cipher2.init(Cipher.ENCRYPT_MODE, publicKey);
@@ -309,17 +312,17 @@ public class Helper {
 
 
     public static void createDirectory(){
-       try{
-           File direct = new File(Environment.getExternalStorageDirectory()+File.separator+"ACL");
+        try{
+            File direct = new File(Environment.getExternalStorageDirectory()+File.separator+"ACL");
 
-           if(!direct.exists()) {
-               if(direct.mkdir()){
-                   Log.e("Helper",direct.getPath()+" created...");
-               }
-           }
-       }catch (Exception e){
-           e.printStackTrace();
-       }
+            if(!direct.exists()) {
+                if(direct.mkdir()){
+                    Log.e("Helper",direct.getPath()+" created...");
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public static void saveText(String msg){
@@ -353,7 +356,7 @@ public class Helper {
             e.printStackTrace();
         }
     }
-    
+
     public static String getUserIdFromText(){
         //Get the text file
 
@@ -421,113 +424,170 @@ public class Helper {
         return Math.round((float) dp * density);
     }
 
-    public static void checkAppVersion(Activity activity, SharedPreferences preferences, DbHelper dbHelper){
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+    public static boolean isConnectedToNetwork(Activity activity) {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        StrictMode.setThreadPolicy(policy);
+        boolean isConnected = false;
+        if (connectivityManager != null) {
+            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+            isConnected = (activeNetwork != null) && (activeNetwork.isConnectedOrConnecting());
+        }
+        if(!isConnected){
+            showToast(activity,"Internet Connection not available...");
+        }
+        return isConnected;
+    }
+
+    public static boolean isConnectedToNetwork(Context context) {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        boolean isConnected = false;
+        if (connectivityManager != null) {
+            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+            isConnected = (activeNetwork != null) && (activeNetwork.isConnectedOrConnecting());
+        }
+        if(!isConnected){
+            showToast(context,"Internet Connection not available...");
+        }
+
+        return isConnected;
+    }
+
+    public static void checkAppVersion(Activity activity, SharedPreferences preferences, DbHelper dbHelper) {
+        if (isConnectedToNetwork(activity)){
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+            StrictMode.setThreadPolicy(policy);
 
 
-        try{
-            JSONObject obj=new JSONObject();
-            obj.put("param_type","version_update");
-            obj.put("method_Name","Helper");
+            try {
+                JSONObject obj = new JSONObject();
+                obj.put("param_type", "version_update");
+                obj.put("method_Name", "Helper");
 
-            ApiClient.getInstance().getConfig(Helper.encrypt(obj.toString()))
-                    .enqueue(new Callback<ConfigBeanResponse>() {
-                        @Override
-                        public void onResponse(Call<ConfigBeanResponse> call, Response<ConfigBeanResponse> response) {
-                            if(response.isSuccessful()){
-                                if(response.body().getResponseCode().equals("1001")){
-                                    for(Datum datum:response.body().getData()) {
-                                        float config = Float.parseFloat(datum.getConfigVal());
+                ApiClient.getInstance().getConfig(Helper.encrypt(obj.toString()))
+                        .enqueue(new Callback<ConfigBeanResponse>() {
+                            @Override
+                            public void onResponse(Call<ConfigBeanResponse> call, Response<ConfigBeanResponse> response) {
+                                if (response.isSuccessful()) {
+                                    if (response.body().getResponseCode().equals("1001")) {
+                                        for (Datum datum : response.body().getData()) {
+                                            float config = Float.parseFloat(datum.getConfigVal());
 
 
-                                        if(Helper.getUserSession(preferences,Helper.MY_USER)!=null){
-                                            JSONObject object= null;
-                                            try {
-                                                object = new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
-                                                JSONObject nameValuePairs=object.getJSONObject("nameValuePairs");
-                                                int user_id=nameValuePairs.getJSONObject("MyUser").getInt("user_id");
+                                            if (Helper.getUserSession(preferences, Helper.MY_USER) != null) {
+                                                JSONObject object = null;
                                                 try {
-                                                    JSONObject jsonObject=new JSONObject();
-                                                    jsonObject.put("user_id",user_id);
-                                                    Response<SelectUserBean>response_user=ApiClient.getInstance().SelectUser(Helper.encrypt(jsonObject.toString())).execute();
+                                                    object = new JSONObject(Helper.getUserSession(preferences, Helper.MY_USER).toString());
+                                                    JSONObject nameValuePairs = object.getJSONObject("nameValuePairs");
+                                                    int user_id = nameValuePairs.getJSONObject("MyUser").getInt("user_id");
+                                                    try {
+                                                        JSONObject jsonObject = new JSONObject();
+                                                        jsonObject.put("user_id", user_id);
+                                                        Response<SelectUserBean> response_user = ApiClient.getInstance().SelectUser(Helper.encrypt(jsonObject.toString())).execute();
 
-                                                            if(response_user.isSuccessful()){
-                                                                if(response_user.body().getResponseCode().equalsIgnoreCase("1001")){
-                                                                    if(!TextUtils.isEmpty(response_user.body().getData().getMyUser().getIsUpdated())){
-                                                                        if(response_user.body().getData().getMyUser().getIsUpdated().equalsIgnoreCase("0")){
-                                                                            if(config>Float.parseFloat(BuildConfig.VERSION_NAME)) {
-                                                                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
+                                                        if (response_user.isSuccessful()) {
+                                                            if (response_user.body().getResponseCode().equalsIgnoreCase("1001")) {
+                                                                if (!TextUtils.isEmpty(response_user.body().getData().getMyUser().getIsUpdated())) {
+                                                                    if (response_user.body().getData().getMyUser().getIsUpdated().equalsIgnoreCase("0")) {
+
+                                                                        if (config > Float.parseFloat(BuildConfig.VERSION_NAME)) {
+                                                                            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N) {
+                                                                                Intent browserIntent = new Intent(Intent.ACTION_VIEW,Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
+//                                                                                browserIntent.setDataAndType(Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"), "application/vnd.android.package-archive");
                                                                                 browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                                                 activity.startActivity(browserIntent);
                                                                                 activity.finish();
-                                                                                System.exit(0);
-                                                                            }else if(config<Float.parseFloat(BuildConfig.VERSION_NAME)){
-                                                                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
-                                                                                browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                                                activity.startActivity(browserIntent);
-                                                                                activity.finish();
-                                                                                System.exit(0);
+
                                                                             }else{
-                                                                                try {
-                                                                                    JSONObject jsonObject2=new JSONObject();
-                                                                                    jsonObject2.put("user_id",user_id);
-                                                                                    jsonObject2.put("isUpdated",1);
+                                                                                Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                                                                                browserIntent.setDataAndType(Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"), "application/vnd.android.package-archive");
+                                                                                browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                                                activity.startActivity(browserIntent);
+                                                                                activity.finish();
+                                                                            }
+                                                                        } else if (config < Float.parseFloat(BuildConfig.VERSION_NAME)) {
+                                                                            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N) {
+                                                                                Intent browserIntent = new Intent(Intent.ACTION_VIEW,Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
+//                                                                                browserIntent.setDataAndType(Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"), "application/vnd.android.package-archive");
+                                                                                browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                                                activity.startActivity(browserIntent);
+                                                                                activity.finish();
 
-                                                                                    Response<AppVersionBean> response3=ApiClient.getInstance().updateAppVersion(Helper.encrypt(jsonObject2.toString())).execute();
-                                                                                        if(response3.isSuccessful()){
-                                                                                            if(response3.body().getResponseCode().equalsIgnoreCase("1001")){
+                                                                            }else{
 
-                                                                                            }
-                                                                                        }
-                                                                                } catch (JSONException e) {
-                                                                                    e.printStackTrace();
+                                                                                Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                                                                                browserIntent.setDataAndType(Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"), "application/vnd.android.package-archive");
+                                                                                browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                                                activity.startActivity(browserIntent);
+                                                                                activity.finish();
+                                                                            }
+                                                                        } else {
+                                                                            try {
+                                                                                JSONObject jsonObject2 = new JSONObject();
+                                                                                jsonObject2.put("user_id", user_id);
+                                                                                jsonObject2.put("isUpdated", 1);
+
+                                                                                Response<AppVersionBean> response3 = ApiClient.getInstance().updateAppVersion(Helper.encrypt(jsonObject2.toString())).execute();
+                                                                                if (response3.isSuccessful()) {
+                                                                                    if (response3.body().getResponseCode().equalsIgnoreCase("1001")) {
+
+                                                                                    }
                                                                                 }
+                                                                            } catch (JSONException e) {
+                                                                                e.printStackTrace();
                                                                             }
                                                                         }
                                                                     }
                                                                 }
                                                             }
+                                                        }
 
 
-                                                }catch (Exception e){
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                } catch (Exception e) {
                                                     e.printStackTrace();
                                                 }
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
 
+                                            }
                                         }
                                     }
-                                }
-                            }else{
-                                try {
-                                    Helper.showAlertNetural(activity.getApplicationContext(),"Error",response.errorBody().string());
+                                } else {
+                                    try {
+                                        Helper.showAlertNetural(activity.getApplicationContext(), "Error", response.errorBody().string());
 
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<ConfigBeanResponse> call, Throwable t) {
-                            t.printStackTrace();
-                            Helper.showAlertNetural(activity.getApplicationContext(),"Error","Communication Error");
+                            @Override
+                            public void onFailure(Call<ConfigBeanResponse> call, Throwable t) {
+                                t.printStackTrace();
+                                Helper.showAlertNetural(activity, "Error", "Communication Error");
 
-                        }
-                    });
+                            }
+                        });
 
 
-        }catch (Exception e){
-            e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
+    }
 
+    public static void showToast(Activity activity,String msg){
+        Toast.makeText(activity,msg,Toast.LENGTH_SHORT).show();
+    }
 
-
-
+    public static void showToast(Context context,String msg){
+        Toast.makeText(context,msg,Toast.LENGTH_SHORT).show();
     }
 
 }

@@ -71,43 +71,45 @@ public class MyDetailFragment extends Fragment {
             ft.commit();
         }
 
-        try {
-            JSONObject object=new JSONObject();
-            object.put("user_id",user_id);
-            ApiClient.getInstance().SelectUser(Helper.encrypt(object.toString()))
-                    .enqueue(new Callback<SelectUserBean>() {
-                        @Override
-                        public void onResponse(Call<SelectUserBean> call, Response<SelectUserBean> response) {
-                            if(response.isSuccessful()){
-                               try{
-                                   if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-                                       txt_mobile_no.setText(response.body().getData().getMyUser().getMobileNo());
-                                       String shareId=response.body().getData().getMyUser().getMobileNo().substring(4,7).trim()+""+user_id;
-                                       txt_referral_code.setText(shareId);
-                                       if(!TextUtils.isEmpty(response.body().getData().getMyUsermsc().getCoinsBalance().toString())) {
-                                           txt_coins.setText(response.body().getData().getMyUsermsc().getCoinsBalance().toString());
-                                       }if(!TextUtils.isEmpty(response.body().getData().getMyUsermsc().getPoint_balance().toString())) {
-                                           txt_points.setText(response.body().getData().getMyUsermsc().getPoint_balance().toString());
-                                       }
+        if(Helper.isConnectedToNetwork(getActivity())){
+            try {
+                JSONObject object=new JSONObject();
+                object.put("user_id",user_id);
+                ApiClient.getInstance().SelectUser(Helper.encrypt(object.toString()))
+                        .enqueue(new Callback<SelectUserBean>() {
+                            @Override
+                            public void onResponse(Call<SelectUserBean> call, Response<SelectUserBean> response) {
+                                if(response.isSuccessful()){
+                                    try{
+                                        if(response.body().getResponseCode().equalsIgnoreCase("1001")){
+                                            txt_mobile_no.setText(response.body().getData().getMyUser().getMobileNo());
+                                            String shareId=response.body().getData().getMyUser().getMobileNo().substring(4,7).trim()+""+user_id;
+                                            txt_referral_code.setText(shareId);
+                                            if(!TextUtils.isEmpty(response.body().getData().getMyUsermsc().getCoinsBalance().toString())) {
+                                                txt_coins.setText(response.body().getData().getMyUsermsc().getCoinsBalance().toString());
+                                            }if(!TextUtils.isEmpty(response.body().getData().getMyUsermsc().getPoint_balance().toString())) {
+                                                txt_points.setText(response.body().getData().getMyUsermsc().getPoint_balance().toString());
+                                            }
 
 
-                                   }else{
-                                       Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                                   }
-                               }catch (Exception e){
-                                   e.printStackTrace();
-                               }
+                                        }else{
+                                            Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                        }
+                                    }catch (Exception e){
+                                        e.printStackTrace();
+                                    }
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<SelectUserBean> call, Throwable t) {
-                            t.printStackTrace();
-                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
-                        }
-                    });
-        }catch (Exception e){
-            e.printStackTrace();
+                            @Override
+                            public void onFailure(Call<SelectUserBean> call, Throwable t) {
+                                t.printStackTrace();
+                                Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
+                            }
+                        });
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
         imageButtonShare.setOnClickListener(new View.OnClickListener() {
             @Override

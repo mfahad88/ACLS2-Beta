@@ -52,38 +52,43 @@ public class JoinedContestFragment extends Fragment {
             userId = getArguments().getInt("userId");
             matchId = getArguments().getInt("matchId");
         }
-        JSONObject object=new JSONObject();
-        try{
-            object.put("user_id",userId);
-            object.put("match_id",matchId);
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        ApiClient.getInstance().getAllMatchesContestByUserIdTeamId(Helper.encrypt(object.toString())).enqueue(new Callback<JoinedContestResponse>() {
-            @Override
-            public void onResponse(Call<JoinedContestResponse> call, Response<JoinedContestResponse> response) {
-                if(response.isSuccessful()){
-                    progressBar.setVisibility(View.GONE);
-                    list_matches.setVisibility(View.VISIBLE);
-                    if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
-                        for (Datum datum : response.body().getData()) {
-                            list.add(new JoinedContestBean(datum.getContest_id(),userId,datum.getContestName(), datum.getDescription(), datum.getEntryFee(), datum.getTeamName(), datum.getTotalPoint()));
-                            JoinedContestAdapter adapter = new JoinedContestAdapter(mView.getContext(), R.layout.joined_contest_adapter, list);
-                            list_matches.setAdapter(adapter);
-                        }
-                    }else {
-                        Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                    }
-                }
-            }
 
-            @Override
-            public void onFailure(Call<JoinedContestResponse> call, Throwable t) {
-                t.printStackTrace();
-                progressBar.setVisibility(View.GONE);
-                Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
+        if(Helper.isConnectedToNetwork(getActivity())){
+            try{
+                JSONObject object=new JSONObject();
+                object.put("user_id",userId);
+                object.put("match_id",matchId);
+
+                ApiClient.getInstance().getAllMatchesContestByUserIdTeamId(Helper.encrypt(object.toString())).enqueue(new Callback<JoinedContestResponse>() {
+                    @Override
+                    public void onResponse(Call<JoinedContestResponse> call, Response<JoinedContestResponse> response) {
+                        if(response.isSuccessful()){
+                            progressBar.setVisibility(View.GONE);
+                            list_matches.setVisibility(View.VISIBLE);
+                            if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
+                                for (Datum datum : response.body().getData()) {
+                                    list.add(new JoinedContestBean(datum.getContest_id(),userId,datum.getContestName(), datum.getDescription(), datum.getEntryFee(), datum.getTeamName(), datum.getTotalPoint()));
+                                    JoinedContestAdapter adapter = new JoinedContestAdapter(mView.getContext(), R.layout.joined_contest_adapter, list);
+                                    list_matches.setAdapter(adapter);
+                                }
+                            }else {
+                                Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<JoinedContestResponse> call, Throwable t) {
+                        t.printStackTrace();
+                        progressBar.setVisibility(View.GONE);
+                        Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
+                    }
+                });
+            }catch (JSONException e){
+                e.printStackTrace();
             }
-        });
+        }
+
         return mView;
     }
 

@@ -269,278 +269,284 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
        }
 
        else{
-            try{
-                String mobileNo=edt_mobile_number.getText().toString();
-                String password=edt_pass_word.getText().toString();
-                String confirmPassword=edt_confirm_password.getText().toString();
-                String referral=edt_referral.getText().toString();
-                if(!checkbox_terms_condition.isChecked()){
-                    Helper.showAlertNetural(mView.getContext(),"Info","Please agree T&C's to proceed");
-                }
-                if((!TextUtils.isEmpty(mobileNo)) && (!TextUtils.isEmpty(password)) && (!TextUtils.isEmpty(confirmPassword)) && checkbox_terms_condition.isChecked()){
-                   if(password.equalsIgnoreCase(confirmPassword)){
-                       if(checkbox_terms_condition.isChecked()){
-                           user_consent.append(checkbox_terms_condition.getText());
-                       }if(checkbox_contact.isChecked()){
-                           user_consent.append(";"+checkbox_contact.getText());
-                       }if(checkbox_partner.isChecked()){
-                           user_consent.append(";"+checkbox_partner.getText());
-                       }
-                       progressBar.setVisibility(View.VISIBLE);
-                       JSONObject object=new JSONObject();
-                       object.put("pws",password);
-                       object.put("mobile_no",mobileNo);
-                       object.put("app_version",BuildConfig.VERSION_NAME);
-                       object.put("os","Android");
-                       object.put("referal_code",referral);
-                       object.put("source",signupType);
-                       object.put("sts",1);
-                       object.put("is_updated","0");
-                       object.put("user_consent",user_consent);
-                       object.put("method_Name",this.getClass().getSimpleName()+".btn_sign_up.onClick");
-                       btn_sign_up.setEnabled(false);
-                       ApiClient.getInstance().insertUser(Helper.encrypt(object.toString()))
-                               .enqueue(new Callback<InsertResponse>() {
-                                   @Override
-                                   public void onResponse(Call<InsertResponse> call, Response<InsertResponse> response) {
-                                       if(response.isSuccessful()){
-                                           btn_sign_up.setEnabled(true);
-                                           progressBar.setVisibility(View.GONE);
-                                           if(response.body().getResponseCode().equals("1001")){
-                                               //Helper.showAlertNetural(mView.getContext(),"Success","Done");
+           if(Helper.isConnectedToNetwork(getActivity())){
+               try{
+                   String mobileNo=edt_mobile_number.getText().toString();
+                   String password=edt_pass_word.getText().toString();
+                   String confirmPassword=edt_confirm_password.getText().toString();
+                   String referral=edt_referral.getText().toString();
+                   if(!checkbox_terms_condition.isChecked()){
+                       Helper.showAlertNetural(mView.getContext(),"Info","Please agree T&C's to proceed");
+                   }
+                   if((!TextUtils.isEmpty(mobileNo)) && (!TextUtils.isEmpty(password)) && (!TextUtils.isEmpty(confirmPassword)) && checkbox_terms_condition.isChecked()){
+                       if(password.equalsIgnoreCase(confirmPassword)){
+                           if(checkbox_terms_condition.isChecked()){
+                               user_consent.append(checkbox_terms_condition.getText());
+                           }if(checkbox_contact.isChecked()){
+                               user_consent.append(";"+checkbox_contact.getText());
+                           }if(checkbox_partner.isChecked()){
+                               user_consent.append(";"+checkbox_partner.getText());
+                           }
+                           progressBar.setVisibility(View.VISIBLE);
+                           JSONObject object=new JSONObject();
+                           object.put("pws",password);
+                           object.put("mobile_no",mobileNo);
+                           object.put("app_version",BuildConfig.VERSION_NAME);
+                           object.put("os","Android");
+                           object.put("referal_code",referral);
+                           object.put("source",signupType);
+                           object.put("sts",1);
+                           object.put("is_updated","0");
+                           object.put("user_consent",user_consent);
+                           object.put("method_Name",this.getClass().getSimpleName()+".btn_sign_up.onClick");
+                           btn_sign_up.setEnabled(false);
+                           ApiClient.getInstance().insertUser(Helper.encrypt(object.toString()))
+                                   .enqueue(new Callback<InsertResponse>() {
+                                       @Override
+                                       public void onResponse(Call<InsertResponse> call, Response<InsertResponse> response) {
+                                           if(response.isSuccessful()){
+                                               btn_sign_up.setEnabled(true);
+                                               progressBar.setVisibility(View.GONE);
+                                               if(response.body().getResponseCode().equals("1001")){
+                                                   //Helper.showAlertNetural(mView.getContext(),"Success","Done");
 
-                                               JSONObject obj=new JSONObject();
-                                               try {
-                                                   obj.put("mobile_no",mobileNo);
-                                                   obj.put("pws",password);
-                                                   login(obj);
-                                               } catch (JSONException e) {
-                                                   e.printStackTrace();
+                                                   JSONObject obj=new JSONObject();
+                                                   try {
+                                                       obj.put("mobile_no",mobileNo);
+                                                       obj.put("pws",password);
+                                                       login(obj);
+                                                   } catch (JSONException e) {
+                                                       e.printStackTrace();
+                                                   }
+
+
+                                               }else{
+                                                   Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
                                                }
-
-
                                            }else{
-                                               Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                                           }
-                                       }else{
-                                           if (response.errorBody() != null) {
-                                               try {
-                                                   btn_sign_up.setEnabled(true);
-                                                   Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
-                                                   progressBar.setVisibility(View.GONE);
-                                               } catch (IOException e) {
+                                               if (response.errorBody() != null) {
+                                                   try {
+                                                       btn_sign_up.setEnabled(true);
+                                                       Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
+                                                       progressBar.setVisibility(View.GONE);
+                                                   } catch (IOException e) {
 
-                                                   e.printStackTrace();
+                                                       e.printStackTrace();
 
+                                                   }
                                                }
                                            }
                                        }
-                                   }
 
-                                   @Override
-                                   public void onFailure(Call<InsertResponse> call, Throwable t) {
-                                       t.printStackTrace();
-                                       btn_sign_up.setEnabled(true);
-                                       Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
-                                   }
-                               });
-                   }else{
-                       Helper.showAlertNetural(mView.getContext(),"Error","Please check password and confirm password");
-                       btn_sign_up.setEnabled(true);
+                                       @Override
+                                       public void onFailure(Call<InsertResponse> call, Throwable t) {
+                                           t.printStackTrace();
+                                           btn_sign_up.setEnabled(true);
+                                           Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
+                                       }
+                                   });
+                       }else{
+                           Helper.showAlertNetural(mView.getContext(),"Error","Please check password and confirm password");
+                           btn_sign_up.setEnabled(true);
+                       }
                    }
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+               }catch (Exception e){
+                   e.printStackTrace();
+               }
+           }
        }
     }
 
     private void login(JSONObject obj) {
-        ApiClient.getInstance().login(Helper.encrypt(obj.toString()))
-                .enqueue(new Callback<LoginResponse>() {
-                    @Override
-                    public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+        if(Helper.isConnectedToNetwork(getActivity())){
+            ApiClient.getInstance().login(Helper.encrypt(obj.toString()))
+                    .enqueue(new Callback<LoginResponse>() {
+                        @Override
+                        public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
 
-                        if(response.isSuccessful()){
-                            progressBar.setVisibility(View.GONE);
-                            btn_next.setEnabled(true);
-                            if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-                                try {
-                                    JSONObject object=new JSONObject();
-                                    object.put(Helper.MY_USER,response.body().getData().getMyUser());
-                                    object.put(Helper.MY_USER_MSC,response.body().getData().getMyUsermsc());
-                                    Helper.putUserSession(sharedpreferences,Helper.MY_USER,object);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                Helper.createDirectory();
-
-                                if(Helper.getUserSession(preferences,"MyUser")!=null) {
+                            if(response.isSuccessful()){
+                                progressBar.setVisibility(View.GONE);
+                                btn_next.setEnabled(true);
+                                if(response.body().getResponseCode().equalsIgnoreCase("1001")){
                                     try {
-                                        JSONObject jsonObject = new JSONObject(String.valueOf(Helper.getUserSession(preferences, Helper.MY_USER)));
-                                        jsonObject.put(Helper.MY_USER_MSC,String.valueOf(Helper.getUserSession(preferences, Helper.MY_USER_MSC)));
-                                        Helper.saveText(String.valueOf(jsonObject));;
-                                    }catch (Exception e){
+                                        JSONObject object=new JSONObject();
+                                        object.put(Helper.MY_USER,response.body().getData().getMyUser());
+                                        object.put(Helper.MY_USER_MSC,response.body().getData().getMyUsermsc());
+                                        Helper.putUserSession(sharedpreferences,Helper.MY_USER,object);
+                                    } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                }
+                                    Helper.createDirectory();
+
+                                    if(Helper.getUserSession(preferences,"MyUser")!=null) {
+                                        try {
+                                            JSONObject jsonObject = new JSONObject(String.valueOf(Helper.getUserSession(preferences, Helper.MY_USER)));
+                                            jsonObject.put(Helper.MY_USER_MSC,String.valueOf(Helper.getUserSession(preferences, Helper.MY_USER_MSC)));
+                                            Helper.saveText(String.valueOf(jsonObject));;
+                                        }catch (Exception e){
+                                            e.printStackTrace();
+                                        }
+                                    }
 
 
 
 
-                                if(screen.equalsIgnoreCase("payment")){
-                                    Fragment fragment=new PaymentFragment();
-                                    Bundle bundle=new Bundle();
-                                    bundle.putInt("conId",contestId);
-                                    bundle.putDouble("credit",credit);
-                                    bundle.putInt("contestAmt",contestAmt);
-                                    fragment.setArguments(bundle);
-                                    FragmentTransaction ft=getFragmentManager().beginTransaction();
-                                    ft.replace(R.id.main_content,fragment);
-                                    ft.commit();
-                                }if(screen.equalsIgnoreCase("prizesclaim")){
-                                    Fragment fragment=new FragmentClaimPrizes();
-                                    FragmentTransaction ft=getFragmentManager().beginTransaction();
-                                    ft.replace(R.id.main_content,fragment);
-                                    ft.commit();
-                                }if(screen.equalsIgnoreCase("mymatches")){
-                                    Fragment fragment=new MyMatchesFragment();
-                                    FragmentTransaction ft=getFragmentManager().beginTransaction();
-                                    ft.replace(R.id.main_content,fragment);
-                                    ft.commit();
-                                }if(screen.equalsIgnoreCase("accountlinking")){
-                                    Fragment fragment=new AccountLinkFragment();
-                                    FragmentTransaction ft=getFragmentManager().beginTransaction();
-                                    ft.replace(R.id.main_content,fragment);
-                                    ft.commit();
-                                }if(screen.equalsIgnoreCase("prizes")){
-                                    Fragment fragment=new PrizesFragment();
-                                    FragmentTransaction ft=getFragmentManager().beginTransaction();
-                                    ft.replace(R.id.main_content,fragment);
-                                    ft.commit();
-                                }if(screen.equalsIgnoreCase("detailfragment")){
-                                    Fragment fragment=new MyDetailFragment();
-                                    FragmentTransaction ft=getFragmentManager().beginTransaction();
-                                    ft.replace(R.id.frame_container,fragment);
-                                    ft.commit();
-                                }if(screen.equalsIgnoreCase("captain")){
-//                                    saveTeam(response.body().getData().getMyUser().getUserId().intValue());
-                                    Fragment fragment = null;
-                                    if(contestAmt>0) {
-
-                                        fragment = new PaymentFragment();
-                                        Bundle bundle = new Bundle();
+                                    if(screen.equalsIgnoreCase("payment")){
+                                        Fragment fragment=new PaymentFragment();
+                                        Bundle bundle=new Bundle();
+                                        bundle.putInt("conId",contestId);
+                                        bundle.putDouble("credit",credit);
                                         bundle.putInt("contestAmt",contestAmt);
                                         fragment.setArguments(bundle);
-                                    }else{
-                                        fragment = new DashboardFragment();
-                                        saveTeam(response.body().getData().getMyUser().getUserId().intValue());
-                                    }
+                                        FragmentTransaction ft=getFragmentManager().beginTransaction();
+                                        ft.replace(R.id.main_content,fragment);
+                                        ft.commit();
+                                    }if(screen.equalsIgnoreCase("prizesclaim")){
+                                        Fragment fragment=new FragmentClaimPrizes();
+                                        FragmentTransaction ft=getFragmentManager().beginTransaction();
+                                        ft.replace(R.id.main_content,fragment);
+                                        ft.commit();
+                                    }if(screen.equalsIgnoreCase("mymatches")){
+                                        Fragment fragment=new MyMatchesFragment();
+                                        FragmentTransaction ft=getFragmentManager().beginTransaction();
+                                        ft.replace(R.id.main_content,fragment);
+                                        ft.commit();
+                                    }if(screen.equalsIgnoreCase("accountlinking")){
+                                        Fragment fragment=new AccountLinkFragment();
+                                        FragmentTransaction ft=getFragmentManager().beginTransaction();
+                                        ft.replace(R.id.main_content,fragment);
+                                        ft.commit();
+                                    }if(screen.equalsIgnoreCase("prizes")){
+                                        Fragment fragment=new PrizesFragment();
+                                        FragmentTransaction ft=getFragmentManager().beginTransaction();
+                                        ft.replace(R.id.main_content,fragment);
+                                        ft.commit();
+                                    }if(screen.equalsIgnoreCase("detailfragment")){
+                                        Fragment fragment=new MyDetailFragment();
+                                        FragmentTransaction ft=getFragmentManager().beginTransaction();
+                                        ft.replace(R.id.frame_container,fragment);
+                                        ft.commit();
+                                    }if(screen.equalsIgnoreCase("captain")){
+//                                    saveTeam(response.body().getData().getMyUser().getUserId().intValue());
+                                        Fragment fragment = null;
+                                        if(contestAmt>0) {
+
+                                            fragment = new PaymentFragment();
+                                            Bundle bundle = new Bundle();
+                                            bundle.putInt("contestAmt",contestAmt);
+                                            fragment.setArguments(bundle);
+                                        }else{
+                                            fragment = new DashboardFragment();
+                                            saveTeam(response.body().getData().getMyUser().getUserId().intValue());
+                                        }
 //                                    bundle.putInt("contestId",contestId);
 
 
-                                    FragmentTransaction ft=getFragmentManager().beginTransaction();
-                                    ft.replace(R.id.main_content,fragment);
-                                    ft.commit();
-                                }
+                                        FragmentTransaction ft=getFragmentManager().beginTransaction();
+                                        ft.replace(R.id.main_content,fragment);
+                                        ft.commit();
+                                    }
 
-                            }else{
-                                progressBar.setVisibility(View.GONE);
-                                Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                                btn_next.setEnabled(true);
+                                }else{
+                                    progressBar.setVisibility(View.GONE);
+                                    Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                    btn_next.setEnabled(true);
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<LoginResponse> call, Throwable t) {
-                        t.printStackTrace();
-                        Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
-                        btn_next.setEnabled(true);
-                        progressBar.setVisibility(View.GONE);
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<LoginResponse> call, Throwable t) {
+                            t.printStackTrace();
+                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
+                            btn_next.setEnabled(true);
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    });
+        }
     }
 
 
     public void saveTeam(int user_id){
-        try{
-            SimpleDateFormat sdf=new SimpleDateFormat("yyssddmm");
-            List<PlayerBean> list= dbHelper.getMyTeam();
-            JSONArray jsonArray = new JSONArray();
-            for(PlayerBean bean:list) {
+       if(Helper.isConnectedToNetwork(getActivity())){
+           try{
+               SimpleDateFormat sdf=new SimpleDateFormat("yyssddmm");
+               List<PlayerBean> list= dbHelper.getMyTeam();
+               JSONArray jsonArray = new JSONArray();
+               for(PlayerBean bean:list) {
 
-                JSONArray array = new JSONArray();
-                array.put(bean.getId());
-                if(bean.isCaptain()) {
-                    array.put(1);
-                }else{
-                    array.put(0);
-                }
-                if(bean.isViceCaptain()) {
-                    array.put(1);
-                }else {
-                    array.put(0);
-                }
-                jsonArray.put(array);
-            }
-            Log.e("beanList",jsonArray.toString());
+                   JSONArray array = new JSONArray();
+                   array.put(bean.getId());
+                   if(bean.isCaptain()) {
+                       array.put(1);
+                   }else{
+                       array.put(0);
+                   }
+                   if(bean.isViceCaptain()) {
+                       array.put(1);
+                   }else {
+                       array.put(0);
+                   }
+                   jsonArray.put(array);
+               }
+               Log.e("beanList",jsonArray.toString());
 
-            JSONObject object=new JSONObject();
+               JSONObject object=new JSONObject();
 
-            object.put("user_id",user_id);
-            object.put("contest_id",contestId);
-            object.put("name",user_id+"-"+sdf.format(new Date()));
-            object.put("method_Name",this.getClass().getSimpleName()+".btn_done.onClick");
-            object.put("playersInfo",jsonArray);
-            object.put("coins",0);
-            object.put("rem_budget",credit);
+               object.put("user_id",user_id);
+               object.put("contest_id",contestId);
+               object.put("name",user_id+"-"+sdf.format(new Date()));
+               object.put("method_Name",this.getClass().getSimpleName()+".btn_done.onClick");
+               object.put("playersInfo",jsonArray);
+               object.put("coins",0);
+               object.put("rem_budget",credit);
 
-            ApiClient.getInstance().JoinContest(Helper.encrypt(object.toString()))
-                    .enqueue(new Callback<JoinContenstResponse>() {
-                        @Override
-                        public void onResponse(Call<JoinContenstResponse> call, Response<JoinContenstResponse> response) {
-                            try{
-                                if(response.isSuccessful()){
-                                  //  pd.dismiss();
+               ApiClient.getInstance().JoinContest(Helper.encrypt(object.toString()))
+                       .enqueue(new Callback<JoinContenstResponse>() {
+                           @Override
+                           public void onResponse(Call<JoinContenstResponse> call, Response<JoinContenstResponse> response) {
+                               try{
+                                   if(response.isSuccessful()){
+                                       //  pd.dismiss();
 //                                    Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                                    if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
-                                        dbHelper.deleteMyTeam();
-                                        new Handler().postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Helper.showAlertNetural(mView.getContext(), "Success", response.body().getMessage());
-                                            }
-                                        },1000);
-                                        Fragment fragment=new DashboardFragment();
-                                        FragmentTransaction ft=getFragmentManager().beginTransaction();
-                                        ft.replace(R.id.main_content,fragment);
-                                        ft.commit();
+                                       if(response.body().getResponseCode().equalsIgnoreCase("1001")) {
+                                           dbHelper.deleteMyTeam();
+                                           new Handler().postDelayed(new Runnable() {
+                                               @Override
+                                               public void run() {
+                                                   Helper.showAlertNetural(mView.getContext(), "Success", response.body().getMessage());
+                                               }
+                                           },1000);
+                                           Fragment fragment=new DashboardFragment();
+                                           FragmentTransaction ft=getFragmentManager().beginTransaction();
+                                           ft.replace(R.id.main_content,fragment);
+                                           ft.commit();
 
-                                    }else{
-                                        Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                                        Log.e("Pay",response.body().getMessage());
-                                    }
+                                       }else{
+                                           Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                           Log.e("Pay",response.body().getMessage());
+                                       }
 
-                                }
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
+                                   }
+                               }catch (Exception e){
+                                   e.printStackTrace();
+                               }
 
 
-                        }
+                           }
 
-                        @Override
-                        public void onFailure(Call<JoinContenstResponse> call, Throwable t) {
-                            t.printStackTrace();
-                           // pd.dismiss();
-                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error"+t.getMessage());
+                           @Override
+                           public void onFailure(Call<JoinContenstResponse> call, Throwable t) {
+                               t.printStackTrace();
+                               // pd.dismiss();
+                               Helper.showAlertNetural(mView.getContext(),"Error","Communication Error"+t.getMessage());
 
-                        }
-                    });
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+                           }
+                       });
+           }catch (Exception e){
+               e.printStackTrace();
+           }
+       }
     }
 
 }

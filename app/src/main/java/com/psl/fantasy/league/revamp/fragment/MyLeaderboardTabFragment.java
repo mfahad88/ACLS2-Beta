@@ -52,39 +52,42 @@ public class MyLeaderboardTabFragment extends Fragment {
             userId=getArguments().getInt("userId");
             contestId=getArguments().getInt("contestId");
         }
-        JSONObject object=new JSONObject();
-        try {
-            object.put("user_id",userId);
-            object.put("contest_id",contestId);
-            ApiClient.getInstance().getAllContestTeamsByUserIdUnion(Helper.encrypt(object.toString()))
-                    .enqueue(new Callback<MyLeaderboardTabResponse>() {
-                        @Override
-                        public void onResponse(Call<MyLeaderboardTabResponse> call, Response<MyLeaderboardTabResponse> response) {
-                            progressBar.setVisibility(View.GONE);
-                            if(response.isSuccessful()) {
-                                if (response.body().getResponseCode().equalsIgnoreCase("1001")) {
-                                    for (Datum datum : response.body().getData()) {
-                                        list.add(new MyLeaderboardTabBean(datum.getMyUserTeamId(),datum.getUserId(), datum.getTeamName(), String.valueOf(datum.getTotalPoint()),datum.getPosition().intValue()));
+
+        if(Helper.isConnectedToNetwork(getActivity())){
+            try {
+                JSONObject object=new JSONObject();
+                object.put("user_id",userId);
+                object.put("contest_id",contestId);
+                ApiClient.getInstance().getAllContestTeamsByUserIdUnion(Helper.encrypt(object.toString()))
+                        .enqueue(new Callback<MyLeaderboardTabResponse>() {
+                            @Override
+                            public void onResponse(Call<MyLeaderboardTabResponse> call, Response<MyLeaderboardTabResponse> response) {
+                                progressBar.setVisibility(View.GONE);
+                                if(response.isSuccessful()) {
+                                    if (response.body().getResponseCode().equalsIgnoreCase("1001")) {
+                                        for (Datum datum : response.body().getData()) {
+                                            list.add(new MyLeaderboardTabBean(datum.getMyUserTeamId(),datum.getUserId(), datum.getTeamName(), String.valueOf(datum.getTotalPoint()),datum.getPosition().intValue()));
+                                        }
+                                        if (list.size() > 0) {
+                                            list_my_leaderboard.setVisibility(View.VISIBLE);
+                                            MyLeaderboardTabAdapter adapter = new MyLeaderboardTabAdapter(mView.getContext(), R.layout.my_leaderboard_tab_adapter, list,userId);
+                                            list_my_leaderboard.setAdapter(adapter);
+                                        }
+                                    } else {
+                                        Helper.showAlertNetural(mView.getContext(), "Error", response.body().getMessage());
                                     }
-                                    if (list.size() > 0) {
-                                        list_my_leaderboard.setVisibility(View.VISIBLE);
-                                        MyLeaderboardTabAdapter adapter = new MyLeaderboardTabAdapter(mView.getContext(), R.layout.my_leaderboard_tab_adapter, list,userId);
-                                        list_my_leaderboard.setAdapter(adapter);
-                                    }
-                                } else {
-                                    Helper.showAlertNetural(mView.getContext(), "Error", response.body().getMessage());
                                 }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<MyLeaderboardTabResponse> call, Throwable t) {
-                            t.printStackTrace();
-                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
-                        }
-                    });
-        }catch (JSONException e){
-            e.printStackTrace();
+                            @Override
+                            public void onFailure(Call<MyLeaderboardTabResponse> call, Throwable t) {
+                                t.printStackTrace();
+                                Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
+                            }
+                        });
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
         }
         return mView;
     }
