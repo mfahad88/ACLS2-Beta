@@ -22,6 +22,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import com.karumi.dexter.Dexter;
@@ -53,7 +54,7 @@ import retrofit2.Response;
 
 public class SplashActivity extends AppCompatActivity {
     DbHelper dbHelper;
-
+    private FirebaseAnalytics mFirebaseAnalytics;
     SharedPreferences preferences;
     int user_id;
     @Override
@@ -72,6 +73,12 @@ public class SplashActivity extends AppCompatActivity {
             FacebookSdk.setAutoLogAppEventsEnabled(true);
 //            Helper.printHashKey(this);
             requestMultiplePermissions();
+            mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+            Bundle params = new Bundle();
+            params.putString("SplashActivity", SplashActivity.class.getName());
+            mFirebaseAnalytics.logEvent("Splash", params);
+            mFirebaseAnalytics.setUserProperty("app_id",BuildConfig.VERSION_NAME);
+
             //FirebaseApp.getInstance().getToken(true);
 
 //            Log.e("Firebase",FirebaseInstanceId.getInstance().getToken());
@@ -111,7 +118,7 @@ public class SplashActivity extends AppCompatActivity {
                            @Override
                            public void onFailure(Call<PlayerResponse> call, Throwable t) {
                                t.fillInStackTrace();
-                               Helper.showAlertNetural(SplashActivity.this,"Error","Communication Error");
+                               Helper.showAlertNetural(getApplicationContext(),"Error","Communication Error");
                            }
                        });
                    }
@@ -181,8 +188,8 @@ public class SplashActivity extends AppCompatActivity {
                 .withPermissions(
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        /*Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,*/
                         Manifest.permission.ACCESS_NETWORK_STATE,
                         Manifest.permission.INTERNET
                         )

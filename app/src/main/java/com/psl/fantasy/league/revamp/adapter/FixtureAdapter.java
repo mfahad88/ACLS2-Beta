@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 
 
@@ -15,12 +16,14 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +40,7 @@ import com.psl.fantasy.league.revamp.fragment.ContestFragment;
 import com.psl.fantasy.league.revamp.fragment.DashboardFragment;
 import com.psl.fantasy.league.revamp.model.ui.MatchesBean;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -48,28 +52,17 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
-public class FixtureAdapter extends ArrayAdapter<MatchesBean> implements LocationListener {
+public class FixtureAdapter extends ArrayAdapter<MatchesBean>{
     Context context;
     int resource;
     List<MatchesBean> list;
-    LocationManager locationManager;
-    String mprovider;
-    Location mlocation;
-    LocationListener listener;
+    View convertView;
     @SuppressLint("MissingPermission")
     public FixtureAdapter(Context context, int resource, List<MatchesBean> list) {
         super(context,resource,list);
         this.context=context;
         this.resource=resource;
         this.list=list;
-        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-
-        mprovider = locationManager.getBestProvider(criteria, false);
-        mlocation=locationManager.getLastKnownLocation(mprovider);
-        if(mlocation==null) {
-            locationManager.requestLocationUpdates(mprovider, 0, 0, this);
-        }
 
     }
 
@@ -88,12 +81,13 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> implements Locatio
     @SuppressLint("NewApi")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final SimpleDateFormat sdf=new SimpleDateFormat("HH:mm:ss");
+
 
         convertView=LayoutInflater.from(context).inflate(resource,null);
         final MatchesBean bean=list.get(position);
 
         //Drawable drawable = null;
+        CardView card_view_match=convertView.findViewById(R.id.card_view_match);
         int resource=0;
         ImageView image_team_one = convertView.findViewById(R.id.image_team_one);
         ImageView image_team_two = convertView.findViewById(R.id.image_team_two);
@@ -194,7 +188,7 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> implements Locatio
                 resource=R.drawable.westindies;
             }
             image_team_two.setImageResource(resource);
-
+            Log.e("Matches",bean.toString());
 
             new Thread(new Runnable() {
                 @Override
@@ -202,24 +196,20 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> implements Locatio
                     while (true) {
                         try {
                             Thread.sleep(1000);
+                            txt_time.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//                                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ");
+
+                                    txt_time.setText( showDifference(sdf.format(bean.getTime()),card_view_match,bean));
+
+                                }
+                            });
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        txt_time.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-
-                                try {
-
-                                    txt_time.setText( showDifference(sdf.format(bean.getTime())));
-                                }catch (Exception e){
-                                    e.printStackTrace();
-                                }
-
-                            }
-                        });
                     }
                 }
             }).start();
@@ -249,18 +239,21 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> implements Locatio
         }catch (Exception e){
             e.printStackTrace();
         }
-
+        /*if(bean.isChecked()){
+            card_view_match.setCardBackgroundColor(Color.parseColor("#FFF4DD"));
+        }*/
         return convertView;
     }
 
-    public String showDifference(String date1){
+
+    public String showDifference(String date1, CardView cardView, MatchesBean bean){
 
         String dateStop = date1;
         String dateFinal = "";
         //TimeZone pstTime = TimeZone.getTimeZone("GMT");
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        String dateStart = format.format(new Date(mlocation.getTime()));
+        String dateStart = format.format(new Date());
 
         Date d1 = null;
         Date d2 = null;
@@ -268,7 +261,7 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> implements Locatio
         try {
             d1 = format.parse(dateStart);
             d2 = format.parse(dateStop);
-            Log.e("d2",d2.toLocaleString()+"("+d1+")");
+
 
             long diff = d2.getTime() - d1.getTime();
 
@@ -287,7 +280,10 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> implements Locatio
             //New Format By FT
             long hrs=diffDays*24;
             hrs+=diffHours;
-
+            if(hrs<=72){
+                cardView.setCardBackgroundColor(Color.parseColor("#FFF4DD"));
+                bean.setChecked(true);
+            }
             if(hrs<=48 && hrs>5){
                 dateFinal=hrs+" Hr(s) Left" ;
             }
@@ -296,12 +292,12 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> implements Locatio
                 dateFinal=diffDays+" Day(s) "+diffHours+" Hr(s) Left";
             }
 
-           // if(hrs<=5){
+            // if(hrs<=5){
             if(hrs<=5 && hrs>0){ // change once data is updated
                 dateFinal = diffHours+" Hr(s) "+diffMinutes+" Min(s) "+diffSeconds+" Sec(s) Left";
             }
 
-           // dateFinal=diffDays + " days, "+diffHours + " hours, "+diffMinutes + " minutes, "+diffSeconds + " seconds.";
+            // dateFinal=diffDays + " days, "+diffHours + " hours, "+diffMinutes + " minutes, "+diffSeconds + " seconds.";
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -310,27 +306,4 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean> implements Locatio
 
 
 
-
-    @Override
-    public void onLocationChanged(Location location) {
-        mlocation=location;
-        if(mlocation!=null){
-            locationManager.removeUpdates(this);
-        }
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
 }

@@ -158,7 +158,7 @@ public class DashboardFragment extends Fragment {
                                         for(Datum bean:response.body().getData()){
                                             if(response.body().getData().size()>0) {
                                                 if(bean.getMatchSts().equalsIgnoreCase("1")){
-                                                    list.add(new MatchesBean(bean.getMatch_series_id(),bean.getTeamId1Name(),bean.getTeamId2Name(),bean.getTeam_id1_shortName(),bean.getTeam_id2_shortName(),bean.getStartDate(),bean.getTeamId1().intValue(),bean.getTeamId2().intValue(),bean.getSeries_name()));
+                                                    list.add(new MatchesBean(bean.getMatch_series_id(),bean.getTeamId1Name(),bean.getTeamId2Name(),bean.getTeam_id1_shortName(),bean.getTeam_id2_shortName(),bean.getStartDate(),bean.getTeamId1().intValue(),bean.getTeamId2().intValue(),bean.getSeries_name(),false));
                                                     list_matches.setVisibility(View.VISIBLE);
 
                                                     fixtureAdapter = new FixtureAdapter(mView.getContext(), R.layout.list_fixture, list);

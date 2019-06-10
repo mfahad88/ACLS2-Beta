@@ -13,8 +13,9 @@ public class MatchesBean {
     private int team_id1;
     private int team_id2;
     private String txt_series;
+    private boolean isChecked;
 
-    public MatchesBean(String matchId, String teamOne, String teamTwo, String shortName1, String shortName2, Date time, int team_id1, int team_id2, String txt_series) {
+    public MatchesBean(String matchId, String teamOne, String teamTwo, String shortName1, String shortName2, Date time, int team_id1, int team_id2, String txt_series, boolean isChecked) {
         MatchId = matchId;
         TeamOne = teamOne;
         TeamTwo = teamTwo;
@@ -24,6 +25,7 @@ public class MatchesBean {
         this.team_id1 = team_id1;
         this.team_id2 = team_id2;
         this.txt_series = txt_series;
+        this.isChecked = isChecked;
     }
 
     public String getMatchId() {
@@ -98,10 +100,18 @@ public class MatchesBean {
         this.txt_series = txt_series;
     }
 
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
+
     @Override
     public String toString() {
         return "MatchesBean{" +
-                "MatchId=" + MatchId +
+                "MatchId='" + MatchId + '\'' +
                 ", TeamOne='" + TeamOne + '\'' +
                 ", TeamTwo='" + TeamTwo + '\'' +
                 ", shortName1='" + shortName1 + '\'' +
@@ -110,6 +120,7 @@ public class MatchesBean {
                 ", team_id1=" + team_id1 +
                 ", team_id2=" + team_id2 +
                 ", txt_series='" + txt_series + '\'' +
+                ", isChecked=" + isChecked +
                 '}';
     }
 }
