@@ -222,6 +222,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
 
                             @Override
                             public void onFailure(Call<SimPaisaOTPResponse> call, Throwable t) {
+                                call.cancel();
                                 t.printStackTrace();
                                 btn_submit.setEnabled(true);
                                 progressBar.setVisibility(View.GONE);
@@ -261,6 +262,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
 
                            @Override
                            public void onFailure(Call<SimPaisaResponse> call, Throwable t) {
+                               call.cancel();
                                t.printStackTrace();
                                btn_pay.setEnabled(true);
                                Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");

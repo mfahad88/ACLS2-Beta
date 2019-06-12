@@ -103,7 +103,7 @@ public class AccountLinkFragment extends Fragment implements View.OnClickListene
             fragment.setArguments(bundle);
             AppCompatActivity activity=(AppCompatActivity)getActivity();
             FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.frame_container,fragment);
+            ft.replace(R.id.main_content,fragment);
             ft.commit();
 
         }
@@ -229,6 +229,7 @@ public class AccountLinkFragment extends Fragment implements View.OnClickListene
 
                                        @Override
                                        public void onFailure(Call<LinkingBean> call, Throwable t) {
+                                           call.cancel();
                                            t.printStackTrace();
                                            btn_ok.setEnabled(true);
                                            progressBar.setVisibility(View.GONE);
@@ -298,6 +299,7 @@ public class AccountLinkFragment extends Fragment implements View.OnClickListene
 
                                            @Override
                                            public void onFailure(Call<OTPBean> call, Throwable t) {
+                                               call.cancel();
                                                t.printStackTrace();
                                                btn_submit.setEnabled(true);
                                                progressBar.setVisibility(View.GONE);
@@ -357,6 +359,7 @@ public class AccountLinkFragment extends Fragment implements View.OnClickListene
 
                                     @Override
                                     public void onFailure(Call<BankInfo> call, Throwable t) {
+                                        call.cancel();
                                         t.printStackTrace();
                                         Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
                                     }

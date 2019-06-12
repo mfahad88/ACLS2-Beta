@@ -90,6 +90,7 @@ public class CreateTeamFragment extends Fragment {
             bean.setCaptain(false);
             bean.setViceCaptain(false);
             player.add(bean);
+            System.out.println(datum.toString());
         }
 
         //List<PlayerBean>list=player.stream().filter(p->p.getSkill().equals(String.valueOf(Player_Type))).collect(Collectors.toList());
@@ -116,7 +117,7 @@ public class CreateTeamFragment extends Fragment {
         };
         PlayerInfoAdapter adapter=new PlayerInfoAdapter(mView.getContext(),R.layout.player_info_adapter,player,Player_Type,playerInterface,dbHelper);
         list_player.setAdapter(adapter);
-
+        list_player.deferNotifyDataSetChanged();
 
         return mView;
     }

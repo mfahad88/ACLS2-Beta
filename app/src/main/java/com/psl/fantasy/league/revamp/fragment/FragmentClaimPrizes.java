@@ -110,6 +110,7 @@ public class FragmentClaimPrizes extends Fragment {
 
                             @Override
                             public void onFailure(Call<PrizesResponse> call, Throwable t) {
+                                call.cancel();
                                 t.printStackTrace();
                                 Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
                             }

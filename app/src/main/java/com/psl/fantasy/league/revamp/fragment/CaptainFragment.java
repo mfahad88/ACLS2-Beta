@@ -242,6 +242,7 @@ public class CaptainFragment extends Fragment {
 
                             @Override
                             public void onFailure(Call<JoinContenstResponse> call, Throwable t) {
+                                call.cancel();
                                 t.printStackTrace();
                                 pd.dismiss();
                                 Helper.showAlertNetural(mView.getContext(),"Error","Communication Error"+t.getMessage());

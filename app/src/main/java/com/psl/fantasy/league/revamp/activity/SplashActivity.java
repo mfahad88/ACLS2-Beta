@@ -77,7 +77,6 @@ public class SplashActivity extends AppCompatActivity {
             Bundle params = new Bundle();
             params.putString("SplashActivity", SplashActivity.class.getName());
             mFirebaseAnalytics.logEvent("Splash", params);
-            mFirebaseAnalytics.setUserProperty("app_id",BuildConfig.VERSION_NAME);
 
             //FirebaseApp.getInstance().getToken(true);
 
@@ -117,8 +116,9 @@ public class SplashActivity extends AppCompatActivity {
 
                            @Override
                            public void onFailure(Call<PlayerResponse> call, Throwable t) {
-                               t.fillInStackTrace();
-                               Helper.showAlertNetural(getApplicationContext(),"Error","Communication Error");
+                               call.cancel();
+                               t.printStackTrace();
+//                               Helper.showAlertNetural(getApplicationContext(),"Error","Communication Error");
                            }
                        });
                    }

@@ -103,6 +103,7 @@ public class MyDetailFragment extends Fragment {
 
                             @Override
                             public void onFailure(Call<SelectUserBean> call, Throwable t) {
+                                call.cancel();
                                 t.printStackTrace();
                                 Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
                             }

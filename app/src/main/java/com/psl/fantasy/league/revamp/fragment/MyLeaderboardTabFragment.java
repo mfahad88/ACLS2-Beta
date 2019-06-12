@@ -81,6 +81,7 @@ public class MyLeaderboardTabFragment extends Fragment {
 
                             @Override
                             public void onFailure(Call<MyLeaderboardTabResponse> call, Throwable t) {
+                                call.cancel();
                                 t.printStackTrace();
                                 Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
                             }

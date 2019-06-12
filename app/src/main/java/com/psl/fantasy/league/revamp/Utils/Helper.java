@@ -554,20 +554,23 @@ public class Helper {
                                             }
                                         }
                                     }
-                                } else {
+                                } /*else {
                                     try {
                                         Helper.showAlertNetural(activity.getApplicationContext(), "Error", response.errorBody().string());
 
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
-                                }
+                                }*/
                             }
 
                             @Override
                             public void onFailure(Call<ConfigBeanResponse> call, Throwable t) {
+//                                Helper.showAlertNetural(activity, "Error", "Communication Error");
+                                call.cancel();
                                 t.printStackTrace();
-                                Helper.showAlertNetural(activity, "Error", "Communication Error");
+
+
 
                             }
                         });

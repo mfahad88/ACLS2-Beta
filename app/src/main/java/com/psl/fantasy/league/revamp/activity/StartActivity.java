@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.psl.fantasy.league.revamp.Utils.DbHelper;
+import com.psl.fantasy.league.revamp.fragment.AccountLinkFragment;
 import com.psl.fantasy.league.revamp.model.response.AppVersion.AppVersionBean;
 import com.psl.fantasy.league.revamp.BuildConfig;
 import com.psl.fantasy.league.revamp.R;
@@ -101,7 +102,8 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
                         return true;*/
 
                     case R.id.balance:
-                        fragment=new BalanceFragment();
+//                        fragment=new BalanceFragment();
+                        fragment=new AccountLinkFragment();
                         FragmentTransaction ft_bal=getSupportFragmentManager().beginTransaction();
                         ft_bal.replace(R.id.main_content,fragment);
                         ft_bal.commit();
@@ -219,8 +221,10 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
 
                             @Override
                             public void onFailure(Call<GetUserNotificationBean> call, Throwable t) {
+                                call.cancel();
+                                Helper.showAlertNetural(StartActivity.this,"Error","Communication Error");
                                 t.printStackTrace();
-                                Helper.showAlertNetural(getApplicationContext(),"Error","Communication Error");
+
                             }
                         });
             }catch (Exception e){
@@ -233,7 +237,7 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
     protected void onDestroy() {
         dbHelper.deleteConfig();
         dbHelper.deleteMyTeam();
-        dbHelper.deletePlayer();
+        //dbHelper.deletePlayer();
         super.onDestroy();
     }
 

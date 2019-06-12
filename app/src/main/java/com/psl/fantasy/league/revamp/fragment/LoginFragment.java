@@ -44,6 +44,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -78,22 +79,21 @@ import retrofit2.Response;
  * A simple {@link Fragment} subclass.
  */
 public class LoginFragment extends Fragment implements View.OnClickListener {
+    private static final String TAG = "FacebookLogin";
      private static final int RC_SIGN_IN =100 ;
     private View mView;
     private static final String EMAIL = "email";
-    private EditText edt_mobile_no,edt_password,edt_mobile_number,edt_pass_word,edt_referral,edt_confirm_password;
+    private EditText edt_mobile_no,edt_password,edt_mobile_number,edt_pass_word,edt_referral,edt_confirm_password,edt_team_name;
     private TextView txt_register;
     private Button btn_next,btn_sign_up;
     private SharedPreferences sharedpreferences;
-    private FirebaseAuth mAuth;
     private int contestId,contestAmt;
     private double credit;
     private CardView card_view_sign_up;
     private LinearLayout linear_sign_in;
     private String signupType="form";
     private SharedPreferences preferences;
-    private LoginButton loginButton;
-    private CallbackManager callbackManager;
+
     private FragmentToActivity mCallback;
     private String screen;
     private StringBuilder user_consent;
@@ -103,6 +103,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private DbHelper dbHelper;
     private GoogleSignInClient mGoogleSignInClient;
     private SignInButton sign_in_button;
+    private FirebaseAuth mAuth;
+    LoginButton login_button;
+    // [END declare_auth]
+
+    private CallbackManager mCallbackManager;
+
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -126,6 +133,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         mView=inflater.inflate(R.layout.fragment_login, container, false);
         user_consent=new StringBuilder();
         init();
+        login_button.setReadPermissions("email", "public_profile");
         mCallback.communicate("disable");
         if(getArguments()!=null){
             credit=getArguments().getDouble("credit");
@@ -139,11 +147,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
-        mAuth = FirebaseAuth.getInstance();
+
         btn_next.setOnClickListener(this);
         sign_in_button.setOnClickListener(this);
         btn_sign_up.setOnClickListener(this);
-        callbackManager = CallbackManager.Factory.create();
         txt_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,6 +165,23 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 dialogFragment.show(getFragmentManager(),"Terms");
             }
         });
+        login_button.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d(TAG, "facebook:onSuccess:" + loginResult);
+                handleFacebookAccessToken(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d(TAG, "facebook:onCancel");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.d(TAG, "facebook:onError", error);
+            }
+        });
 
         return mView;
     }
@@ -165,8 +189,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
 
     private void init(){
-        LoginManager.getInstance().logOut();
-
         btn_next=mView.findViewById(R.id.btn_next);
         edt_mobile_no=mView.findViewById(R.id.edt_mobile_no);
         edt_password=mView.findViewById(R.id.edt_password);
@@ -182,18 +204,24 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         progressBar=mView.findViewById(R.id.progressBar);
         card_view_sign_up=mView.findViewById(R.id.card_view_sign_up);
         edt_confirm_password=mView.findViewById(R.id.edt_confirm_password);
+        edt_team_name=mView.findViewById(R.id.edt_team_name);
         checkbox_terms_condition=mView.findViewById(R.id.checkbox_terms_condition);
         checkbox_partner=mView.findViewById(R.id.checkbox_partner);
         checkbox_contact=mView.findViewById(R.id.checkbox_contact);
         txt_terms_conditions=mView.findViewById(R.id.txt_terms_conditions);
         dbHelper=new DbHelper(getContext());
         sign_in_button=mView.findViewById(R.id.sign_in_button);
+        login_button=mView.findViewById(R.id.login_button);
+        mAuth = FirebaseAuth.getInstance();
+        mCallbackManager=CallbackManager.Factory.create();
+
     }
 
 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if(RC_SIGN_IN==100) {
          Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             GoogleSignInAccount account = null;
@@ -205,10 +233,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             }
 
         }else{
-            callbackManager.onActivityResult(requestCode, resultCode, data);
+            mCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
-        super.onActivityResult(requestCode, resultCode, data);
 
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 
@@ -238,12 +266,40 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
     // [END signin]
 
+    private void handleFacebookAccessToken(AccessToken token) {
+        Log.d(TAG, "handleFacebookAccessToken:" + token);
+        // [START_EXCLUDE silent]
+
+        // [END_EXCLUDE]
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Toast.makeText(getContext(), ""+task.isSuccessful(), Toast.LENGTH_SHORT).show();
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            Toast.makeText(getContext(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+    }
+
     private void signOut() {
         // Firebase sign out
         mAuth.signOut();
 
         // Google sign out
-        mGoogleSignInClient.signOut();
+        LoginManager.getInstance().logOut();
     }
 
     @Override
@@ -264,21 +320,24 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
            }catch (Exception e){
                e.printStackTrace();
            }
-       }else if(v.getId()==R.id.sign_in_button){
+       }/*else if(v.getId()==R.id.sign_in_button){
            signIn();
-       }
+       }if(v.getId()==R.id.login_button){
+            signOut();
+        }*/
 
-       else{
+       if(v.getId()==R.id.btn_sign_up){
            if(Helper.isConnectedToNetwork(getActivity())){
                try{
                    String mobileNo=edt_mobile_number.getText().toString();
                    String password=edt_pass_word.getText().toString();
                    String confirmPassword=edt_confirm_password.getText().toString();
                    String referral=edt_referral.getText().toString();
-                   if(!checkbox_terms_condition.isChecked()){
+                   String teamName=edt_team_name.getText().toString();
+                   if(checkbox_terms_condition.getVisibility()==View.VISIBLE && !checkbox_terms_condition.isChecked()){
                        Helper.showAlertNetural(mView.getContext(),"Info","Please agree T&C's to proceed");
                    }
-                   if((!TextUtils.isEmpty(mobileNo)) && (!TextUtils.isEmpty(password)) && (!TextUtils.isEmpty(confirmPassword)) && checkbox_terms_condition.isChecked()){
+                   if((!TextUtils.isEmpty(mobileNo)) && (!TextUtils.isEmpty(password)) && (!TextUtils.isEmpty(confirmPassword)) && checkbox_terms_condition.isChecked() &&(!TextUtils.isEmpty(teamName))){
                        if(password.equalsIgnoreCase(confirmPassword)){
                            if(checkbox_terms_condition.isChecked()){
                                user_consent.append(checkbox_terms_condition.getText());
@@ -298,6 +357,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                            object.put("sts",1);
                            object.put("is_updated","0");
                            object.put("user_consent",user_consent);
+                           object.put("team_name",teamName);
                            object.put("method_Name",this.getClass().getSimpleName()+".btn_sign_up.onClick");
                            btn_sign_up.setEnabled(false);
                            ApiClient.getInstance().insertUser(Helper.encrypt(object.toString()))
@@ -340,6 +400,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
                                        @Override
                                        public void onFailure(Call<InsertResponse> call, Throwable t) {
+                                           call.cancel();
                                            t.printStackTrace();
                                            btn_sign_up.setEnabled(true);
                                            Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
@@ -458,6 +519,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                         @Override
                         public void onFailure(Call<LoginResponse> call, Throwable t) {
                             t.printStackTrace();
+                            call.cancel();
                             Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
                             btn_next.setEnabled(true);
                             progressBar.setVisibility(View.GONE);

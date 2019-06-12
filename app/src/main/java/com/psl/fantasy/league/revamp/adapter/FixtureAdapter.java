@@ -239,9 +239,9 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean>{
         }catch (Exception e){
             e.printStackTrace();
         }
-        /*if(bean.isChecked()){
+        if(bean.isChecked()){
             card_view_match.setCardBackgroundColor(Color.parseColor("#FFF4DD"));
-        }*/
+        }
         return convertView;
     }
 

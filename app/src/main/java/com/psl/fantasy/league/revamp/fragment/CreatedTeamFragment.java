@@ -74,6 +74,7 @@ public class CreatedTeamFragment extends Fragment {
 
                            @Override
                            public void onFailure(Call<PlayerInfoResponse> call, Throwable t) {
+                               call.cancel();
                                t.printStackTrace();
                                Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
                            }

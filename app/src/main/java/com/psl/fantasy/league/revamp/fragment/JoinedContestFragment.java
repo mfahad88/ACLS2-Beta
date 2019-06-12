@@ -79,6 +79,7 @@ public class JoinedContestFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<JoinedContestResponse> call, Throwable t) {
+                        call.cancel();
                         t.printStackTrace();
                         progressBar.setVisibility(View.GONE);
                         Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");

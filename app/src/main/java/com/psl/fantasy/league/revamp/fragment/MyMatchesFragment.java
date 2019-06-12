@@ -129,6 +129,7 @@ public class MyMatchesFragment extends Fragment {
 
                             @Override
                             public void onFailure(Call<MyMatchesResponse> call, Throwable t) {
+                                call.cancel();
                                 t.printStackTrace();
                                 progressBar.setVisibility(View.GONE);
                                 txt_error.setVisibility(View.VISIBLE);

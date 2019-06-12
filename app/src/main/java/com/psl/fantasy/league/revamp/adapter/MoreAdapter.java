@@ -16,6 +16,7 @@ import com.psl.fantasy.league.revamp.Utils.Helper;
 import com.psl.fantasy.league.revamp.activity.StartActivity;
 import com.psl.fantasy.league.revamp.fragment.AboutUsFragment;
 import com.psl.fantasy.league.revamp.fragment.FaqFragment;
+import com.psl.fantasy.league.revamp.fragment.MyDetailFragment;
 import com.psl.fantasy.league.revamp.fragment.PrizesFragment;
 import com.psl.fantasy.league.revamp.fragment.RulesFragment;
 import com.psl.fantasy.league.revamp.fragment.TermsConditionsFragment;
@@ -67,6 +68,9 @@ public class MoreAdapter extends ArrayAdapter {
                             Intent intent=new Intent(context,StartActivity.class);
                             context.startActivity(intent);
                             ((AppCompatActivity) context).finish();
+                    }if(objects[position].toString().equalsIgnoreCase("Invite a friend")){
+                        ft.replace(R.id.main_content,new MyDetailFragment());
+                        ft.commit();
                     }
                 }
             }

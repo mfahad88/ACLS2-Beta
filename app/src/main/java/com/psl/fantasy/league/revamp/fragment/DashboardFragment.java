@@ -30,6 +30,7 @@ import com.psl.fantasy.league.revamp.model.ui.MatchesBean;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -143,8 +144,10 @@ public class DashboardFragment extends Fragment {
     }
 
     public void populateMatches(){
-        if(Helper.isConnectedToNetwork(getActivity())){
-            try{
+
+
+        try{
+            if(Helper.isConnectedToNetwork(getActivity())){
                 showProgress(View.VISIBLE);
                 JSONObject object=new JSONObject();
                 object.put("method_Name",this.getClass().getSimpleName()+".onCreateView");
@@ -152,101 +155,107 @@ public class DashboardFragment extends Fragment {
                         .enqueue(new Callback<MatchesResponse>() {
                             @Override
                             public void onResponse(Call<MatchesResponse> call, Response<MatchesResponse> response) {
-                                showProgress(GONE);
-                                if(response.isSuccessful()){
-                                    if(response.body().getResponseCode().equals("1001")){
-                                        for(Datum bean:response.body().getData()){
-                                            if(response.body().getData().size()>0) {
-                                                if(bean.getMatchSts().equalsIgnoreCase("1")){
-                                                    list.add(new MatchesBean(bean.getMatch_series_id(),bean.getTeamId1Name(),bean.getTeamId2Name(),bean.getTeam_id1_shortName(),bean.getTeam_id2_shortName(),bean.getStartDate(),bean.getTeamId1().intValue(),bean.getTeamId2().intValue(),bean.getSeries_name(),false));
-                                                    list_matches.setVisibility(View.VISIBLE);
+                               try{
+                                   showProgress(GONE);
+                                   if(response.isSuccessful()){
+                                       if(response.body().getResponseCode().equals("1001")){
+                                           for(Datum bean:response.body().getData()){
+                                               if(response.body().getData().size()>0) {
+                                                   if(bean.getMatchSts().equalsIgnoreCase("1")){
+                                                       list.add(new MatchesBean(bean.getMatch_series_id(),bean.getTeamId1Name(),bean.getTeamId2Name(),bean.getTeam_id1_shortName(),bean.getTeam_id2_shortName(),bean.getStartDate(),bean.getTeamId1().intValue(),bean.getTeamId2().intValue(),bean.getSeries_name(),false));
+                                                       list_matches.setVisibility(View.VISIBLE);
 
-                                                    fixtureAdapter = new FixtureAdapter(mView.getContext(), R.layout.list_fixture, list);
+                                                       fixtureAdapter = new FixtureAdapter(mView.getContext(), R.layout.list_fixture, list);
 
-                                                    list_matches.setAdapter(fixtureAdapter);
+                                                       list_matches.setAdapter(fixtureAdapter);
 
-                                                }
-                                            }else{
-                                                Helper.displayError(txt_status,"No record found...");
-                                            }
-                                        }
+                                                   }
+                                               }else{
+                                                   Helper.displayError(txt_status,"No record found...");
+                                               }
+                                           }
 
-                                    }else{
-                                        Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                                    }
-                                }
+                                       }else{
+                                           Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                       }
+                                   }
+                               }catch (Exception e){
+                                   e.printStackTrace();
+                               }
                             }
 
                             @Override
                             public void onFailure(Call<MatchesResponse> call, Throwable t) {
-                                t.fillInStackTrace();
+
                                 Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
+                                call.cancel();
                                 showProgress(GONE);
+                                t.printStackTrace();
                             }
                         });
 
-
-            }catch (JSONException e){
-                e.printStackTrace();
             }
+        }catch (JSONException e){
+            e.printStackTrace();
         }
+
     }
 
     private void showProgress(int visibility){
 
 
-            if(visibility==View.VISIBLE){
-                linear_progress_bar.setVisibility(View.VISIBLE);
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        int i=0;
-                        while (true){
-                            i++;
-                            if(i==1) {
-                                txt_status.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        txt_status.setText("Fetching match fixtures Please Wait.");
-                                    }
-                                });
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
+        if(visibility==View.VISIBLE){
+            linear_progress_bar.setVisibility(View.VISIBLE);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    int i=0;
+                    while (true){
+                        i++;
+                        if(i==1) {
+                            txt_status.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    txt_status.setText("Fetching match fixtures Please Wait.");
                                 }
-                            }if(i==2) {
-                                txt_status.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        txt_status.setText("Fetching match fixtures Please Wait..");
-                                    }
-                                });
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                            }if(i==3) {
-                                txt_status.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        txt_status.setText("Fetching match fixtures Please Wait...");
-                                    }
-                                });
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                i=0;
+                            });
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
                             }
+                        }if(i==2) {
+                            txt_status.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    txt_status.setText("Fetching match fixtures Please Wait..");
+                                }
+                            });
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }if(i==3) {
+                            txt_status.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    txt_status.setText("Fetching match fixtures Please Wait...");
+                                }
+                            });
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            i=0;
                         }
                     }
-                }).start();
-            }else{
-                linear_progress_bar.setVisibility(GONE);
-            }
+                }
+            }).start();
+        }else{
+            linear_progress_bar.setVisibility(GONE);
+        }
 
     }
 

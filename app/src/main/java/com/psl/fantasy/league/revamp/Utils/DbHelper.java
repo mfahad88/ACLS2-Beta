@@ -298,8 +298,9 @@ public class DbHelper extends SQLiteOpenHelper {
                     datum.setMd(c.getString(c.getColumnIndex(md)));
 
                     list.add(datum);
-
+                    System.out.println(datum.toString());
                 } while (c.moveToNext());
+
             }
 
         } catch (Exception e) {

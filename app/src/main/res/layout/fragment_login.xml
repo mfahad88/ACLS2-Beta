@@ -9,20 +9,21 @@
 
 
     <LinearLayout
+        android:id="@+id/linear_sign_in"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
         android:orientation="vertical"
-        android:id="@+id/linear_sign_in"
-        android:visibility="visible"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true">
+        android:visibility="visible">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            app:cardCornerRadius="5dp"
             android:layout_margin="10dp"
+            app:cardCornerRadius="5dp"
             app:cardElevation="5dp">
 
             <RelativeLayout
@@ -30,123 +31,114 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal">
 
-                <Button
+                <com.facebook.login.widget.LoginButton
                     android:id="@+id/login_button"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:padding="5dp"
-                    android:background="#FF3C5A99"
-                    android:drawableStart="@drawable/transparent_facebook"
-                    android:text="Facebook"
-                    android:textColor="@android:color/white"
-                    android:layout_marginTop="13dp"
-                    android:layout_toLeftOf="@id/txt_OR"
-                    android:layout_marginLeft="5dp"
-                    android:drawableLeft="@drawable/transparent_facebook" />
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp" />
 
                 <com.google.android.gms.common.SignInButton
                     android:id="@+id/sign_in_button"
-                    android:layout_marginTop="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                   android:layout_toRightOf="@id/txt_OR" />
+                    android:layout_marginTop="10dp"
+                    android:layout_toRightOf="@id/txt_OR" />
 
                 <TextView
+                    android:id="@+id/txt_OR"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/sign_in_button"
-                    android:text="OR"
-                    android:id="@+id/txt_OR"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:layout_centerHorizontal="true"/>
+                    android:text="OR" />
 
                 <TextView
+                    android:id="@+id/txt_mobile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Mobile No."
-                    android:layout_alignLeft="@id/login_button"
-                    android:textSize="10sp"
                     android:layout_below="@id/txt_OR"
-                    android:id="@+id/txt_mobile"
+                    android:layout_alignLeft="@id/login_button"
                     android:layout_marginTop="10dp"
-                    />
+                    android:text="Mobile No."
+                    android:textSize="10sp" />
+
                 <EditText
+                    android:id="@+id/edt_mobile_no"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/txt_mobile"
-                    android:hint="Mobile No."
-                    android:singleLine="true"
-                    android:maxLength="11"
                     android:layout_alignLeft="@id/login_button"
                     android:layout_alignRight="@id/sign_in_button"
-                    android:textSize="12sp"
-                    android:inputType="number"
-                    android:digits="@string/digits"
-                    android:id="@+id/edt_mobile_no"
-                    android:padding="10dp"
                     android:layout_marginTop="5dp"
+                    android:digits="@string/digits"
+                    android:hint="Mobile No."
+                    android:inputType="number"
                     android:longClickable="false"
-                    />
+                    android:maxLength="11"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:textSize="12sp" />
 
 
                 <TextView
+                    android:id="@+id/txt_pass"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Password"
-                    android:layout_marginTop="10dp"
-                    android:layout_alignLeft="@id/login_button"
-                    android:textSize="10sp"
                     android:layout_below="@id/edt_mobile_no"
-                    android:id="@+id/txt_pass"
-                    />
+                    android:layout_alignLeft="@id/login_button"
+                    android:layout_marginTop="10dp"
+                    android:text="Password"
+                    android:textSize="10sp" />
 
 
                 <EditText
+                    android:id="@+id/edt_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/txt_pass"
-                    android:hint="Password"
-                    android:layout_marginTop="5dp"
-                    android:maxLength="15"
                     android:layout_alignLeft="@id/login_button"
                     android:layout_alignRight="@id/sign_in_button"
+                    android:layout_marginTop="5dp"
+                    android:hint="Password"
+                    android:inputType="textPassword"
+                    android:maxLength="15"
+                    android:padding="10dp"
                     android:singleLine="true"
                     android:textSize="12sp"
-                    android:id="@+id/edt_password"
-                    android:inputType="textPassword"
-                    android:padding="10dp"
 
                     />
 
                 <Button
+                    android:id="@+id/btn_next"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/edt_password"
-                    android:layout_centerHorizontal="true"
-                    android:text="Log in"
                     android:layout_alignLeft="@id/edt_mobile_no"
                     android:layout_alignRight="@id/edt_mobile_no"
-                    android:id="@+id/btn_next"
-                    android:singleLine="true"
-                    android:textSize="10sp"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="20dp"
                     android:background="@drawable/button_square"
-                    android:textColor="@android:color/white"/>
+                    android:singleLine="true"
+                    android:text="Log in"
+                    android:textColor="@android:color/white"
+                    android:textSize="10sp" />
 
                 <TextView
+                    android:id="@+id/txt_forget"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Forget Password?"
-                    android:textStyle="bold"
-                    android:visibility="gone"
-                    android:id="@+id/txt_forget"
+                    android:layout_below="@id/btn_next"
                     android:layout_alignLeft="@id/edt_mobile_no"
                     android:layout_alignRight="@id/edt_mobile_no"
+                    android:layout_marginBottom="20dp"
                     android:gravity="center_horizontal"
-                    android:layout_below="@id/btn_next"
+                    android:text="Forget Password?"
                     android:textColor="#3759a5"
-                    android:layout_marginBottom="20dp"/>
+                    android:textStyle="bold"
+                    android:visibility="gone" />
             </RelativeLayout>
 
 
@@ -155,26 +147,26 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:weightSum="1"
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal"
+            android:padding="2dp"
             android:visibility="visible"
-            android:padding="2dp">
+            android:weightSum="1">
 
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="Not a member?"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:text="Not a member?" />
 
             <TextView
+                android:id="@+id/txt_register"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Register"
+                android:textColor="#3759a5"
                 android:textSize="12sp"
-                android:textStyle="bold"
-                android:id="@+id/txt_register"
-                android:textColor="#3759a5"/>
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -199,153 +191,184 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
 
-        <RelativeLayout
-            android:layout_width="330dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:id="@+id/relative_sign_up"
-            android:layout_gravity="center_horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="SignUp User"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="10dp"
-                android:id="@+id/txt_sign_up"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mobile No."
-                android:layout_below="@id/txt_sign_up"
-                android:id="@+id/txt_mobile_no"
-                android:textSize="10sp"/>
-
-            <EditText
-                android:id="@+id/edt_mobile_number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLength="11"
-                android:singleLine="true"
-                android:layout_below="@id/txt_mobile_no"
-                android:digits="@string/digits"
-                android:gravity="center_vertical"
-                android:inputType="number"
-                android:paddingLeft="5dp" />
-
-            <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Password"
-
-            android:layout_below="@id/edt_mobile_number"
-            android:id="@+id/txt_password"
-            android:textSize="10sp"/>
-
-            <EditText
-                android:id="@+id/edt_pass_word"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:maxLength="15"
-                android:layout_below="@id/txt_password"
-                android:inputType="textPassword"
-                android:paddingLeft="5dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Confirm Password"
-                android:layout_below="@id/edt_pass_word"
-                android:id="@+id/txt_password_confirm"
-                android:textSize="10sp"/>
-
-            <EditText
-                android:id="@+id/edt_confirm_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLength="15"
-                android:layout_gravity="center_horizontal"
-                android:layout_below="@id/txt_password_confirm"
-                android:inputType="textPassword"
-                android:paddingLeft="5dp" />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Referral Code (Optional)"
-                android:layout_below="@id/edt_confirm_password"
-                android:id="@+id/txt_referral_code"
-                android:textSize="10sp"/>
-
-            <EditText
-                android:id="@+id/edt_referral"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_below="@id/txt_referral_code"
-                android:inputType="text"
-                android:paddingLeft="5dp" />
-
-
-
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <RelativeLayout
-                android:layout_width="match_parent"
+                android:layout_width="330dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/edt_referral">
+                android:layout_margin="10dp"
+                android:id="@+id/relative_sign_up"
+                android:layout_gravity="center_horizontal">
 
-                <CheckBox
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/checkbox_terms_condition"
-                    android:text="By registering, I agree to T&amp;C's"/>
-
-                <CheckBox
+                    android:text="SignUp User"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="10dp"
+                    android:id="@+id/txt_sign_up"/>
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/checkbox_terms_condition"
-                    android:id="@+id/checkbox_contact"
-                    android:text="I'm happy for the ACL to contact me"/>
+                    android:text="Mobile No."
+                    android:layout_below="@id/txt_sign_up"
+                    android:id="@+id/txt_mobile_no"
+                    android:textSize="10sp"/>
 
-                <CheckBox
+                <EditText
+                    android:id="@+id/edt_mobile_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLength="11"
+                    android:singleLine="true"
+                    android:layout_below="@id/txt_mobile_no"
+                    android:digits="@string/digits"
+                    android:gravity="center_vertical"
+                    android:inputType="number"
+                    android:paddingLeft="5dp" />
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/checkbox_contact"
-                    android:id="@+id/checkbox_partner"
-                    android:text="I'm happy for the ACL's partners to contact me"/>
+                    android:text="Password"
 
-                <Button
+                    android:layout_below="@id/edt_mobile_number"
+                    android:id="@+id/txt_password"
+                    android:textSize="10sp"/>
+
+                <EditText
+                    android:id="@+id/edt_pass_word"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:maxLength="15"
+                    android:textSize="12sp"
+                    android:layout_below="@id/txt_password"
+                    android:inputType="textPassword"
+                    android:paddingLeft="5dp" />
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Register"
-                    android:visibility="visible"
-                    android:layout_alignLeft="@id/checkbox_partner"
-                    android:layout_alignRight="@id/checkbox_partner"
-                    android:textColor="@android:color/white"
-                    android:background="@drawable/drawable_btn_square"
-                    android:id="@+id/btn_sign_up"
-                    android:layout_below="@id/checkbox_partner"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="15dp"/>
+                    android:text="Confirm Password"
+                    android:layout_below="@id/edt_pass_word"
+                    android:id="@+id/txt_password_confirm"
+                    android:textSize="10sp"/>
 
+                <EditText
+                    android:id="@+id/edt_confirm_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLength="15"
+                    android:textSize="12sp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_below="@id/txt_password_confirm"
+                    android:inputType="textPassword"
+                    android:paddingLeft="5dp" />
 
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/btn_sign_up"
-                    android:textColor="#3759a5"
-                    android:layout_marginTop="7dp"
-                    android:layout_centerHorizontal="true"
-                    android:id="@+id/txt_terms_conditions"
-                    android:textStyle="bold"
-                    android:text="Terms and Condition"/>
+                    android:text="Referral Code (Optional)"
+                    android:layout_below="@id/edt_confirm_password"
+                    android:id="@+id/txt_referral_code"
+                    android:textSize="10sp"/>
+
+                <EditText
+                    android:id="@+id/edt_referral"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_below="@id/txt_referral_code"
+                    android:textSize="12sp"
+                    android:inputType="text"
+                    android:paddingLeft="5dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Team Name"
+                    android:layout_below="@id/edt_referral"
+                    android:id="@+id/txt_team_name"
+                    android:textSize="10sp"/>
+
+                <EditText
+                    android:id="@+id/edt_team_name"
+                    android:hint="This will remain same for all the matches"
+                    android:textSize="12sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_below="@id/txt_team_name"
+                    android:inputType="text"
+                    android:maxLength="10"
+                    android:longClickable="false"
+                    android:paddingLeft="5dp" />
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/edt_team_name">
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/verdana"
+                        android:id="@+id/checkbox_terms_condition"
+                        android:text="By registering, I agree to T&amp;C's"/>
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/verdana"
+                        android:layout_below="@+id/checkbox_terms_condition"
+                        android:id="@+id/checkbox_contact"
+                        android:text="I'm happy for the ACL to contact me"/>
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/verdana"
+                        android:layout_below="@+id/checkbox_contact"
+                        android:id="@+id/checkbox_partner"
+                        android:text="I'm happy for the ACL's partners to contact me"/>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Register"
+                        android:visibility="visible"
+                        android:layout_alignLeft="@id/checkbox_partner"
+                        android:layout_alignRight="@id/checkbox_partner"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/drawable_btn_square"
+                        android:id="@+id/btn_sign_up"
+                        android:layout_below="@id/checkbox_partner"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="15dp"/>
+
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/btn_sign_up"
+                        android:textColor="#3759a5"
+                        android:layout_marginTop="7dp"
+                        android:layout_centerHorizontal="true"
+                        android:id="@+id/txt_terms_conditions"
+                        android:textStyle="bold"
+                        android:text="Terms and Condition"/>
+                </RelativeLayout>
+
+
             </RelativeLayout>
 
-
-        </RelativeLayout>
+        </ScrollView>
 
         <RelativeLayout
             android:layout_width="wrap_content"

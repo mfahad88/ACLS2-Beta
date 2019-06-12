@@ -78,6 +78,7 @@ public class PrizesClaimAdapter extends ArrayAdapter<PrizesBean> {
 
                                         @Override
                                         public void onFailure(Call<PrizeClaimResponse> call, Throwable t) {
+                                            call.cancel();
                                             t.printStackTrace();
                                             Helper.showAlertNetural(context,"Error","Communication Error");
                                         }

@@ -79,6 +79,7 @@ public class PrizesRedeemFragment extends Fragment {
 
                                 @Override
                                 public void onFailure(Call<GetRedeem> call, Throwable t) {
+                                    call.cancel();
                                     t.printStackTrace();
                                     Helper.showAlertNetural(view.getContext(),"Error","Communication Error");
                                 }

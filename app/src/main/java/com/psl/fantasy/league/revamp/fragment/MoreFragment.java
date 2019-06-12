@@ -22,7 +22,7 @@ import org.json.JSONObject;
  * A simple {@link Fragment} subclass.
  */
 public class MoreFragment extends Fragment {
-    public static final String[] items={"Terms & Conditions","FAQs","Prizes","About","Rules","Logout"};
+    public static final String[] items={"Terms & Conditions","FAQs","Prizes","About","Rules","Invite a friend","Logout"};
     public static final String[] items1={"Terms & Conditions","FAQs","Prizes","About","Rules"};
     private FragmentToActivity mCallback;
     private SharedPreferences preferences;
