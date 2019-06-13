@@ -359,53 +359,57 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                            object.put("user_consent",user_consent);
                            object.put("team_name",teamName);
                            object.put("method_Name",this.getClass().getSimpleName()+".btn_sign_up.onClick");
-                           btn_sign_up.setEnabled(false);
-                           ApiClient.getInstance().insertUser(Helper.encrypt(object.toString()))
-                                   .enqueue(new Callback<InsertResponse>() {
-                                       @Override
-                                       public void onResponse(Call<InsertResponse> call, Response<InsertResponse> response) {
-                                           if(response.isSuccessful()){
-                                               btn_sign_up.setEnabled(true);
-                                               progressBar.setVisibility(View.GONE);
-                                               if(response.body().getResponseCode().equals("1001")){
-                                                   //Helper.showAlertNetural(mView.getContext(),"Success","Done");
+                           if(mobileNo.length()==11){
+                               btn_sign_up.setEnabled(false);
+                               ApiClient.getInstance().insertUser(Helper.encrypt(object.toString()))
+                                       .enqueue(new Callback<InsertResponse>() {
+                                           @Override
+                                           public void onResponse(Call<InsertResponse> call, Response<InsertResponse> response) {
+                                               if(response.isSuccessful()){
+                                                   btn_sign_up.setEnabled(true);
+                                                   progressBar.setVisibility(View.GONE);
+                                                   if(response.body().getResponseCode().equals("1001")){
+                                                       //Helper.showAlertNetural(mView.getContext(),"Success","Done");
 
-                                                   JSONObject obj=new JSONObject();
-                                                   try {
-                                                       obj.put("mobile_no",mobileNo);
-                                                       obj.put("pws",password);
-                                                       login(obj);
-                                                   } catch (JSONException e) {
-                                                       e.printStackTrace();
+                                                       JSONObject obj=new JSONObject();
+                                                       try {
+                                                           obj.put("mobile_no",mobileNo);
+                                                           obj.put("pws",password);
+                                                           login(obj);
+                                                       } catch (JSONException e) {
+                                                           e.printStackTrace();
+                                                       }
+
+
+                                                   }else{
+                                                       Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
                                                    }
-
-
                                                }else{
-                                                   Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
-                                               }
-                                           }else{
-                                               if (response.errorBody() != null) {
-                                                   try {
-                                                       btn_sign_up.setEnabled(true);
-                                                       Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
-                                                       progressBar.setVisibility(View.GONE);
-                                                   } catch (IOException e) {
+                                                   if (response.errorBody() != null) {
+                                                       try {
+                                                           btn_sign_up.setEnabled(true);
+                                                           Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
+                                                           progressBar.setVisibility(View.GONE);
+                                                       } catch (IOException e) {
 
-                                                       e.printStackTrace();
+                                                           e.printStackTrace();
 
+                                                       }
                                                    }
                                                }
                                            }
-                                       }
 
-                                       @Override
-                                       public void onFailure(Call<InsertResponse> call, Throwable t) {
-                                           call.cancel();
-                                           t.printStackTrace();
-                                           btn_sign_up.setEnabled(true);
-                                           Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
-                                       }
-                                   });
+                                           @Override
+                                           public void onFailure(Call<InsertResponse> call, Throwable t) {
+                                               call.cancel();
+                                               t.printStackTrace();
+                                               btn_sign_up.setEnabled(true);
+                                               Helper.showAlertNetural(mView.getContext(),"Error","Communication Error");
+                                           }
+                                       });
+                           }else{
+                               Helper.showAlertNetural(mView.getContext(),"Error","Please provide valid mobile number");
+                           }
                        }else{
                            Helper.showAlertNetural(mView.getContext(),"Error","Please check password and confirm password");
                            btn_sign_up.setEnabled(true);

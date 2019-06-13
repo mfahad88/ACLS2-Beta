@@ -50,6 +50,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 public class FixtureAdapter extends ArrayAdapter<MatchesBean>{
@@ -189,16 +191,34 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean>{
             }
             image_team_two.setImageResource(resource);
             Log.e("Matches",bean.toString());
+            Timer timer=new Timer();
+            timer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    txt_time.post(new Runnable() {
+                        @Override
+                        public void run() {
 
-            new Thread(new Runnable() {
+                            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            txt_time.setText( showDifference(sdf.format(bean.getTime()),card_view_match,bean));
+
+                        }
+                    });
+                }
+            },1000,100);
+            /*new Thread(new Runnable() {
                 @Override
                 public void run() {
                     while (true) {
                         try {
                             Thread.sleep(1000);
-                            txt_time.post(new Runnable() {
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        txt_time.post(new Runnable() {
                                 @Override
                                 public void run() {
+
                                     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //                                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ");
 
@@ -206,13 +226,11 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean>{
 
                                 }
                             });
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+
 
                     }
                 }
-            }).start();
+            }).start();*/
 
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -239,9 +257,9 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean>{
         }catch (Exception e){
             e.printStackTrace();
         }
-        if(bean.isChecked()){
+        /*if(bean.isChecked()){
             card_view_match.setCardBackgroundColor(Color.parseColor("#FFF4DD"));
-        }
+        }*/
         return convertView;
     }
 
@@ -280,10 +298,10 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean>{
             //New Format By FT
             long hrs=diffDays*24;
             hrs+=diffHours;
-            if(hrs<=72){
+            /*if(hrs<=72){
                 cardView.setCardBackgroundColor(Color.parseColor("#FFF4DD"));
                 bean.setChecked(true);
-            }
+            }*/
             if(hrs<=48 && hrs>5){
                 dateFinal=hrs+" Hr(s) Left" ;
             }

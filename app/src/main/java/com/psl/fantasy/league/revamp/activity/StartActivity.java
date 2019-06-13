@@ -17,12 +17,14 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.psl.fantasy.league.revamp.Utils.DbHelper;
 import com.psl.fantasy.league.revamp.fragment.AccountLinkFragment;
+import com.psl.fantasy.league.revamp.interfaces.NotificationInterface;
 import com.psl.fantasy.league.revamp.model.response.AppVersion.AppVersionBean;
 import com.psl.fantasy.league.revamp.BuildConfig;
 import com.psl.fantasy.league.revamp.R;
@@ -60,6 +62,9 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
     private DbHelper dbHelper;
     private RelativeLayout relative_notification;
     private ListView list_notification;
+    PopupMenu popupMenu;
+    List<Datum> list_subject;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +73,7 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
         preferences=getSharedPreferences(Helper.SHARED_PREF,MODE_PRIVATE);
         dbHelper=new DbHelper(this);
         txtNotifCount=findViewById(R.id.txtNotifCount);
-        relative_notification=findViewById(R.id.relative_notification);
+        list_subject = new ArrayList<Datum>();
         list_notification=findViewById(R.id.list_notification);
         txt_bullet_1 = findViewById(R.id.txt_bullet_1);
         txt_bullet_2 = findViewById(R.id.txt_bullet_2);
@@ -132,6 +137,11 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
                     @Override
                     public void onClick(View v) {
                         if(Integer.parseInt(txtNotifCount.getText().toString())>0){
+                            popupMenu=new PopupMenu(getApplicationContext(),v);
+                            for(Datum datum:list_subject){
+                                popupMenu.getMenu().add(datum.getSubj());
+                            }
+                            popupMenu.show();
 //                            relative_notification.setVisibility(View.VISIBLE);
                             /*if(relative_notification.getVisibility()==View.VISIBLE){
                                 relative_notification.setVisibility(View.GONE);
@@ -203,16 +213,17 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
                             public void onResponse(Call<GetUserNotificationBean> call, Response<GetUserNotificationBean> response) {
                                 if(response.isSuccessful()){
                                     if(response.body().getResponseCode().equalsIgnoreCase("1001")){
-                                        ArrayList<String> list_subject=new ArrayList<String>();
+
+
                                         txtNotifCount.post(new Runnable() {
                                             @Override
                                             public void run() {
                                                 txtNotifCount.setText(String.valueOf(response.body().getData().size()));
                                                 for(Datum datum:response.body().getData()){
-                                                    list_subject.add(datum.getSubj());
+                                                    list_subject.add(datum);
+
                                                 }
-                                                ArrayAdapter<String> adapter=new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,list_subject);
-                                                list_notification.setAdapter(adapter);
+
                                             }
                                         });
                                     }
@@ -238,6 +249,7 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
         dbHelper.deleteConfig();
         dbHelper.deleteMyTeam();
         //dbHelper.deletePlayer();
+
         super.onDestroy();
     }
 

@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.psl.fantasy.league.revamp.R;
+import com.psl.fantasy.league.revamp.Utils.Helper;
 import com.psl.fantasy.league.revamp.model.response.PrizeDistribution.Datum;
 import com.psl.fantasy.league.revamp.model.ui.WinnerBean;
 
@@ -32,7 +33,7 @@ public class WinnerBottomAdapter extends ArrayAdapter {
         TextView txt_rank=convertView.findViewById(R.id.txt_rank);
         TextView txt_amount=convertView.findViewById(R.id.txt_amount);
         txt_rank.setText(bean.getCatDesc());
-        txt_amount.setText(bean.getDistValue());
+        txt_amount.setText(Helper.currencyFormatter(bean.getDistValue()));
         return convertView;
     }
 }

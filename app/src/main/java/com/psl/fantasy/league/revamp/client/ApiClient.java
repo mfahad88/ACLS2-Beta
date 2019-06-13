@@ -16,8 +16,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiClient {
  
 
-    public static final String BASE_URL = "http://59ca1ae3.ngrok.io/api/";
-//    private static final String BASE_URL = "http://apnicricketleague.eastus.cloudapp.azure.com:8754/JsApniCricketLeague/api/";
+//    public static final String BASE_URL = "http://59ca1ae3.ngrok.io/api/";
+    private static final String BASE_URL = "http://apnicricketleague.eastus.cloudapp.azure.com:8754/JsApniCricketLeague/api/";
 //      public static final String BASE_URL = "http://172.28.28.51:8080/api/";
 //      public static final String BASE_URL = "http://192.168.1.7:8080/";
     private static Retrofit retrofit = null;
@@ -45,7 +45,7 @@ public class ApiClient {
         OkHttpClient httpClient = new OkHttpClient.Builder()
         .addInterceptor(interceptor)
 //        .retryOnConnectionFailure(true)
-        .connectTimeout(3,TimeUnit.SECONDS)
+        .connectTimeout(10,TimeUnit.SECONDS)
         .readTimeout(5,TimeUnit.SECONDS)
         .writeTimeout(10, TimeUnit.SECONDS)
         .build();

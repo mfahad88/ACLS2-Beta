@@ -58,6 +58,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
+import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -589,6 +590,25 @@ public class Helper {
 
     public static void showToast(Context context,String msg){
         Toast.makeText(context,msg,Toast.LENGTH_SHORT).show();
+    }
+
+    public static String currencyFormatter(String num) {
+        String output = num;
+        boolean isText=false;
+        char ch=num.charAt(0);
+        int ascii=ch;
+        if(ascii>64 && ascii<91){
+            isText=true;
+        } if(ascii>96 && ascii<123){
+            isText=true;
+        }
+
+        if(!isText){
+            double m = Double.parseDouble(num);
+            DecimalFormat formatter = new DecimalFormat("###,###,###.##");
+            output=formatter.format(m);
+        }
+        return output;
     }
 
 }
