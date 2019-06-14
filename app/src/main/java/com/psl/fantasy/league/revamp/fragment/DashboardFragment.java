@@ -97,7 +97,7 @@ public class DashboardFragment extends Fragment {
             mCallback.communicate("disable");
             mCallback.communicate("DashboardFragment");
             pullToRefresh.setVisibility(View.VISIBLE);
-
+            list_matches.setVisibility(View.VISIBLE);
             populateMatches();
 
             pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -107,9 +107,10 @@ public class DashboardFragment extends Fragment {
                     try {
                         Helper.checkAppVersion(getActivity(), preferences, dbHelper);
                         //fixtureAdapter.clear();
-                        fixtureAdapter.notifyDataSetChanged();
+
 //                        fixtureAdapter.notifyDataSetInvalidated();
-                        populateMatches();
+                            populateMatches();
+
                         pullToRefresh.setRefreshing(false);
 
 
@@ -170,10 +171,10 @@ public class DashboardFragment extends Fragment {
                                                }
                                            }
                                            if(list.size()>0){
-                                               list_matches.setVisibility(View.VISIBLE);
+
 
                                                fixtureAdapter = new FixtureAdapter(mView.getContext(), R.layout.list_fixture, list);
-
+                                               fixtureAdapter.notifyDataSetChanged();
                                                list_matches.setAdapter(fixtureAdapter);
                                            }
 

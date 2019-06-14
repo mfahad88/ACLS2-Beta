@@ -22,7 +22,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.analytics.FirebaseAnalytics;
+
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import com.karumi.dexter.Dexter;
@@ -54,7 +54,6 @@ import retrofit2.Response;
 
 public class SplashActivity extends AppCompatActivity {
     DbHelper dbHelper;
-    private FirebaseAnalytics mFirebaseAnalytics;
     SharedPreferences preferences;
     int user_id;
     @Override
@@ -73,14 +72,11 @@ public class SplashActivity extends AppCompatActivity {
             FacebookSdk.setAutoLogAppEventsEnabled(true);
 //            Helper.printHashKey(this);
             requestMultiplePermissions();
-            mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-            Bundle params = new Bundle();
-            params.putString("SplashActivity", SplashActivity.class.getName());
-            mFirebaseAnalytics.logEvent("Splash", params);
+
 
             //FirebaseApp.getInstance().getToken(true);
 
-//            Log.e("Firebase",FirebaseInstanceId.getInstance().getToken());
+            Log.e("Firebase",FirebaseInstanceId.getInstance().getToken());
 
         }catch (Exception e){
             e.printStackTrace();

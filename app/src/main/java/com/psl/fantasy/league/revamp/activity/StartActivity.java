@@ -1,8 +1,6 @@
 package com.psl.fantasy.league.revamp.activity;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationMenuView;
@@ -14,29 +12,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.psl.fantasy.league.revamp.Utils.DbHelper;
 import com.psl.fantasy.league.revamp.fragment.AccountLinkFragment;
-import com.psl.fantasy.league.revamp.interfaces.NotificationInterface;
-import com.psl.fantasy.league.revamp.model.response.AppVersion.AppVersionBean;
-import com.psl.fantasy.league.revamp.BuildConfig;
 import com.psl.fantasy.league.revamp.R;
 import com.psl.fantasy.league.revamp.Utils.Helper;
 import com.psl.fantasy.league.revamp.client.ApiClient;
-import com.psl.fantasy.league.revamp.fragment.BalanceFragment;
 import com.psl.fantasy.league.revamp.fragment.DashboardFragment;
 
 import com.psl.fantasy.league.revamp.fragment.MoreFragment;
 import com.psl.fantasy.league.revamp.fragment.MyMatchesFragment;
 import com.psl.fantasy.league.revamp.interfaces.FragmentToActivity;
-import com.psl.fantasy.league.revamp.model.response.SelectUser.SelectUserBean;
 import com.psl.fantasy.league.revamp.model.response.UserNotification.Datum;
 import com.psl.fantasy.league.revamp.model.response.UserNotification.GetUserNotificationBean;
 
@@ -61,7 +52,6 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
     private int user_id;
     private DbHelper dbHelper;
     private RelativeLayout relative_notification;
-    private ListView list_notification;
     PopupMenu popupMenu;
     List<Datum> list_subject;
 
@@ -74,7 +64,7 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
         dbHelper=new DbHelper(this);
         txtNotifCount=findViewById(R.id.txtNotifCount);
         list_subject = new ArrayList<Datum>();
-        list_notification=findViewById(R.id.list_notification);
+
         txt_bullet_1 = findViewById(R.id.txt_bullet_1);
         txt_bullet_2 = findViewById(R.id.txt_bullet_2);
         txt_bullet_3 = findViewById(R.id.txt_bullet_3);
@@ -139,16 +129,20 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
                         if(Integer.parseInt(txtNotifCount.getText().toString())>0){
                             popupMenu=new PopupMenu(getApplicationContext(),v);
                             for(Datum datum:list_subject){
-                                popupMenu.getMenu().add(datum.getSubj());
+                                popupMenu.getMenu().add(0,datum.getUserNotifId(),0,datum.getSubj());
                             }
                             popupMenu.show();
-//                            relative_notification.setVisibility(View.VISIBLE);
-                            /*if(relative_notification.getVisibility()==View.VISIBLE){
-                                relative_notification.setVisibility(View.GONE);
-                            }else{
-                                relative_notification.setVisibility(View.VISIBLE);
-                            }*/
-
+                            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem item) {
+                                    for(Datum datum:list_subject) {
+                                        if(datum.getUserNotifId()==item.getItemId()) {
+                                            Helper.showAlertNetural(StartActivity.this,datum.getSubj(),datum.getMsg());
+                                        }
+                                    }
+                                    return false;
+                                }
+                            });
                         }
                     }
                 });
