@@ -16,9 +16,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
-import com.facebook.FacebookSdk;
-import com.facebook.LoggingBehavior;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -66,13 +63,9 @@ public class SplashActivity extends AppCompatActivity {
             preferences=getSharedPreferences(Helper.SHARED_PREF,MODE_PRIVATE);
             dbHelper=new DbHelper(this);
             Helper.printHashKey(this);
-            FacebookSdk.setApplicationId(getString(R.string.facebook_app_id));
-            FacebookSdk.sdkInitialize(this.getApplicationContext());
-            FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
-            FacebookSdk.setAutoLogAppEventsEnabled(true);
+
 //            Helper.printHashKey(this);
             requestMultiplePermissions();
-
 
             //FirebaseApp.getInstance().getToken(true);
 

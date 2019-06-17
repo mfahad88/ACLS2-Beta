@@ -29,9 +29,10 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="15dp"
                 android:gravity="center_horizontal">
 
-                <com.facebook.login.widget.LoginButton
+               <!-- <com.facebook.login.widget.LoginButton
                     android:id="@+id/login_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -43,23 +44,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:layout_toRightOf="@id/txt_OR" />
+                    android:layout_toRightOf="@id/txt_OR" />-->
 
-                <TextView
+                <!--<TextView
                     android:id="@+id/txt_OR"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/sign_in_button"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:text="OR" />
+                    android:text="OR" />-->
 
                 <TextView
                     android:id="@+id/txt_mobile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/txt_OR"
-                    android:layout_alignLeft="@id/login_button"
+
                     android:layout_marginTop="10dp"
                     android:text="Mobile No."
                     android:textSize="10sp" />
@@ -69,8 +69,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/txt_mobile"
-                    android:layout_alignLeft="@id/login_button"
-                    android:layout_alignRight="@id/sign_in_button"
                     android:layout_marginTop="5dp"
                     android:digits="@string/digits"
                     android:hint="Mobile No."
@@ -87,7 +85,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/edt_mobile_no"
-                    android:layout_alignLeft="@id/login_button"
+
                     android:layout_marginTop="10dp"
                     android:text="Password"
                     android:textSize="10sp" />
@@ -98,8 +96,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/txt_pass"
-                    android:layout_alignLeft="@id/login_button"
-                    android:layout_alignRight="@id/sign_in_button"
+
                     android:layout_marginTop="5dp"
                     android:hint="Password"
                     android:inputType="textPassword"

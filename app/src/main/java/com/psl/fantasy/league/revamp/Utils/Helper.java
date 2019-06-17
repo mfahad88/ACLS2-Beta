@@ -31,8 +31,7 @@ import com.psl.fantasy.league.revamp.BuildConfig;
 
 import com.psl.fantasy.league.revamp.client.ApiClient;
 import com.psl.fantasy.league.revamp.model.request.TestBeanRequest;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
+
 import com.google.gson.Gson;
 import com.psl.fantasy.league.revamp.model.response.AppVersion.AppVersionBean;
 import com.psl.fantasy.league.revamp.model.response.Config.ConfigBeanResponse;
@@ -200,13 +199,6 @@ public class Helper {
         AnalyticsApplication application = (AnalyticsApplication) app;
         return application.getDefaultTracker();
     }*/
-
-    public static void trackEvent(Tracker t,String category, String action, String label) {
-
-
-        // Build and send an Event.
-        t.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).build());
-    }
 
 
     public static boolean permissionAlreadyGranted(Context context,String permission) {
