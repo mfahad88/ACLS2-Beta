@@ -174,7 +174,7 @@ public class ContestFragment extends Fragment{
                     bundle.putString("TeamTwo",teamTwo);
                     fragment.setArguments(bundle);
                     FragmentTransaction ft=getFragmentManager().beginTransaction();
-
+                    ft.addToBackStack(null);
                     ft.replace(R.id.main_content,fragment);
                     ft.commit();
                 }
@@ -194,7 +194,7 @@ public class ContestFragment extends Fragment{
                     bundle.putString("TeamTwo",teamTwo);
                     fragment.setArguments(bundle);
                     FragmentTransaction ft=getFragmentManager().beginTransaction();
-
+                    ft.addToBackStack(null);
                     ft.replace(R.id.main_content,fragment);
                     ft.commit();
                 }
@@ -213,7 +213,7 @@ public class ContestFragment extends Fragment{
                     bundle.putString("TeamTwo",teamTwo);
                     fragment.setArguments(bundle);
                     FragmentTransaction ft=getFragmentManager().beginTransaction();
-
+                    ft.addToBackStack(null);
                     ft.replace(R.id.main_content,fragment);
                     ft.commit();
                 }
@@ -233,7 +233,7 @@ public class ContestFragment extends Fragment{
                     bundle.putString("TeamTwo",teamTwo);
                     fragment.setArguments(bundle);
                     FragmentTransaction ft=getFragmentManager().beginTransaction();
-
+                    ft.addToBackStack(null);
                     ft.replace(R.id.main_content,fragment);
                     ft.commit();
                 }

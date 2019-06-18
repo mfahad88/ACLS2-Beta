@@ -74,6 +74,7 @@ public class MyMatchesTabAdapter extends ArrayAdapter<MyMatchesTabBean> {
                     fragment.setArguments(bundle);
                     FragmentTransaction ft=((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
                     ft.replace(R.id.main_content,fragment);
+                    ft.addToBackStack(null);
                     ft.commit();
                 }
             });

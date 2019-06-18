@@ -74,7 +74,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private FragmentToActivity mCallback;
     private String screen;
-    private StringBuilder user_consent;
+    
     ProgressBar progressBar;
     TextView txt_terms_conditions;
     private CheckBox checkbox_terms_condition,checkbox_contact,checkbox_partner;
@@ -103,7 +103,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mView=inflater.inflate(R.layout.fragment_login, container, false);
-        user_consent=new StringBuilder();
+        
         init();
         mCallback.communicate("disable");
         if(getArguments()!=null){
@@ -222,18 +222,23 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                    String confirmPassword=edt_confirm_password.getText().toString();
                    String referral=edt_referral.getText().toString();
                    String teamName=edt_team_name.getText().toString();
+                   StringBuilder user_consent = new StringBuilder();
+                   if(checkbox_terms_condition.isChecked()){
+                       user_consent.append(checkbox_terms_condition.getText());
+                   }if(checkbox_contact.isChecked()){
+                       user_consent.append(";"+checkbox_contact.getText());
+                   }if(checkbox_partner.isChecked()){
+                       user_consent.append(";"+checkbox_partner.getText());
+                   }
                    if(checkbox_terms_condition.getVisibility()==View.VISIBLE && !checkbox_terms_condition.isChecked()){
                        Helper.showAlertNetural(mView.getContext(),"Info","Please agree T&C's to proceed");
                    }
+                   if(TextUtils.isEmpty(edt_referral.getText().toString())){
+                       referral=null;
+                   }
                    if((!TextUtils.isEmpty(mobileNo)) && (!TextUtils.isEmpty(password)) && (!TextUtils.isEmpty(confirmPassword)) && checkbox_terms_condition.isChecked() &&(!TextUtils.isEmpty(teamName))){
                        if(password.equalsIgnoreCase(confirmPassword)){
-                           if(checkbox_terms_condition.isChecked()){
-                               user_consent.append(checkbox_terms_condition.getText());
-                           }if(checkbox_contact.isChecked()){
-                               user_consent.append(";"+checkbox_contact.getText());
-                           }if(checkbox_partner.isChecked()){
-                               user_consent.append(";"+checkbox_partner.getText());
-                           }
+                           
                            progressBar.setVisibility(View.VISIBLE);
                            JSONObject object=new JSONObject();
                            object.put("pws",password);

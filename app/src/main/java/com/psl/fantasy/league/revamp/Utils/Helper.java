@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -96,6 +97,8 @@ public class Helper {
         AlertDialog dialog=builder.create();
         dialog.show();
     }
+
+
 
     public static boolean validateEmail(String emailStr) {
 
@@ -601,6 +604,14 @@ public class Helper {
             output=formatter.format(m);
         }
         return output;
+    }
+
+    public static boolean isFragmentVisible(Fragment fragment) {
+        Activity activity = fragment.getActivity();
+        View focusedView = fragment.getView().findFocus();
+        return activity != null
+                && focusedView != null
+                && focusedView == activity.getWindow().getDecorView().findFocus();
     }
 
 }

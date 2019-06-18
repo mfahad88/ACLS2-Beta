@@ -21,7 +21,9 @@ import android.widget.TextView;
 
 import com.psl.fantasy.league.revamp.Utils.Helper;
 import com.psl.fantasy.league.revamp.client.ApiClient;
+import com.psl.fantasy.league.revamp.fragment.ContestFragment;
 import com.psl.fantasy.league.revamp.fragment.DashboardFragment;
+import com.psl.fantasy.league.revamp.fragment.PrizesFragment;
 import com.psl.fantasy.league.revamp.fragment.TeamFragment;
 import com.psl.fantasy.league.revamp.fragment.WinnerBottomFragment;
 import com.psl.fantasy.league.revamp.model.response.PrizeDistribution.Datum;
@@ -132,7 +134,7 @@ public class ContestAdapter extends ArrayAdapter<ContestBean> {
                 fragment.setArguments(bundle);
                 AppCompatActivity activity=(AppCompatActivity)context;
                 FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
-
+                ft.addToBackStack(null);
 //                FragmentTransaction ft=((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.main_content,fragment);
 

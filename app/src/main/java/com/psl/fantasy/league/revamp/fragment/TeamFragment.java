@@ -148,9 +148,8 @@ public class TeamFragment extends Fragment {
                             bundle.putDouble("credit", credit);
                             fragment.setArguments(bundle);
                             FragmentTransaction ft = getFragmentManager().beginTransaction();
-
+                            //ft.addToBackStack(null);
                             ft.replace(R.id.main_content, fragment);
-
                             ft.commit();
                         }else{
                             Toast.makeText(mView.getContext(), "Please create team of 11 players", Toast.LENGTH_SHORT).show();

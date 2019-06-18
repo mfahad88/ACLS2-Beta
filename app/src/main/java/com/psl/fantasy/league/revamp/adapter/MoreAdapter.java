@@ -47,18 +47,23 @@ public class MoreAdapter extends ArrayAdapter {
             public void onClick(View v) {
                 if(objects[position].toString().equalsIgnoreCase("prizes")){
                     ft.replace(R.id.main_content,new PrizesFragment());
+                    ft.addToBackStack(null);
                     ft.commit();
                 }if(objects[position].toString().equalsIgnoreCase("FAQs")){
                     ft.replace(R.id.main_content,new FaqFragment());
+                    ft.addToBackStack(null);
                     ft.commit();
                 }if(objects[position].toString().equalsIgnoreCase("Rules")){
                     ft.replace(R.id.main_content,new RulesFragment());
+                    ft.addToBackStack(null);
                     ft.commit();
                 }if(objects[position].toString().equalsIgnoreCase("Terms & Conditions")){
                     ft.replace(R.id.main_content,new TermsConditionsFragment());
+                    ft.addToBackStack(null);
                     ft.commit();
                 }if(objects[position].toString().equalsIgnoreCase("About")){
                     ft.replace(R.id.main_content,new AboutUsFragment());
+                    ft.addToBackStack(null);
                     ft.commit();
                 }
                 if(Helper.getUserSession(preferences,Helper.MY_USER)!=null){
@@ -70,6 +75,7 @@ public class MoreAdapter extends ArrayAdapter {
                             ((AppCompatActivity) context).finish();
                     }if(objects[position].toString().equalsIgnoreCase("Invite a friend")){
                         ft.replace(R.id.main_content,new MyDetailFragment());
+                        ft.addToBackStack(null);
                         ft.commit();
                     }
                 }

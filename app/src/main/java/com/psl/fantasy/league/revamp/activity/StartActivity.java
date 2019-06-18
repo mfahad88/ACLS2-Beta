@@ -1,5 +1,6 @@
 package com.psl.fantasy.league.revamp.activity;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,12 +9,12 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ import com.psl.fantasy.league.revamp.fragment.DashboardFragment;
 import com.psl.fantasy.league.revamp.fragment.MoreFragment;
 import com.psl.fantasy.league.revamp.fragment.MyMatchesFragment;
 import com.psl.fantasy.league.revamp.interfaces.FragmentToActivity;
+import com.psl.fantasy.league.revamp.model.response.UpdateNotification.UpdateNotificationBean;
 import com.psl.fantasy.league.revamp.model.response.UserNotification.Datum;
 import com.psl.fantasy.league.revamp.model.response.UserNotification.GetUserNotificationBean;
 
@@ -54,7 +56,7 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
     private RelativeLayout relative_notification;
     PopupMenu popupMenu;
     List<Datum> list_subject;
-
+    BottomNavigationView navigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +73,8 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
         linear_pointer= findViewById(R.id.linear_pointer);
         Helper.checkAppVersion(this, preferences, dbHelper);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);
         setBottomNavigationLabelsTextSize(navigation,0.7f);
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -137,7 +140,48 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
                                 public boolean onMenuItemClick(MenuItem item) {
                                     for(Datum datum:list_subject) {
                                         if(datum.getUserNotifId()==item.getItemId()) {
-                                            Helper.showAlertNetural(StartActivity.this,datum.getSubj(),datum.getMsg());
+                                           // Helper.showAlertNetural(StartActivity.this,datum.getSubj(),datum.getMsg());
+
+                                            android.app.AlertDialog.Builder builder=new android.app.AlertDialog.Builder(StartActivity.this);
+                                            builder.setTitle(datum.getSubj()).setMessage(datum.getMsg());
+                                            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                    try{
+                                                        JSONObject jsonObject=new JSONObject();
+                                                        jsonObject.put("user_notif_id",datum.getUserNotifId().intValue());
+                                                        jsonObject.put("sts","v");
+                                                        jsonObject.put("method_name","dialog.dismiss");
+                                                        ApiClient.getInstance().updateUserNotif(Helper.encrypt(jsonObject.toString()))
+                                                                .enqueue(new Callback<UpdateNotificationBean>() {
+                                                                    @Override
+                                                                    public void onResponse(Call<UpdateNotificationBean> call, Response<UpdateNotificationBean> response) {
+                                                                        if(response.isSuccessful()){
+                                                                            if(response.body().getResponseCode().equals("1001")){
+                                                                                dialog.dismiss();
+                                                                                getNotification();
+                                                                            }else{
+                                                                                Helper.showAlertNetural(StartActivity.this,"Error",response.body().getMessage());
+                                                                            }
+                                                                        }
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onFailure(Call<UpdateNotificationBean> call, Throwable t) {
+                                                                        call.cancel();
+                                                                        t.printStackTrace();
+                                                                        Helper.showAlertNetural(StartActivity.this,"Error","Communication Error");
+                                                                    }
+                                                                });
+                                                    }catch (JSONException e){
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            });
+                                            android.app.AlertDialog dialog=builder.create();
+                                            dialog.show();
+
                                         }
                                     }
                                     return false;
@@ -208,18 +252,18 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
                                 if(response.isSuccessful()){
                                     if(response.body().getResponseCode().equalsIgnoreCase("1001")){
 
+                                        int counter=0;
+                                        if(response.body().getResponseCode().equals("1001")) {
 
-                                        txtNotifCount.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                txtNotifCount.setText(String.valueOf(response.body().getData().size()));
-                                                for(Datum datum:response.body().getData()){
+                                            for (Datum datum : response.body().getData()) {
+                                                if(datum.getUserNotifSts().equals("i")) {
+                                                    counter++;
                                                     list_subject.add(datum);
-
                                                 }
 
                                             }
-                                        });
+                                            txtNotifCount.setText(String.valueOf(counter));
+                                        }
                                     }
                                 }
                             }
@@ -247,5 +291,49 @@ public class StartActivity extends AppCompatActivity implements FragmentToActivi
         super.onDestroy();
     }
 
+    @Override
+    public void onBackPressed() {
+        try {
+            //boolean isVisible = ((DashboardFragment) getSupportFragmentManager().findFragmentById(R.id.main_content)).isVisible();
+//        boolean isVisible=Helper.isFragmentVisible(new DashboardFragment());
+            if (getSupportFragmentManager().findFragmentById(R.id.main_content).getClass().getSimpleName().equals(new DashboardFragment().getClass().getSimpleName())) {
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+                builder1.setTitle("Confirmation");
+                builder1.setMessage("Are you sure you want to exit.");
+                builder1.setCancelable(true);
 
+                builder1.setPositiveButton(
+                        "Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                finishAffinity();
+
+                            }
+                        });
+
+                builder1.setNegativeButton(
+                        "No",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
+            }if(getSupportFragmentManager().findFragmentById(R.id.main_content).getClass().getSimpleName().equals(new MyMatchesFragment().getClass().getSimpleName())||
+                    getSupportFragmentManager().findFragmentById(R.id.main_content).getClass().getSimpleName().equals(new AccountLinkFragment().getClass().getSimpleName())||
+                    getSupportFragmentManager().findFragmentById(R.id.main_content).getClass().getSimpleName().equals(new MoreFragment().getClass().getSimpleName())){
+                navigation.setSelectedItemId(R.id.navigation_home);
+            }else{
+                if(!getSupportFragmentManager().findFragmentById(R.id.main_content).getClass().getSimpleName().equals(new DashboardFragment().getClass().getSimpleName()))
+                {
+                    super.onBackPressed();
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        //super.onBackPressed();
+    }
 }

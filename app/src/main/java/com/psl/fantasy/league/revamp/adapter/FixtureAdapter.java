@@ -249,7 +249,7 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean>{
                     //FragmentTransaction ft=((FragmentActivity)context).getFragmentManager().beginTransaction();
                     android.support.v4.app.FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
                     ft.replace(R.id.main_content,fragment);
-                    ft.addToBackStack(new DashboardFragment().getClass().getName());
+                    ft.addToBackStack(null);
 
                     ft.commit();
                 }

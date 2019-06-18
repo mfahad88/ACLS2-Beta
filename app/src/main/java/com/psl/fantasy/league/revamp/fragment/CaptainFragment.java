@@ -135,6 +135,7 @@ public class CaptainFragment extends Fragment {
                         bundle.putString("screen","captain");
                         fragment.setArguments(bundle);
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        //ft.addToBackStack(null);
                         ft.replace(R.id.main_content, fragment);
                         ft.commit();
                     }else{
@@ -152,6 +153,7 @@ public class CaptainFragment extends Fragment {
                                 bundle.putInt("conId", contestId);
                                 fragment.setArguments(bundle);
                                 FragmentTransaction ft = getFragmentManager().beginTransaction();
+                               // ft.addToBackStack(null);
                                 ft.replace(R.id.main_content, fragment);
                                 ft.commit();
                             }else if(contestAmt==0){

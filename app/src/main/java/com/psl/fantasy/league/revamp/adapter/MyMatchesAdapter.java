@@ -175,6 +175,7 @@ public class MyMatchesAdapter extends ArrayAdapter<MyMatchesBean> {
                 FragmentTransaction ft=activity.getSupportFragmentManager().beginTransaction();
 //                FragmentTransaction ft=((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.main_content,fragment);
+                ft.addToBackStack(null);
                 ft.commit();
             }
         });

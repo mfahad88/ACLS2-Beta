@@ -81,6 +81,7 @@ public class JoinedContestAdapter extends ArrayAdapter<JoinedContestBean> {
 //                FragmentTransaction ft=((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
                 fragment.setArguments(bundle);
                 ft.replace(R.id.main_content,fragment);
+                ft.addToBackStack(null);
                 ft.commit();
             }
         });

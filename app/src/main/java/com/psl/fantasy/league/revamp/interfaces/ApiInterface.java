@@ -1,5 +1,6 @@
 package com.psl.fantasy.league.revamp.interfaces;
 
+import com.psl.fantasy.league.revamp.model.response.UpdateNotification.UpdateNotificationBean;
 import com.psl.fantasy.league.revamp.model.response.UserNotification.GetUserNotificationBean;
 import com.psl.fantasy.league.revamp.model.response.AppVersion.AppVersionBean;
 import com.psl.fantasy.league.revamp.model.response.AccountLinking.BankInfo;
@@ -109,4 +110,7 @@ public interface ApiInterface {
 
     @POST("getUserNotif")
     Call<GetUserNotificationBean> getUserNotif(@Body TestBeanRequest beanRequest);
+
+    @POST("updateUserNotif")
+    Call<UpdateNotificationBean> updateUserNotif(@Body TestBeanRequest beanRequest);
 }
