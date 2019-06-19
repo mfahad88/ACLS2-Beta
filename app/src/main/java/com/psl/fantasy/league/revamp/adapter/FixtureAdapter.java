@@ -190,7 +190,7 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean>{
                 resource=R.drawable.westindies;
             }
             image_team_two.setImageResource(resource);
-            Log.e("Matches",bean.toString());
+            //Log.e("Matches",bean.toString());
             Timer timer=new Timer();
             timer.scheduleAtFixedRate(new TimerTask() {
                 @Override
@@ -293,7 +293,7 @@ public class FixtureAdapter extends ArrayAdapter<MatchesBean>{
             System.out.print(diffMinutes + " minutes, ");
             System.out.print(diffSeconds + " seconds.");
 
-            Log.e("Time",diffDays + " days, "+diffHours + " hours, "+diffMinutes + " minutes, "+diffSeconds + " seconds.");
+       //     Log.e("Time",diffDays + " days, "+diffHours + " hours, "+diffMinutes + " minutes, "+diffSeconds + " seconds.");
 
             //New Format By FT
             long hrs=diffDays*24;

@@ -13,29 +13,74 @@
         android:id="@+id/txt_payment"
         android:layout_margin="15dp"
         android:textSize="16sp"/>
-       <!-- <ImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_margin="10dp"
-            android:layout_alignParentStart="true"
-            android:background="@drawable/js_wallet"
-            android:id="@+id/img_js_wallet"
-            android:layout_alignParentLeft="true" />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal"
+            android:id="@+id/radio_group_payment"
+            android:layout_below="@id/txt_payment">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:id="@+id/radio_redeem"
+                android:text="Redeem"/>
 
 
-    <ImageView
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_margin="10dp"
-        android:layout_alignParentEnd="true"
-        android:background="@drawable/ic_launcher"
-        android:layout_alignParentRight="true" />-->
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:id="@+id/radio_payment"
+                android:text="Payment"/>
+        </RadioGroup>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:id="@+id/relative_redeem"
+        android:layout_below="@id/radio_group_payment">
+
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Coins"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:id="@+id/txt_coins"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="save"
+                android:id="@+id/btn_save"
+                />
+        </LinearLayout>
+
+    </RelativeLayout>
+
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/txt_payment"
-            android:visibility="visible"
+            android:layout_below="@id/radio_group_payment"
+            android:visibility="gone"
             android:layout_margin="10dp"
             android:id="@+id/relativePay">
 
@@ -119,7 +164,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:layout_below="@id/txt_payment"
+            android:layout_below="@id/radio_group_payment"
             android:visibility="gone"
             android:id="@+id/relativeOTP">
 

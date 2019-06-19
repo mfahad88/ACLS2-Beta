@@ -3,7 +3,6 @@ package com.psl.fantasy.league.revamp.Utils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,7 +16,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -421,6 +419,7 @@ public class Helper {
     }
 
     public static boolean isConnectedToNetwork(Activity activity) {
+
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
 

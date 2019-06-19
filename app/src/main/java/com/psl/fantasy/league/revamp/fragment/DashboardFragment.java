@@ -10,10 +10,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.psl.fantasy.league.revamp.R;
 import com.psl.fantasy.league.revamp.Utils.DbHelper;
@@ -30,7 +32,6 @@ import com.psl.fantasy.league.revamp.model.ui.MatchesBean;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,9 +55,11 @@ public class DashboardFragment extends Fragment {
     private FixtureAdapter fixtureAdapter;
     private SharedPreferences preferences;
     private int user_id;
+    ViewPager viewPage;
     private DbHelper dbHelper;
     private LinearLayout linear_progress_bar;
     boolean isConnected;
+    ImageButton leftNav,rightNav;
     public DashboardFragment() {
         // Required empty public constructor
     }
@@ -90,6 +93,7 @@ public class DashboardFragment extends Fragment {
         // Inflate the layout for this fragment
         mView=inflater.inflate(R.layout.fragment_dashboard, container, false);
         init();
+
         Helper.checkAppVersion(getActivity(), preferences, dbHelper);
         try{
 
@@ -120,6 +124,34 @@ public class DashboardFragment extends Fragment {
                 }
             });
 
+           new Thread(new Runnable() {
+               @Override
+               public void run() {
+                   // Images left navigation
+                   leftNav.setOnClickListener(new View.OnClickListener() {
+                       @Override
+                       public void onClick(View v) {
+                           int tab = viewPage.getCurrentItem();
+                           if (tab > 0) {
+                               tab--;
+                               viewPage.setCurrentItem(tab);
+                           } else if (tab == 0) {
+                               viewPage.setCurrentItem(tab);
+                           }
+                       }
+                   });
+
+                   // Images right navigatin
+                   rightNav.setOnClickListener(new View.OnClickListener() {
+                       @Override
+                       public void onClick(View v) {
+                           int tab = viewPage.getCurrentItem();
+                           tab++;
+                           viewPage.setCurrentItem(tab);
+                       }
+                   });
+               }
+           }).start();
 
         }catch (Exception e){
             e.printStackTrace();
@@ -132,7 +164,10 @@ public class DashboardFragment extends Fragment {
         list_matches=mView.findViewById(R.id.list_matches);
         list=new ArrayList<>();
         txt_status=mView.findViewById(R.id.txt_status);
-        ViewPager viewPage=mView.findViewById(R.id.viewPage);
+        leftNav = (ImageButton) mView.findViewById(R.id.left_nav);
+        rightNav = (ImageButton) mView.findViewById(R.id.right_nav);
+
+        viewPage = mView.findViewById(R.id.viewPage);
         ImageAdapter adapter=new ImageAdapter(mView.getContext());
         viewPage.setAdapter(adapter);
         pullToRefresh=mView.findViewById(R.id.pullToRefresh);
@@ -261,5 +296,7 @@ public class DashboardFragment extends Fragment {
         }
 
     }
+
+
 
 }

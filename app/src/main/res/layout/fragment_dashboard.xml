@@ -12,14 +12,41 @@
         android:layout_alignParentRight="true"
         android:visibility="gone"
         android:id="@+id/list_notification"></ListView>
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewPage"
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/banner"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:orientation="horizontal">
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPage"
+
         android:layout_width="400dp"
         android:layout_height="50dp"
         android:layout_centerHorizontal="true"/>
+
+
+        <ImageButton
+            android:id="@+id/left_nav"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical|left"
+            android:background="#9fffffff"
+            android:src="@drawable/ic_keyboard_arrow_left_black_24dp" />
+
+        <ImageButton
+            android:id="@+id/right_nav"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical|right"
+            android:background="#9fffffff"
+            android:src="@drawable/ic_keyboard_arrow_right_black_24dp" />
+
+    </FrameLayout>
+
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,7 +56,7 @@
         android:layout_margin="5dp"
         android:padding="5dp"
         android:textColor="@android:color/black"
-        android:layout_below="@id/viewPage"/>
+        android:layout_below="@id/banner"/>
 
     <LinearLayout
         android:layout_width="wrap_content"

@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -37,6 +38,7 @@ import com.psl.fantasy.league.revamp.Utils.Helper;
 import com.psl.fantasy.league.revamp.adapter.TelcoAdapter;
 import com.psl.fantasy.league.revamp.model.response.JoinContest.JoinContenstResponse;
 import com.psl.fantasy.league.revamp.client.ApiClient;
+import com.psl.fantasy.league.revamp.model.response.SelectUser.SelectUserBean;
 import com.psl.fantasy.league.revamp.model.response.SimPaisa.SimPaisaResponse;
 import com.psl.fantasy.league.revamp.model.response.SimPaisaOTP.SimPaisaOTPResponse;
 import com.psl.fantasy.league.revamp.model.ui.PlayerBean;
@@ -62,7 +64,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
     private DbHelper dbHelper;
     int ContestId; int userId;
     int contestAmt;
-    TextView edt_mobile_no;
+    TextView edt_mobile_no,txt_coins;
     String mobileNo;
     double credit;
     SharedPreferences preferences;
@@ -70,12 +72,14 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
     String[] telcoName={"Mobilink","Warid","Telenor","Zong"};
     Spinner spinner_telco;
     TelephonyManager telephonyManager;
-    RelativeLayout relativePay,relativeOTP;
+    RelativeLayout relativePay,relativeOTP,relative_redeem;
     EditText edt_otp;
     Button btn_submit;
     int operatorID;
     ProgressBar progressBar;
     String provider="";
+    RadioGroup radio_group_payment;
+    Button btn_save;
     public PaymentFragment() {
         // Required empty public constructor
     }
@@ -92,10 +96,12 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
         preferences=mView.getContext().getSharedPreferences(Helper.SHARED_PREF,Context.MODE_PRIVATE);
         dbHelper=new DbHelper(mView.getContext());
         spinner_telco=mView.findViewById(R.id.spinner_telco);
+        radio_group_payment=mView.findViewById(R.id.radio_group_payment);
         relativePay=mView.findViewById(R.id.relativePay);
         relativeOTP=mView.findViewById(R.id.relativeOTP);
-
-
+        relative_redeem=mView.findViewById(R.id.relative_redeem);
+        btn_save=mView.findViewById(R.id.btn_save);
+        txt_coins=mView.findViewById(R.id.txt_coins);
         edt_otp=mView.findViewById(R.id.edt_otp);
         btn_submit=mView.findViewById(R.id.btn_submit);
         progressBar=mView.findViewById(R.id.progressBar);
@@ -105,6 +111,24 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
             credit=getArguments().getDouble("credit");
             contestAmt=getArguments().getInt("contestAmt");
         }
+
+
+        radio_group_payment.check(R.id.radio_redeem);
+        (mView.findViewById(R.id.radio_redeem)).setSelected(true);
+
+        radio_group_payment.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(checkedId==R.id.radio_redeem){
+                    relativePay.setVisibility(View.GONE);
+                    relative_redeem.setVisibility(View.VISIBLE);
+                    getCoins();
+                }else{
+                    relativePay.setVisibility(View.VISIBLE);
+                    relative_redeem.setVisibility(View.GONE);
+                }
+            }
+        });
         try {
             edt_amount.setText(String.valueOf(contestAmt));
             JSONObject object = new JSONObject(Helper.getUserSession(preferences,Helper.MY_USER).toString());
@@ -112,6 +136,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
 
             mobileNo=String.format("%.0f",nameValuePairs.getJSONObject(Helper.MY_USER).getDouble("mobile_no"));
             userId = nameValuePairs.getJSONObject(Helper.MY_USER).getInt("user_id");
+            getCoins();
             if(!TextUtils.isEmpty(mobileNo)) {
                 if(!mobileNo.startsWith("0")){
                     edt_mobile_no.setText("0"+mobileNo);
@@ -125,6 +150,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
 
         btn_pay.setOnClickListener(this);
         btn_submit.setOnClickListener(this);
+        btn_save.setOnClickListener(this);
         TelcoAdapter adapter=new TelcoAdapter(mView.getContext(),R.layout.telco_adapter,icon,telcoName);
         spinner_telco.setAdapter(adapter);
 
@@ -172,6 +198,34 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    public void getCoins(){
+        try {
+            JSONObject object=new JSONObject();
+            object.put("user_id",userId);
+            ApiClient.getInstance().SelectUser(Helper.encrypt(object.toString()))
+                    .enqueue(new Callback<SelectUserBean>() {
+                        @Override
+                        public void onResponse(Call<SelectUserBean> call, Response<SelectUserBean> response) {
+                            if(response.isSuccessful()){
+                                if(response.body().getResponseCode().equals("1001")){
+                                    txt_coins.setText(response.body().getData().getMyUsermsc().getCoinsBalance().toString());
+                                }else{
+                                    Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<SelectUserBean> call, Throwable t) {
+                            t.printStackTrace();
+                            call.cancel();
+                            Helper.showAlertNetural(mView.getContext(),"Error","Communication error...");
+                        }
+                    });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     public void paySimPaisaOTP(){
         try{
             btn_submit.setEnabled(false);
