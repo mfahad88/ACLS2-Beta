@@ -489,8 +489,12 @@ public class Helper {
                                                                     if (response_user.body().getData().getMyUser().getIsUpdated().equalsIgnoreCase("0")) {
 
                                                                         if (config > Float.parseFloat(BuildConfig.VERSION_NAME)) {
-                                                                            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N) {
-                                                                                Intent browserIntent = new Intent(Intent.ACTION_VIEW,Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
+                                                                            Intent browserIntent = new Intent(Intent.ACTION_VIEW,Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
+                                                                            browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                                            activity.startActivity(browserIntent);
+                                                                            activity.finish();
+                                                                           /* if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N) {
+                                                                                Intent browserIntent = new Intent(Intent.ACTION_VIEW);
                                                                                 browserIntent.setDataAndType(Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"), "application/vnd.android.package-archive");
                                                                                 browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                                                 activity.startActivity(browserIntent);
@@ -501,10 +505,14 @@ public class Helper {
                                                                                 browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                                                 activity.startActivity(browserIntent);
                                                                                 activity.finish();
-                                                                            }
+                                                                            }*/
                                                                         } else if (config < Float.parseFloat(BuildConfig.VERSION_NAME)) {
-                                                                            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N) {
-                                                                                Intent browserIntent = new Intent(Intent.ACTION_VIEW,Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
+                                                                            Intent browserIntent = new Intent(Intent.ACTION_VIEW,Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"));
+                                                                            browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                                            activity.startActivity(browserIntent);
+                                                                            activity.finish();
+                                                                            /*if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N) {
+                                                                                Intent browserIntent = new Intent(Intent.ACTION_VIEW);
                                                                                 browserIntent.setDataAndType(Uri.parse("https://1drv.ms/u/s!AtJGoRk9R0bQhAVuq-dk8qsAbXxY"), "application/vnd.android.package-archive");
                                                                                 browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                                                 activity.startActivity(browserIntent);
@@ -516,7 +524,7 @@ public class Helper {
                                                                                 browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                                                 activity.startActivity(browserIntent);
                                                                                 activity.finish();
-                                                                            }
+                                                                            }*/
                                                                         } else {
                                                                             try {
                                                                                 JSONObject jsonObject2 = new JSONObject();

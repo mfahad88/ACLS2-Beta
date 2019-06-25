@@ -224,6 +224,12 @@ public class AccountLinkFragment extends Fragment implements View.OnClickListene
                                                }else{
                                                    Helper.showAlertNetural(mView.getContext(),"Error",response.body().getMessage());
                                                }
+                                           }else{
+                                               try {
+                                                   Helper.showAlertNetural(mView.getContext(),"Error",response.errorBody().string());
+                                               } catch (IOException e) {
+                                                   e.printStackTrace();
+                                               }
                                            }
                                        }
 
